@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Walkthrough &mdash; SDMX Dashboard Generator 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Technical specifications" href="modules.html" />
+    <link rel="prev" title="Welcome to SDMX Dashboard Generator’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SDMX Dashboard Generator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Walkthrough</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-with-examples">How to with examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#high-level-architecture">High-level architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Technical specifications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SDMX Dashboard Generator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Walkthrough</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/walkthrough.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="walkthrough">
+<h1>Walkthrough<a class="headerlink" href="#walkthrough" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>SDMX Dashboard generator is an open-source <a class="reference external" href="https://dash.plotly.com">Dash</a> application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. It supports the version 2.1 of the standard. It leverages the open-source library <a class="reference external" href="https://github.com/Meaningful-Data/sdmxthon">SDMXthon</a> to retrieve and parse data and metadata in SDMX. A dashboard is composed of several visualizations as defined by the specifications provided in a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file stored in the <code class="docutils literal notranslate"><span class="pre">/yaml</span></code> folder.</p>
+<p>This library has been developed for the <a class="reference external" href="https://www.sdmx2023.org/hackathon">SDMX Hackathon Global Conference 2023</a>.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<p>Main features of the application:</p>
+<details open>
+  <summary>Integration with specification file</summary>
+<ul class="simple">
+<li><p><strong>Automatic reading of settings:</strong> the system offers automatic reading of settings from both default and enhanced <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> files, simplifying configuration.</p></li>
+<li><p><strong>User-independent access:</strong> users can access the system through an URL or via drag and drop functionality, ensuring a seamless experience.</p></li>
+</ul>
+</details>
+<details open>
+  <summary>Integration with SDMX REST API connectivity</summary>
+<ul class="simple">
+<li><p><strong>Cross-sources support:</strong> the system supports cross-sources data retrieval with parallelized processes, facilitating efficient data integration.</p></li>
+<li><p><strong>Multi-lingual metadata:</strong> it seamlessly integrates multi-lingual metadata, enhancing the comprehensibility of data from various sources.</p></li>
+</ul>
+</details>
+<details open>
+  <summary>Application design</summary>
+<ul class="simple">
+<li><p><strong>Dynamic data visualization:</strong> the application is supported by Plotly and it provides dynamic and interactive data visualization capabilities, including KPIs, line charts, pie charts and bar graphs.</p></li>
+<li><p><strong>Automatic dashboard adjustments:</strong> visualizations are automatically adjusted within the dashboard, allowing users to customize their position and size as needed.</p></li>
+<li><p><strong>Automatic metadata:</strong> the application generates automatic metadata, such as informative tooltips, titles, and units, enhancing data interpretation.</p></li>
+<li><p><strong>Table format access:</strong> users can access data in a tabular format and easily export it for further analysis.</p></li>
+<li><p><strong>Customizability:</strong> the application’s components and style are highly customizable using Bootstrap, allowing users to modify themes, icons, and incorporate HTML5 elements to tailor the interface to their needs.</p></li>
+</ul>
+</details>
+<details open>
+  <summary>Further enhancements</summary>
+<ul class="simple">
+<li><p><strong>Robustness of the appplication:</strong> define proper Exception classes and more rigorous Exception handling.</p></li>
+<li><p><strong>New features:</strong> <br></p>
+<ul>
+<li><p>enhancement of <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file or removal by integrating settings in a new tab of the app</p></li>
+<li><p>enhancement interactivity (e.g. filtering data, search, parameter simulation..)</p></li>
+<li><p>enhancement chart types (e.g. mix charts per graph, map, dual-axis, flows, network, outlier..)</p></li>
+<li><p>only show languages available depending on the returned metadata</p></li>
+<li><p>multiple pages application</p></li>
+<li><p>include commercial data.</p></li>
+</ul>
+</li>
+</ul>
+</details>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Clone the repo</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/bank-for-international-settlements/SDMX-dashboard-generator.git
+</pre></div>
+</div>
+</li>
+<li><p>Install dependencies</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>SDMX-dashboard-generator
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>If you wish to contribute, you can install the optional requirements:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>optional-requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p>Run the app</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>app.py
+</pre></div>
+</div>
+</li>
+<li><p>Open your browser at <a class="reference external" href="http://127.0.0.1:5000">http://127.0.0.1:5000</a> if you use Flask or <a class="reference external" href="http://127.0.0.1:8050">http://127.0.0.1:8050</a></p></li>
+</ol>
+</section>
+<section id="how-to-with-examples">
+<h2>How to with examples<a class="headerlink" href="#how-to-with-examples" title="Link to this heading"></a></h2>
+<p>The application comes with examples stored in the <code class="docutils literal notranslate"><span class="pre">/yaml</span></code> folder which can be used in two ways:</p>
+<ul class="simple">
+<li><p>by uploading one <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file in the interface via drag and drop or</p></li>
+<li><p>by typing the <code class="docutils literal notranslate"><span class="pre">DashID</span></code> of the dashboard in the URL (i.e. <a class="reference external" href="http://127.0.0.1:5000/eurostat">http://127.0.0.1:5000/eurostat</a> for the <code class="docutils literal notranslate"><span class="pre">eurostat_sample.yaml</span></code> file which contains <code class="docutils literal notranslate"><span class="pre">DashID:</span> <span class="pre">eurostat</span></code>).</p></li>
+</ul>
+<p>The application will scan the existing content in the <code class="docutils literal notranslate"><span class="pre">yaml</span></code> subfolder of the project and load the <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file containing the requested <code class="docutils literal notranslate"><span class="pre">DashID</span></code>. If none is found, the app will raise a <code class="docutils literal notranslate"><span class="pre">PreventUpdate</span></code>.</p>
+</section>
+<section id="high-level-architecture">
+<h2>High-level architecture<a class="headerlink" href="#high-level-architecture" title="Link to this heading"></a></h2>
+<p>The application is built around four main components:</p>
+<details open>
+  <summary>SDMX data and metadata</summary>
+<ul class="simple">
+<li><p>The Statistical Data and Metadata Exchange (SDMX) is a standard to facilitate the exchange of statistical data and metadata using modern information technology. This application leverages the standard to retrieve data and metadata in a consistent and user-friendly way. It leverages two classes, <code class="docutils literal notranslate"><span class="pre">SDMXData</span></code> and <code class="docutils literal notranslate"><span class="pre">SDMXMetadata</span></code>, which are built on top of the open-source package <a class="reference external" href="https://github.com/Meaningful-Data/sdmxthon">SDMXThon</a>. The data retrieval functions return a Pandas DataFrame.</p></li>
+<li><p>As far as the metadata are concerned, a more advanced flow has been implemented in order to enrich the dashboard with as many as information as available and requested. In short, when the metadata url has been provided (<code class="docutils literal notranslate"><span class="pre">dataflow</span></code>), the application retrieves all related information, including the codes associated to the codelist flagged as legend concept in the settings. This feature is key to provide also multilingual support (e.g. chart legend items). Since the parsing of large metadata files could be resource-intensive, the user is also given the option to specify the DSD url (<code class="docutils literal notranslate"><span class="pre">datastructure</span></code>) which is lighter.</p></li>
+</ul>
+</details>
+<details open>
+  <summary>The specification file</strong></summary>
+<blockquote>
+<div><h3 class="rubric" id="configuration">Configuration</h3>
+</div></blockquote>
+<blockquote>
+<div><blockquote>
+<div><p>SDMX Dashboard Generator requires a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file with the settings for the dashboard. This file follows the specifications indicated by the <a class="reference external" href="https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf">SDMX Hackathon Global Conference 2023 Terms of Reference</a>.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><blockquote>
+<div><p>Example of <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> structure:<br>
+<img alt="This is an alt text." src="docs/icons/yaml_sample.png" /></p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="dashid">DashID</h3>
+<blockquote>
+<div><p>Any string composed of numbers, letters, and underscores (_) used to identify the dashboard. This ID will be used to compose the URL to display the dashboard. For example, if the base URL of the application is <code class="docutils literal notranslate"><span class="pre">http://127.0.0.1:5000</span></code> and the DashID is <code class="docutils literal notranslate"><span class="pre">eurostat</span></code>, the dashboard might be displayed at <a class="reference external" href="http://127.0.0.1:5000/eurostat">http://127.0.0.1:5000/eurostat</a>.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="row">Row</h3>
+<blockquote>
+<div><p>An integer value 0…3 that indicates the row where the visual is to be located. Unlimited number of rows is allowed. Up to three charts can share the same row and they are to be distributed left-right in the order they appear in the specification file. A node with Row=0 and chartType=TITLE allows to define Title and Subtitle for the dashboard. Row=0 and chartType=FOOTER to specify up to two lines in Title and Sub-title nodes for the bottom of the dashboard.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="title">Title</h3>
+<blockquote>
+<div><p>A string to describe the chart. If no title is specified, the dashboard will automatically show the name of the requested dataflow. The latter supports translation.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="subtitle">Subtitle</h3>
+<blockquote>
+<div><p>A string to complement the description in the title. If <code class="docutils literal notranslate"><span class="pre">auto</span></code> is provided, the subtitle will be generated by taking the code name from <code class="docutils literal notranslate"><span class="pre">legendConcept</span></code>. If more than one code name is available, then it will take the first one and append to it <code class="docutils literal notranslate"><span class="pre">...</span></code>. If the subtitle node is empty, no subtitle will be shown.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="unit">Unit</h3>
+<blockquote>
+<div><p>A string to describe the unit which can be show in the VALUE chart type next to the observation value if <code class="docutils literal notranslate"><span class="pre">UnitShow</span></code> is set to <code class="docutils literal notranslate"><span class="pre">Yes</span></code>.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="uniticon">UnitIcon</h3>
+<blockquote>
+<div><p>A boostrap icon to be show on top of the VALUE chart. Full list available at: <a class="reference external" href="https://icons.getbootstrap.com">https://icons.getbootstrap.com/</a>.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="decimals">Decimals</h3>
+<blockquote>
+<div><p>Defines the number of decimals to display the observation value.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="charttype">chartType:</h3>
+<blockquote>
+<div><p>It can be KPI (i.e. VALUE) or charts (i.e. PIE, LINE and BAR).</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="legendconcept">legendConcept</h3>
+<blockquote>
+<div><p>Indicates the dimension that defines multiple series to be displayed in the visualization (e.g. sectors of the pie chart, each of the lines in a lines chart or each cluster in a bar chart).</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="legendloc">legendLoc</h3>
+<blockquote>
+<div><p>Legend location which can be TOP, BOTTOM, LEFT, RIGHT or HIDE for no legend. This is not applicable for VALUE.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="labelsyn">LabelsYN</h3>
+<blockquote>
+<div><p>Possible values are “Yes”/”No” and indicates whether the description of each category is to be displayed on the chart. This is not applicable for VALUE.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="xaxisconcept">xAxisConcept</h3>
+<blockquote>
+<div><p>Indicates the concept to be allocated to the “x” axis (e.g. TIME_PERIOD for LINES).</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="yaxisconcept">yAxisConcept</h3>
+<blockquote>
+<div><p>Indicates the concept to be allocated to the “y” axis (e.g. OBS_VALUE).</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="downloadyn">downloadYN</h3>
+<blockquote>
+<div><p>Possible values are “Yes”/”No” and indicates whether the download of the data behind the chart is allowed and by clicking on it the link opens in an off-canvas to download the table with the data.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="dsdlink">dsdLink</h3>
+<blockquote>
+<div><p>An URL of an application or file containing related the datastructure data.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="metadatalink">metadataLink</h3>
+<blockquote>
+<div><p>An URL of an application or file containing reference metadata. If present, an ‘i’ icon is displayed below the title, and by clicking on it the link opens in an off-canvas.</p>
+</div></blockquote>
+</div></blockquote>
+<blockquote>
+<div><h3 class="rubric" id="data">DATA</h3>
+<blockquote>
+<div><p>An URL of an application or file containing data.</p>
+</div></blockquote>
+</div></blockquote>
+</details>
+<details open>
+  <summary>The Dash application</summary>
+<p>The application source code is contained in the file <code class="docutils literal notranslate"><span class="pre">app.py</span></code>, which:</p>
+<ul class="simple">
+<li><p>is entirely based on Dash, a Python open-source framework to create web applications in a flexible and scalable way;</p></li>
+<li><p>can run both on locally or shared across the domain;</p></li>
+<li><p>reads a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file stored in the <code class="docutils literal notranslate"><span class="pre">/yaml</span></code> folder which contains the specifications of the dashboard;</p></li>
+<li><p>organises the content across the dashboard by displaying charts following the guideliens provided in the <a class="reference external" href="https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf">SDMX Hackathon Global Conference 2023 Terms of Reference</a> (e.g. a maximum of three charts per row is allowed).</p></li>
+</ul>
+</details>
+<details open>
+  <summary>The ChartGenerator</summary>
+<p>The ChartGenerator source code is contained in the file <code class="docutils literal notranslate"><span class="pre">src/draw.py</span></code>, which consists in a python class allowing the user to select a function for the desired chart type, corresponding to the <code class="docutils literal notranslate"><span class="pre">chartType</span></code> from the <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">chartType:</span> <span class="pre">VALUE</span></code>: returns a KPI based on the provided DataFrame; A single value corresponding to an observation value at a given point in time displayed in the visual placeholder with Decimals number of decimal positions. It may include a Title and a Subtitle. The Unit may appear located at UnitLoc. The queries specified in DATA must return a single value. Should it return more than one value, the first one will be used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chartType:</span> <span class="pre">PIE</span></code>: returns a pie chart composed by the values returned by the query(ies) specified in DATA which sum represents the full circle (360°). Each value will define a sector of x°, proportional to the fraction of the total it represents. If a single query is specified in DATA, it must return multiple observations for the dimension in legendConcept, which labels will appear in the legend. All the other dimensions are assigned a constant value in the filters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chartType:</span> <span class="pre">LINES</span></code>: returns a lines chart including one or multiple series, either time series or cross-sectional. For time series representation (the usual case), xAxisConcept is TIME_PERIOD, but any other dimension can be specified in case of cross-sectional series. yAxisConcept should normally be OBS_VALUE. The query or queries specified in DATA may return one or multiple series. If a single query is used, it must return multiple observations for the dimension in xAxisConcept (usually TIME_PERIOD) and, eventually, for a second dimension specified in legendConcept that define multiple series, one for each of its returned values. All the other dimensions must be assigned a constant value in the filters. When DATA includes multiple queries, each one will return one series (one line) and all of them must have the dimension specified in legendConcept open to multiple values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chartType:</span> <span class="pre">BARS</span></code>: returns a vertical bars chart including one or multiple series (clustered bars), either time series or cross-sectional. xAxisConcept can be any dimension which values will identify each bar. yAxisConcept (the height of the bar) should normally be OBS_VALUE. The query or queries specified in DATA may return one or multiple series. If a single query is used, it must return multiple observations for the dimension in xAxisConcept and, eventually, for a second dimension specified in legendConcept that define multiple series, one for each of its returned values. This concept definesthe “clusters” of bars. All the other dimensions must be assigned a constant value in the filters. When DATA includes multiple queries, each one will return one series (one cluster) and all of them must have the dimension specified in legendConcept open to multiple values.</p></li>
+</ul>
+<p>Each function, with the exception of the one returning the KPI, makes use of <code class="docutils literal notranslate"><span class="pre">decorator</span></code> elements for enriching the chart with style elements (e.g. legendlocation).</p>
+</details>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>Any contribution is  <strong>greatly appreciated</strong>!</p>
+<p>For uniform and clean code, please consider integrating <a class="reference external" href="https://flake8.pycqa.org/en/latest/">flake8</a> and <a class="reference external" href="https://black.readthedocs.io/en/stable/index.html">black</a> as part of your workflow.
+A configuration for the former is already provided, and you can find a <a class="reference external" href="https://medium.com/&#64;huzaifazahoor654/improving-code-quality-with-flake8-and-black-a-guide-for-python-developers-c374168d5884">good introduction here</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to SDMX Dashboard Generator’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="Technical specifications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

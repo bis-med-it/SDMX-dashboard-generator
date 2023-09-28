@@ -1,0 +1,138 @@
+---
+DashID: eurostat
+Rows:
+-
+    Row: 0
+    chartType: TITLE
+    Title: "Macroeconomic indicators in the euro area"
+    Subtitle: "Consumer prices, production turnover and building permits"
+-
+    Row: 0
+    chartType: FOOTER
+    Title: "2023 SDMX Global Conference Hackathon - Developed by the team from Bank for International Settlements"
+    Subtitle: "The views expressed are those of the authors and do not necessarily reflect those of the Bank for International Settlements. All errors are our own."
+-
+    Row: 1
+    chartType: VALUE
+    Title:
+    Subtitle: "auto"
+    Unit: "%" 
+    UnitShow: "Yes"
+    UnitIcon: "bi bi-basket3-fill h1"
+    unitLoc: SUFFIX
+    Decimals: 2
+    LabelsYN: "No"
+    legendConcept: geo
+    legendLoc: 
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    dataLink: 
+    metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEICP000/1.0"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEICP000/M.CP00.I15.EA20?endPeriod=2023&lastNObservations=1"
+-
+    Row: 1
+    chartType: VALUE
+    Title:
+    Subtitle: "auto"
+    Unit: "persons"
+    UnitShow: "No"
+    UnitIcon: "bi bi-people-fill h1"
+    unitLoc: HIDE
+    Decimals: 0
+    LabelsYN: "No"
+    legendConcept: geo
+    legendLoc: 
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    dataLink: 
+    metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEILM010/1.0?detail=full"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEILM010/M.SA.TOTAL.T.THS_PER.EA20?endPeriod=2023&lastNObservations=1"
+-
+    Row: 1
+    chartType: VALUE
+    Title:
+    Subtitle: "auto"
+    Unit: "%"
+    UnitShow: "Yes"
+    UnitIcon: "bi bi-bag-fill h1"
+    unitLoc: SUFFIX
+    Decimals: 2
+    LabelsYN: "No"
+    legendConcept: geo
+    legendLoc: 
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    dataLink: 
+    metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEILM310/1.0?detail=full"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEILM310/Q.NSA.JOBRATE.TOTAL.B-S.EA20?endPeriod=2023&lastNObservations=1"
+-
+    Row: 2
+    chartType: PIE
+    Title:
+    Subtitle: "auto"
+    Unit: "%"
+    unitLoc: SUFFIX
+    Decimals: 0
+    LabelsYN: "Yes"
+    legendConcept: indic_de
+    legendLoc: BOTTOM
+    xAxisConcept: indic_de
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    dataLink: 
+    metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TPS00010/1.0?detail=full"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00010/A..EA20?endPeriod=2022&lastNObservations=1"
+-
+    Row: 2
+    chartType: BAR
+    Title:
+    Subtitle: "auto"
+    Unit: "%"
+    unitLoc: HIDE
+    Decimals: 0
+    LabelsYN: "No"
+    legendConcept: geo
+    legendLoc: BOTTOM
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    dataLink: 
+    metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEIIS550/1.0?detail=full"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEIIS550/M.PSQM.F_CC1.I2015_SCA.BE+FR+ES+DE"
+-
+    Row: 3
+    chartType: LINE
+    Title:
+    Subtitle: "auto"
+    Unit: "%"
+    unitLoc: SUFFIX
+    Decimals: 0
+    LabelsYN: "No"
+    legendConcept: geo
+    legendLoc: HIDE
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    dataLink: 
+    metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEICP000/1.0?detail=full"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEICP000/M.CP00.I15.EA20+EU27_2020+FR+DE+IT+ES?"
+-
+    Row: 3
+    chartType: LINE
+    Title:
+    Subtitle: "auto"
+    Unit: "% test"
+    unitLoc: SUFFIX
+    Decimals: 0
+    LabelsYN: "Yes"
+    legendConcept: geo
+    legendLoc: BOTTOM
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    dataLink: 
+    metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEICP000/1.0"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEICP000/M.CP00.I15.EA20"

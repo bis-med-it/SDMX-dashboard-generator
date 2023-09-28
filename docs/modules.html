@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technical specifications &mdash; SDMX Dashboard Generator 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Walkthrough" href="walkthrough.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SDMX Dashboard Generator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Walkthrough</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Technical specifications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.app">App</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.add_graphs"><code class="docutils literal notranslate"><span class="pre">add_graphs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_chart_item"><code class="docutils literal notranslate"><span class="pre">create_chart_item()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_download"><code class="docutils literal notranslate"><span class="pre">create_download()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_download_button"><code class="docutils literal notranslate"><span class="pre">create_download_button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_info_button"><code class="docutils literal notranslate"><span class="pre">create_info_button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_offcanvas"><code class="docutils literal notranslate"><span class="pre">create_offcanvas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_offcanvas_table"><code class="docutils literal notranslate"><span class="pre">create_offcanvas_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_table"><code class="docutils literal notranslate"><span class="pre">create_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_table_button"><code class="docutils literal notranslate"><span class="pre">create_table_button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.create_toast"><code class="docutils literal notranslate"><span class="pre">create_toast()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.download_charts"><code class="docutils literal notranslate"><span class="pre">download_charts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.download_data"><code class="docutils literal notranslate"><span class="pre">download_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.download_single_chart"><code class="docutils literal notranslate"><span class="pre">download_single_chart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.download_table"><code class="docutils literal notranslate"><span class="pre">download_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.draw_chart"><code class="docutils literal notranslate"><span class="pre">draw_chart()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.generate_footer"><code class="docutils literal notranslate"><span class="pre">generate_footer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.generate_title"><code class="docutils literal notranslate"><span class="pre">generate_title()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_dash_id"><code class="docutils literal notranslate"><span class="pre">get_dash_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_dashboard_title"><code class="docutils literal notranslate"><span class="pre">get_dashboard_title()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_dataflow_metadata"><code class="docutils literal notranslate"><span class="pre">get_dataflow_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_icon_kpi"><code class="docutils literal notranslate"><span class="pre">get_icon_kpi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_language"><code class="docutils literal notranslate"><span class="pre">get_language()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_rows"><code class="docutils literal notranslate"><span class="pre">get_rows()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_static_metatada"><code class="docutils literal notranslate"><span class="pre">get_static_metatada()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_text_kpi"><code class="docutils literal notranslate"><span class="pre">get_text_kpi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.get_title_footer"><code class="docutils literal notranslate"><span class="pre">get_title_footer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.load_content"><code class="docutils literal notranslate"><span class="pre">load_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.load_yaml"><code class="docutils literal notranslate"><span class="pre">load_yaml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.load_yamlfile"><code class="docutils literal notranslate"><span class="pre">load_yamlfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.open_metadata_offcanvas"><code class="docutils literal notranslate"><span class="pre">open_metadata_offcanvas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.open_table_offcanvas"><code class="docutils literal notranslate"><span class="pre">open_table_offcanvas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.snake_case"><code class="docutils literal notranslate"><span class="pre">snake_case()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.toggle_collapse"><code class="docutils literal notranslate"><span class="pre">toggle_collapse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.toggle_modal"><code class="docutils literal notranslate"><span class="pre">toggle_modal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.app.update_output"><code class="docutils literal notranslate"><span class="pre">update_output()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.draw">Charts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.draw.ChartGenerator"><code class="docutils literal notranslate"><span class="pre">ChartGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.draw.ChartGenerator.bar_chart"><code class="docutils literal notranslate"><span class="pre">ChartGenerator.bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.draw.ChartGenerator.calculate_kpi"><code class="docutils literal notranslate"><span class="pre">ChartGenerator.calculate_kpi()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.draw.ChartGenerator.pie_chart"><code class="docutils literal notranslate"><span class="pre">ChartGenerator.pie_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.draw.ChartGenerator.time_series_chart"><code class="docutils literal notranslate"><span class="pre">ChartGenerator.time_series_chart()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#src.draw.chart_style_decorator"><code class="docutils literal notranslate"><span class="pre">chart_style_decorator()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.sdmx">SDMX helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.sdmx.SDMXData"><code class="docutils literal notranslate"><span class="pre">SDMXData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.sdmx.SDMXData.get_data"><code class="docutils literal notranslate"><span class="pre">SDMXData.get_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.sdmx.SDMXData.get_data_async"><code class="docutils literal notranslate"><span class="pre">SDMXData.get_data_async()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#src.sdmx.SDMXMetadata"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.sdmx.SDMXMetadata.dataflow_metadata"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.dataflow_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.sdmx.SDMXMetadata.datastructure_metadata"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.datastructure_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.sdmx.SDMXMetadata.get_cl"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.get_cl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.sdmx.SDMXMetadata.get_codelist_name"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.get_codelist_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.sdmx.SDMXMetadata.get_codelists"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.get_codelists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.sdmx.SDMXMetadata.parse_message"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.parse_message()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#src.sdmx.get_cl_item_name"><code class="docutils literal notranslate"><span class="pre">get_cl_item_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.sdmx.get_components"><code class="docutils literal notranslate"><span class="pre">get_components()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.sdmx.get_components_async"><code class="docutils literal notranslate"><span class="pre">get_components_async()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.sdmx.get_translation"><code class="docutils literal notranslate"><span class="pre">get_translation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.sdmx.get_url_cl"><code class="docutils literal notranslate"><span class="pre">get_url_cl()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.sdmx.translate_df"><code class="docutils literal notranslate"><span class="pre">translate_df()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.utils">Utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.cleanhtml"><code class="docutils literal notranslate"><span class="pre">cleanhtml()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SDMX Dashboard Generator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Technical specifications</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="technical-specifications">
+<h1>Technical specifications<a class="headerlink" href="#technical-specifications" title="Link to this heading"></a></h1>
+<section id="module-src.app">
+<span id="app"></span><h2>App<a class="headerlink" href="#module-src.app" title="Link to this heading"></a></h2>
+<p>application</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.add_graphs">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">add_graphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#add_graphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.add_graphs" title="Link to this definition"></a></dt>
+<dd><p>add_graphs returns the charts div in the dashboard page</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – the cached data of the charts as returned by download_data</p></li>
+<li><p><strong>footer</strong> – the footer div generated by download_data</p></li>
+<li><p><strong>lang</strong> – the language selected in the dropdown</p></li>
+<li><p><strong>value</strong> – anyvalue that controls the behaviour of the spinner</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>html.Div with the charts loaded in the cache</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_chart_item">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_chart_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chart_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_chart_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_chart_item" title="Link to this definition"></a></dt>
+<dd><p>create_chart_item returns the HTML div for the info and table buttons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – dict: the settings of the chart as specified in the YAML</p></li>
+<li><p><strong>chart_id</strong> – str: the unique chart ID which correspond to the row and the
+sequential number (int) of the chart as specified in the YAML</p></li>
+<li><p><strong>df_metadata</strong> – list: the list of metadata associated with the chart</p></li>
+<li><p><strong>df</strong> – pd.DataFrame: the DataFrame associated with the chart ID</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>html.Div with the info and table buttons</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_download">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_download"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_download" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_download_button">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_download_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_download_button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_download_button" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_info_button">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_info_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_info_button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_info_button" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_offcanvas">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_offcanvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chart_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_offcanvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_offcanvas" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_offcanvas_table">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_offcanvas_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chart_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_offcanvas_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_offcanvas_table" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_table">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_table" title="Link to this definition"></a></dt>
+<dd><p>create_table returns the Dash DataTable to be displayed in the offcanvas
+and exported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chart_id</strong> – str: the unique chart ID which correspond to the row and the
+sequential number (int) of the chart as specified in the YAML</p></li>
+<li><p><strong>df</strong> – pd.DataFrame: the pd.DataFrame associated with the chart ID</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dash DataTable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_table_button">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_table_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_table_button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_table_button" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.create_toast">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">create_toast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#create_toast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.create_toast" title="Link to this definition"></a></dt>
+<dd><p>create_toast returns the dbc.Toast with the statistic metadata set in the YAML</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – the corresponding value of the chart as specified in the YAML</p></li>
+<li><p><strong>header</strong> – str: the corresponding key associated to each chart in the YAML file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dbc.Toast with the statistic metadata,
+Unit and source (DATA) set in the YAML</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.download_charts">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">download_charts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart_per_rows</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#download_charts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.download_charts" title="Link to this definition"></a></dt>
+<dd><p>Download chart data asyncronously</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>chart_per_rows</strong> – output of get_rows()</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>chart data and metadata, split in row lists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.download_data">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">download_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#download_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.download_data" title="Link to this definition"></a></dt>
+<dd><p>download_data returns the cached data and the footer required to build the
+charts_div and footer_div</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>settings</strong> – the settings of the chart as specified in the YAML</p></li>
+<li><p><strong>value</strong> – any value that controls the behaviour of the spinner</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with the cached data required to build the charts_div,
+the footer, the spinners 1 and 2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.download_single_chart">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">download_single_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_chart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#download_single_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.download_single_chart" title="Link to this definition"></a></dt>
+<dd><p>Download data for a single chart</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_chart</strong> – the settings of the single chart</p></li>
+<li><p><strong>z</strong> – int: Row number</p></li>
+<li><p><strong>y</strong> – int: Position in row</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with chart settings and data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.download_table">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">download_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_clicks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#download_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.download_table" title="Link to this definition"></a></dt>
+<dd><p>download_table returns the export table in CSV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_clicks</strong> – int: the number of times that the list-download
+chart-id has been clicked on</p></li>
+<li><p><strong>data</strong> – the DataTable returned by create_table()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>triggers dcc.send_data_frame to download the table as CSV</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.draw_chart">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">draw_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chart</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#draw_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.draw_chart" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.generate_footer">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">generate_footer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#generate_footer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.generate_footer" title="Link to this definition"></a></dt>
+<dd><p>generate_footer returns the footer from the YAML file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – a dictionary with settings from the YAML file</p></li>
+<li><p><strong>key</strong> – str: the key (FOOTER) from settings from the YAML file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a html.Span with the footer of the dashboard as specified in the YAML file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.generate_title">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">generate_title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#generate_title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.generate_title" title="Link to this definition"></a></dt>
+<dd><p>generate_title returns the title from the YAML file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – a dictionary with settings from the YAML file</p></li>
+<li><p><strong>key</strong> – str: the key (TITLE) from settings from the YAML file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a html.Span with the title of the dashboard as specified in the YAML file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_dash_id">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_dash_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_dash_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_dash_id" title="Link to this definition"></a></dt>
+<dd><p>get_dash_id returns the snake cased DashID from the YAML file settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> – a dictionary with settings from the YAML file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a string with the snaked cased DashId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_dashboard_title">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_dashboard_title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_dashboard_title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_dashboard_title" title="Link to this definition"></a></dt>
+<dd><p>get_dashboard_title returns the title to the dashboard and controls
+the behaviour of the loading spinner</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – a dictionary with settings from the YAML file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a html.Span with the title of the dashboard and an integer
+that controls the behaviour of the loading spinner</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_dataflow_metadata">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_dataflow_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_dataflow_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_dataflow_metadata" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_icon_kpi">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_icon_kpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kpi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chart</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_icon_kpi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_icon_kpi" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_language">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_language"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_language" title="Link to this definition"></a></dt>
+<dd><p>get_language returns the language code as returned by the callback</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*args</strong> – <p>the language code clicked in the dropdown</p>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>string with the language code requested which is cached</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_rows">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_charts_per_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_rows" title="Link to this definition"></a></dt>
+<dd><p>get_rows returns the distribution of the charts per row in the dashboard</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – dict: the settings of the chart as specified in the YAML</p></li>
+<li><p><strong>max_charts_per_row</strong> – int: the maximum charts per row (Default value = 3)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list with the distribution of the charts per row</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_static_metatada">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_static_metatada</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chart_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_static_metatada"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_static_metatada" title="Link to this definition"></a></dt>
+<dd><p>get_static_metatada returns the HTML div for the info and table buttons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chart</strong> – the settings of the chart as specified in the YAML</p></li>
+<li><p><strong>chart_id</strong> – the unique chart ID which correspond to the row and the sequential
+number (int) of the chart as specified in the YAML</p></li>
+<li><p><strong>df_metadata</strong> – the list of metadata associated with the chart</p></li>
+<li><p><strong>df</strong> – the pd.DataFrame associated with the chart ID</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>html.Div with the dbc.CardBody containing the title, subtitle and
+the buttons (table and info)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_text_kpi">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_text_kpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kpi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chart</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_text_kpi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_text_kpi" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.get_title_footer">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">get_title_footer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#get_title_footer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.get_title_footer" title="Link to this definition"></a></dt>
+<dd><p>get_title_footer returns a dictionary with entries with Row == 0
+specified in the YAML file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – a dictionary with settings from the YAML file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with the title and footer, or any other entry
+with Row == 0 in the YAML file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.load_content">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">load_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#load_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.load_content" title="Link to this definition"></a></dt>
+<dd><p>load_content returns a dictionary with the settings from the YAML file
+and a boolean on whether the settings are loaded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yaml_file</strong> – the relative path of the YAML file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with the settings and a boolean when the loading is completed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.load_yaml">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">load_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">href</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#load_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.load_yaml" title="Link to this definition"></a></dt>
+<dd><p>load_yaml returns the location of the YAML file whose dashID matches
+the string provided in the href of the URL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>href</strong> – str: the dashID</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a string with the location of the requested YAML file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.load_yamlfile">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">load_yamlfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/src/app.html#load_yamlfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.load_yamlfile" title="Link to this definition"></a></dt>
+<dd><p>load_yamlfile returns the loaded settings from the YAML file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – str: the YAML file</p></li>
+<li><p><strong>folder</strong> – str, optional: the YAML file folder location</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with loaded settings from the YAML file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.open_metadata_offcanvas">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">open_metadata_offcanvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">click</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#open_metadata_offcanvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.open_metadata_offcanvas" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.open_table_offcanvas">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">open_table_offcanvas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">click</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#open_table_offcanvas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.open_table_offcanvas" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.snake_case">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">snake_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/app.html#snake_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.snake_case" title="Link to this definition"></a></dt>
+<dd><p>snake_case returns snake cased string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string</strong> – str: input to be snake cased</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the input string snake cased</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.toggle_collapse">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">toggle_collapse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_open</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_loaded</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#toggle_collapse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.toggle_collapse" title="Link to this definition"></a></dt>
+<dd><p>toggle_collapse returns a boolean that contols the behaviour of the toggle menu
+of the settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – int: the cumulative number of clicks since the start of the session</p></li>
+<li><p><strong>is_open</strong> – bool: whether the toggle menu is open</p></li>
+<li><p><strong>is_loaded</strong> – bool: whether the settings are loaded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a boolean to control the behaviour of the toggle menu of the settings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.toggle_modal">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">toggle_modal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">open_clicks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close_clicks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_open</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#toggle_modal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.toggle_modal" title="Link to this definition"></a></dt>
+<dd><p>toggle_collapse returns a boolean that contol the behaviour of the modal (Info)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>open_clicks</strong> – int: the cumulative number of clicks to open the modal</p></li>
+<li><p><strong>close_clicks</strong> – int: the cumulative number of clicks to close the modal</p></li>
+<li><p><strong>is_open</strong> – bool: whether the modal is open</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a boolean that contol the behaviour of the modal (Info)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.app.update_output">
+<span class="sig-prename descclassname"><span class="pre">src.app.</span></span><span class="sig-name descname"><span class="pre">update_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uploaded_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/app.html#update_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.app.update_output" title="Link to this definition"></a></dt>
+<dd><p>update_output returns a dictionary with the settings from the YAML file selected
+from the settings and a boolean on whether the settings are loaded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>uploaded_file</strong> – the path of the YAML file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with the settings and a boolean when the loading is completed</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-src.draw">
+<span id="charts"></span><h2>Charts<a class="headerlink" href="#module-src.draw" title="Link to this heading"></a></h2>
+<p>Module providing graphing utilities</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.draw.ChartGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.draw.</span></span><span class="sig-name descname"><span class="pre">ChartGenerator</span></span><a class="reference internal" href="_modules/src/draw.html#ChartGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.draw.ChartGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Initialize a ChartGenerator instance with an empty Plotly figure.</p>
+<p>This constructor initializes a ChartGenerator instance with an empty Plotly figure,
+which can be used to create various types of charts.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.draw.ChartGenerator.bar_chart">
+<span class="sig-name descname"><span class="pre">bar_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xAxisConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yAxisConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/draw.html#ChartGenerator.bar_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.draw.ChartGenerator.bar_chart" title="Link to this definition"></a></dt>
+<dd><p>Create a bar chart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – pd.DataFrame: the input containing bar chart data.</p></li>
+<li><p><strong>xAxisConcept</strong> – str: the concept for the x-axis data.</p></li>
+<li><p><strong>yAxisConcept</strong> – str: the concept for the y-axis data.</p></li>
+<li><p><strong>group_by</strong> – str, optional: the column to group by for grouped bar charts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self: the ChartGenerator instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.draw.ChartGenerator.calculate_kpi">
+<span class="sig-name descname"><span class="pre">calculate_kpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yAxisConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xAxisConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legendConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/draw.html#ChartGenerator.calculate_kpi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.draw.ChartGenerator.calculate_kpi" title="Link to this definition"></a></dt>
+<dd><p>Calculate Key Performance Indicators (KPIs) based on the provided DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – pd.DataFrame: the DataFrame containing the data.</p></li>
+<li><p><strong>xAxisConcept</strong> – str: the concept for the x-axis data.</p></li>
+<li><p><strong>yAxisConcept</strong> – str: the concept for the y-axis data.</p></li>
+<li><p><strong>legendConcept</strong> – str: the column name representing the legend</p></li>
+<li><p><strong>group_by</strong> – str, optional: the column to group data by.</p></li>
+<li><p><strong>decimals</strong> – int, optional: the number of decimals for rounding Y-axis
+(Default value = 2)</p></li>
+<li><p><strong>aggregation</strong> – str, optional: the aggregation to apply to Y-axis data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict: a dictionary containing legend values as keys</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If any of the specified columns are not found,
+if ‘legendConcept’ is None,
+or if invalid aggregation options are provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.draw.ChartGenerator.pie_chart">
+<span class="sig-name descname"><span class="pre">pie_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xAxisConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yAxisConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LabelsYN</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/draw.html#ChartGenerator.pie_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.draw.ChartGenerator.pie_chart" title="Link to this definition"></a></dt>
+<dd><p>Create a pie chart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – pd.DataFrame: the input DataFrame containing pie chart data.</p></li>
+<li><p><strong>xAxisConcept</strong> – str: the concept for the x-axis data.</p></li>
+<li><p><strong>yAxisConcept</strong> – str: the concept for the y-axis data.</p></li>
+<li><p><strong>group_by</strong> – str, optional: the column to group by for multiple pie charts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self: the ChartGenerator instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.draw.ChartGenerator.time_series_chart">
+<span class="sig-name descname"><span class="pre">time_series_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xAxisConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yAxisConcept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/draw.html#ChartGenerator.time_series_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.draw.ChartGenerator.time_series_chart" title="Link to this definition"></a></dt>
+<dd><p>Create a time series chart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – DataFrame: the input DataFrame containing time series data.</p></li>
+<li><p><strong>xAxisConcept</strong> – str: the concept for the x-axis data.</p></li>
+<li><p><strong>yAxisConcept</strong> – str: the concept for the y-axis data.</p></li>
+<li><p><strong>group_by</strong> – str, optional: the column to group by for multiline charts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>self: the ChartGenerator instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.draw.chart_style_decorator">
+<span class="sig-prename descclassname"><span class="pre">src.draw.</span></span><span class="sig-name descname"><span class="pre">chart_style_decorator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/draw.html#chart_style_decorator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.draw.chart_style_decorator" title="Link to this definition"></a></dt>
+<dd><p>A decorator for applying chart styling and legend positioning to Plotly figures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> – function: the original function that generates a Plotly figure.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>function: a wrapped function that modifies the figure’s style
+and legend positioning.</p>
+</dd>
+</dl>
+<p>This decorator is used to enhance the appearance of Plotly figures generated by
+other functions. It allows you to specify the positioning of the legend and applies
+various style modifications to the figure.</p>
+<dl>
+<dt>Example:</dt><dd><p>&#64;chart_style_decorator
+def generate_plot(data, legendLoc=”BOTTOM”):</p>
+<blockquote>
+<div><p># Create a Plotly figure based on the input data
+fig = create_figure(data)
+return fig</p>
+</div></blockquote>
+<p># Apply the decorator to the generate_plot function
+styled_fig = generate_plot(data, legendLoc=”BOTTOM”)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-src.sdmx">
+<span id="sdmx-helpers"></span><h2>SDMX helpers<a class="headerlink" href="#module-src.sdmx" title="Link to this heading"></a></h2>
+<p>Module providing sdmx utilities</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.sdmx.SDMXData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.sdmx.</span></span><span class="sig-name descname"><span class="pre">SDMXData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#SDMXData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to get the data from SDMX API in SDMX format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>url_data</strong> – the API URL from which to pull the data</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.sdmx.SDMXData.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yAxisConcept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/sdmx.html#SDMXData.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXData.get_data" title="Link to this definition"></a></dt>
+<dd><p>Returns a Pandas DataFrame with the data requested and optionally
+set the yAxisConcept as float.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yAxisConcept</strong> – str, optional: the y-axis to convert to numeric.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame: the requested data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.sdmx.SDMXData.get_data_async">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_data_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yAxisConcept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/src/sdmx.html#SDMXData.get_data_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXData.get_data_async" title="Link to this definition"></a></dt>
+<dd><p>Asynchronously returns a Pandas DataFrame with the data requested and
+optionally set the yAxisConcept as float.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yAxisConcept</strong> – str, optional: the y-axis to convert to numeric.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame: the requested data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.sdmx.SDMXMetadata">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.sdmx.</span></span><span class="sig-name descname"><span class="pre">SDMXMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#SDMXMetadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXMetadata" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to get the metadata from SDMX API in SDMX format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component</strong> – any object compatible with the <a class="reference external" href="https://docs.sdmxthon.meaningfuldata.eu/packages/model/component.html">Component object</a></p></li>
+<li><p><strong>concept</strong> – a string that denotes the concept to translate</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.sdmx.SDMXMetadata.dataflow_metadata">
+<span class="sig-name descname"><span class="pre">dataflow_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#SDMXMetadata.dataflow_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXMetadata.dataflow_metadata" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary with the name and description of the dataflow</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.sdmx.SDMXMetadata.datastructure_metadata">
+<span class="sig-name descname"><span class="pre">datastructure_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#SDMXMetadata.datastructure_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXMetadata.datastructure_metadata" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary with the id, dimensions, attributes and measures of the
+queried DSD</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.sdmx.SDMXMetadata.get_cl">
+<span class="sig-name descname"><span class="pre">get_cl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#SDMXMetadata.get_cl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXMetadata.get_cl" title="Link to this definition"></a></dt>
+<dd><p>Returns a Tuple with the name (str), description (str) and
+<a class="reference external" href="https://docs.sdmxthon.meaningfuldata.eu/packages/model/item.html#code">model.itemScheme.Code</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.sdmx.SDMXMetadata.get_codelist_name">
+<span class="sig-name descname"><span class="pre">get_codelist_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#SDMXMetadata.get_codelist_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXMetadata.get_codelist_name" title="Link to this definition"></a></dt>
+<dd><p>Returns a string with the Agency, ID and version of of the codelist or a
+<a class="reference external" href="https://docs.sdmxthon.meaningfuldata.eu/packages/model/itemScheme.html#codelist">model.itemScheme.Codelist</a>
+if all descendants are included in the SDMX URL call</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.sdmx.SDMXMetadata.get_codelists">
+<span class="sig-name descname"><span class="pre">get_codelists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#SDMXMetadata.get_codelists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXMetadata.get_codelists" title="Link to this definition"></a></dt>
+<dd><p>Returns a <a class="reference external" href="https://docs.sdmxthon.meaningfuldata.eu/packages/model/itemScheme.html#codelist">model.itemScheme.Codelist</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.sdmx.SDMXMetadata.parse_message">
+<span class="sig-name descname"><span class="pre">parse_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#SDMXMetadata.parse_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.SDMXMetadata.parse_message" title="Link to this definition"></a></dt>
+<dd><p>Parses the appropriate component and returns children artefacts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>component_type</strong> – a string that can only take the following values:
+Dataflows, Codelists, DataStructures, Concepts</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with the children artefacts associated to
+a component type.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.sdmx.get_cl_item_name">
+<span class="sig-prename descclassname"><span class="pre">src.sdmx.</span></span><span class="sig-name descname"><span class="pre">get_cl_item_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#get_cl_item_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.get_cl_item_name" title="Link to this definition"></a></dt>
+<dd><p>get_cl_item_name returns a string with code name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>items</strong> – a dictionary with the codes of the codelist</p></li>
+<li><p><strong>item</strong> – a string with the code name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the code name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.sdmx.get_components">
+<span class="sig-prename descclassname"><span class="pre">src.sdmx.</span></span><span class="sig-name descname"><span class="pre">get_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descendants</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#get_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.get_components" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a dictionary with the SDMX data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – str: the API URL from which to pull the data</p></li>
+<li><p><strong>descendants</strong> – bool: whether to include all descendants in the call to the API
+(Default = True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict: a dictionary in JSON format with the data/metadata requested.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.sdmx.get_components_async">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.sdmx.</span></span><span class="sig-name descname"><span class="pre">get_components_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descendants</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#get_components_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.get_components_async" title="Link to this definition"></a></dt>
+<dd><p>Asynchronously retrieve a dictionary with the SDMX data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – str: the API URL from which to pull the data</p></li>
+<li><p><strong>descendants</strong> – bool: whether to include all descendants in the call to the API
+(Default = True)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict: a dictionary in JSON format with the data/metadata requested</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.sdmx.get_translation">
+<span class="sig-prename descclassname"><span class="pre">src.sdmx.</span></span><span class="sig-name descname"><span class="pre">get_translation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#get_translation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.get_translation" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>get_translation returns a translated string, if any language other than                    is available. Only fr, es, de are currently supported                    but this list can be easily expanded. If no language is</dt><dd><p>detected, it defaults back to English</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>content</strong> – a dictionary of dictionaries to translate</p></li>
+<li><p><strong>locale</strong> – str: the language code (en, es, de, fr); defaults to “en”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the string translated if any language is available</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.sdmx.get_url_cl">
+<span class="sig-prename descclassname"><span class="pre">src.sdmx.</span></span><span class="sig-name descname"><span class="pre">get_url_cl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url_dsd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cl_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#get_url_cl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.get_url_cl" title="Link to this definition"></a></dt>
+<dd><p>get_url_cl returns a string with the URL of the codelist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url_dsd</strong> – the API URL of the DSD</p></li>
+<li><p><strong>cl_name</strong> – the Agency, ID and version of the codelist (eg ESTAT:CL_AREA(1.0))</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a string with the URL to query against the API</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.sdmx.translate_df">
+<span class="sig-prename descclassname"><span class="pre">src.sdmx.</span></span><span class="sig-name descname"><span class="pre">translate_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concept</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items_translated</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/sdmx.html#translate_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.sdmx.translate_df" title="Link to this definition"></a></dt>
+<dd><p>translate_df returns a translated Pandas DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – a Pandas DataFrame</p></li>
+<li><p><strong>concept</strong> – a string with the column to translate</p></li>
+<li><p><strong>items_translated</strong> – a dictionary with the codes translated</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame: the translated DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-src.utils">
+<span id="utils"></span><h2>Utils<a class="headerlink" href="#module-src.utils" title="Link to this heading"></a></h2>
+<p>Module providing generic utilities</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.cleanhtml">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">cleanhtml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_html</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils.html#cleanhtml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.cleanhtml" title="Link to this definition"></a></dt>
+<dd><p>Clean raw html</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_html</strong> – str: the input to clean</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>str: the cleaned text</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="walkthrough.html" class="btn btn-neutral float-left" title="Walkthrough" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

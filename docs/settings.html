@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration &mdash; SDMX Dashboard Generator 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SDMX Dashboard Generator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Technical specifications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SDMX Dashboard Generator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/settings.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h1>
+<p>SDMX Dashboard Generator requires a YAML file with the settings for the dashboard. This file follows the specifications indicated by the <a class="reference external" href="https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf">SDMX Hackathon Global Conference 2023 Terms of Reference</a>.</p>
+<section id="dashid">
+<h2>DashID<a class="headerlink" href="#dashid" title="Link to this heading"></a></h2>
+<p>Any string composed of numbers, letters, and underscores (_) used to identify the dashboard. This ID will be used to compose the URL to display the dashboard. For example, if the base URL of the application is <code class="docutils literal notranslate"><span class="pre">https://mydomain/mybaseURL/</span></code> and the DashID is <code class="docutils literal notranslate"><span class="pre">MyDashboardID</span></code>, the dashboard might be displayed at <code class="docutils literal notranslate"><span class="pre">https://mydomain/mybaseURL/MyDashboardID</span></code>.</p>
+</section>
+<section id="row">
+<h2>Row<a class="headerlink" href="#row" title="Link to this heading"></a></h2>
+<p>An integer value 0…3 that indicates the row where the visual is to be located. Up to three charts can share the same row and they are to be distributed left-right in the order they appear in the specification file. A node with Row=0 and chartType=TITLE allows to define Title and Subtitle for the dashboard. Row=0 and chartType=FOOTER to specify up to two lines in Title and Sub-title nodes for the bottom of the dashboard.</p>
+</section>
+<section id="title">
+<h2>Title<a class="headerlink" href="#title" title="Link to this heading"></a></h2>
+<p>A string with the title as specified in the YAML file. If no title is specified, the dashboard will automatically show the name of the requested dataflow. The latter supports translation.</p>
+</section>
+<section id="subtitle">
+<h2>Subtitle<a class="headerlink" href="#subtitle" title="Link to this heading"></a></h2>
+<p>A string with the subtitle as specified in the YAML file. If <code class="docutils literal notranslate"><span class="pre">auto</span></code> is provided, the subtitle will be generated by taking the code name from <code class="docutils literal notranslate"><span class="pre">legendConcept</span></code>. If more than one code name is available, then it will take the first one and append to it <code class="docutils literal notranslate"><span class="pre">...</span></code>. If the subtitle node is empty, no subtitle will be shown.</p>
+</section>
+<section id="unit">
+<h2>Unit<a class="headerlink" href="#unit" title="Link to this heading"></a></h2>
+<p>A string with the unit as specified in the YAML file. The unit can be show in the VALUE chart type next to the observation value if <code class="docutils literal notranslate"><span class="pre">UnitShow</span></code> is set to <code class="docutils literal notranslate"><span class="pre">Yes</span></code>.</p>
+</section>
+<section id="uniticon">
+<h2>UnitIcon<a class="headerlink" href="#uniticon" title="Link to this heading"></a></h2>
+<p>A boostrap icon to be show on top of the VALUE chart.</p>
+</section>
+<section id="decimals">
+<h2>Decimals<a class="headerlink" href="#decimals" title="Link to this heading"></a></h2>
+<p>Defines the number of decimals to display the observation value.</p>
+</section>
+<section id="charttype">
+<h2>chartType:<a class="headerlink" href="#charttype" title="Link to this heading"></a></h2>
+<p>It can be VALUE, PIE, LINE and BAR:</p>
+<p>TBA</p>
+</section>
+<section id="legendconcept">
+<h2>legendConcept<a class="headerlink" href="#legendconcept" title="Link to this heading"></a></h2>
+</section>
+<section id="legendloc">
+<h2>legendLoc<a class="headerlink" href="#legendloc" title="Link to this heading"></a></h2>
+</section>
+<section id="labelsyn">
+<h2>LabelsYN<a class="headerlink" href="#labelsyn" title="Link to this heading"></a></h2>
+</section>
+<section id="xaxisconcept">
+<h2>xAxisConcept<a class="headerlink" href="#xaxisconcept" title="Link to this heading"></a></h2>
+<p>Indicates the concept to be allocated to the “x” axis, usually TIME_PERIOD for LINES. For BARS it indicates the dimension that define the bars.</p>
+</section>
+<section id="yaxisconcept">
+<h2>yAxisConcept<a class="headerlink" href="#yaxisconcept" title="Link to this heading"></a></h2>
+<p>Indicates the concept to be allocated to the “y” axis, usually the observation value
+representing the MEASURE</p>
+</section>
+<section id="downloadyn">
+<h2>downloadYN<a class="headerlink" href="#downloadyn" title="Link to this heading"></a></h2>
+<p>Possible values are Yes/No and indicates whether the download of the data behind the chart is allowed.</p>
+</section>
+<section id="dsdlink">
+<h2>dsdLink<a class="headerlink" href="#dsdlink" title="Link to this heading"></a></h2>
+<p>An URL of an application or file containing related the datastructure data.</p>
+</section>
+<section id="metadatalink">
+<h2>metadataLink<a class="headerlink" href="#metadatalink" title="Link to this heading"></a></h2>
+<p>An URL of an application or file containing reference metadata. If present, an ‘i’ icon is displayed below the title, and by clicking on it the link opens in an off-canvas.</p>
+</section>
+<section id="data">
+<h2>DATA<a class="headerlink" href="#data" title="Link to this heading"></a></h2>
+<p>An URL of an application or file containing data.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

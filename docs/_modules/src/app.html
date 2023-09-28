@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.app &mdash; SDMX Dashboard Generator 1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SDMX Dashboard Generator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Technical specifications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SDMX Dashboard Generator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.app</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.app</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;application&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
+<span class="kn">from</span> <span class="nn">re</span> <span class="kn">import</span> <span class="n">sub</span>
+
+<span class="kn">import</span> <span class="nn">dash</span>
+<span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">ALL</span><span class="p">,</span> <span class="n">MATCH</span><span class="p">,</span> <span class="n">Dash</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">dcc</span><span class="p">,</span> <span class="n">html</span>
+<span class="kn">from</span> <span class="nn">dash.dash_table</span> <span class="kn">import</span> <span class="n">DataTable</span>
+<span class="kn">from</span> <span class="nn">dash.exceptions</span> <span class="kn">import</span> <span class="n">PreventUpdate</span>
+<span class="kn">from</span> <span class="nn">furl</span> <span class="kn">import</span> <span class="n">furl</span>
+
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">src.draw</span> <span class="kn">import</span> <span class="n">ChartGenerator</span>
+<span class="kn">from</span> <span class="nn">src.sdmx</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SDMXData</span><span class="p">,</span>
+    <span class="n">SDMXMetadata</span><span class="p">,</span>
+    <span class="n">get_cl_item_name</span><span class="p">,</span>
+    <span class="n">get_components_async</span><span class="p">,</span>
+    <span class="n">get_translation</span><span class="p">,</span>
+    <span class="n">get_url_cl</span><span class="p">,</span>
+    <span class="n">translate_df</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">cleanhtml</span>
+
+<span class="n">external_stylesheets</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">dbc</span><span class="o">.</span><span class="n">themes</span><span class="o">.</span><span class="n">COSMO</span><span class="p">,</span>
+    <span class="n">dbc</span><span class="o">.</span><span class="n">icons</span><span class="o">.</span><span class="n">FONT_AWESOME</span><span class="p">,</span>
+    <span class="n">dbc</span><span class="o">.</span><span class="n">icons</span><span class="o">.</span><span class="n">BOOTSTRAP</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Dash</span><span class="p">(</span>
+    <span class="vm">__name__</span><span class="p">,</span>
+    <span class="n">external_stylesheets</span><span class="o">=</span><span class="n">external_stylesheets</span><span class="p">,</span>
+    <span class="n">prevent_initial_callbacks</span><span class="o">=</span><span class="s2">&quot;initial_duplicate&quot;</span><span class="p">,</span>
+    <span class="n">meta_tags</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;viewport&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;SDMX Dashboard Generator&quot;</span>
+<span class="n">application</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">server</span>
+
+<span class="n">dash</span><span class="o">.</span><span class="n">register_page</span><span class="p">(</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">refresh</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">NavbarSimple</span><span class="p">(</span>
+            <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;mb-3&quot;</span><span class="p">,</span>
+            <span class="n">brand</span><span class="o">=</span><span class="s2">&quot;SDMX Hackathon.</span><span class="se">\</span>
+<span class="s2">                A web application for SMDX data and metadata rendering&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span>
+            <span class="n">dark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenu</span><span class="p">(</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Language&quot;</span><span class="p">,</span>
+                    <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">),</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="n">divider</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;Français&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">),</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;Deutsch&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;Español&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;es&quot;</span><span class="p">),</span>
+                    <span class="p">],</span>
+                    <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;down&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
+                    <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;fa fa-cog&quot;</span><span class="p">)],</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;collapse-button&quot;</span><span class="p">,</span>
+                    <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mb-3&quot;</span><span class="p">,</span>
+                    <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
+                    <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-info-circle&quot;</span><span class="p">)],</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;open&quot;</span><span class="p">,</span>
+                    <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mb-3&quot;</span><span class="p">,</span>
+                    <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Modal</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="c1"># NOTE: It may be a good idea to import the info button content</span>
+                        <span class="c1"># from a markdown file</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">ModalHeader</span><span class="p">(</span><span class="n">dbc</span><span class="o">.</span><span class="n">ModalTitle</span><span class="p">(</span><span class="s2">&quot;Header&quot;</span><span class="p">)),</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">ModalBody</span><span class="p">(</span>
+                            <span class="s2">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&quot;</span>
+                        <span class="p">),</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">ModalFooter</span><span class="p">(</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
+                                <span class="s2">&quot;Close&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;ms-auto&quot;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span>
+                            <span class="p">)</span>
+                        <span class="p">),</span>
+                    <span class="p">],</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;modal&quot;</span><span class="p">,</span>
+                    <span class="n">is_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">],</span>
+        <span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;locale&quot;</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;yaml_file&quot;</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;settings&quot;</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;is_loaded&quot;</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner&quot;</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner2&quot;</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;get_data&quot;</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;footer&quot;</span><span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">Container</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Collapse</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Card</span><span class="p">(</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">CardBody</span><span class="p">(</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;upload-data&quot;</span><span class="p">,</span>
+                                <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                                    <span class="p">[</span>
+                                        <span class="s2">&quot;Drag and drop or &quot;</span><span class="p">,</span>
+                                        <span class="n">html</span><span class="o">.</span><span class="n">A</span><span class="p">(</span><span class="s2">&quot;select the configuration YAML file&quot;</span><span class="p">),</span>
+                                    <span class="p">]</span>
+                                <span class="p">),</span>
+                                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                                    <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;100%&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="s2">&quot;60px&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;lineHeight&quot;</span><span class="p">:</span> <span class="s2">&quot;60px&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;borderWidth&quot;</span><span class="p">:</span> <span class="s2">&quot;1px&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;borderStyle&quot;</span><span class="p">:</span> <span class="s2">&quot;dashed&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;borderRadius&quot;</span><span class="p">:</span> <span class="s2">&quot;5px&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;margin&quot;</span><span class="p">:</span> <span class="s2">&quot;10px&quot;</span><span class="p">,</span>
+                                <span class="p">},</span>
+                                <span class="n">multiple</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="p">),</span>
+                        <span class="p">)</span>
+                    <span class="p">),</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;collapse&quot;</span><span class="p">,</span>
+                    <span class="n">is_open</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;title_div&quot;</span><span class="p">),</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                    <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span>
+                            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;loading-1&quot;</span><span class="p">,</span>
+                            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+                            <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner-id&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;secondary&quot;</span><span class="p">),</span>
+                        <span class="p">)</span>
+                    <span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                    <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span>
+                            <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;loading-2&quot;</span><span class="p">,</span>
+                            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+                            <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner-id2&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">),</span>
+                        <span class="p">)</span>
+                    <span class="p">]</span>
+                <span class="p">),</span>
+                <span class="n">dcc</span><span class="o">.</span><span class="n">Download</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;download_data&quot;</span><span class="p">),</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;charts_div&quot;</span><span class="p">),</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;footer_div&quot;</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_language">
+<a class="viewcode-back" href="../../src.html#src.app.get_language">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;locale&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="p">[</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;fr&quot;</span><span class="p">,</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;es&quot;</span><span class="p">,</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_language</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_language returns the language code as returned by the callback</span>
+
+<span class="sd">    :param *args: the language code clicked in the dropdown</span>
+<span class="sd">    :returns: string with the language code requested which is cached</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">callback_context</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">triggered</span><span class="p">:</span>
+        <span class="n">button_id</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">button_id</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;prop_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">button_id</span></div>
+
+
+
+<div class="viewcode-block" id="toggle_collapse">
+<a class="viewcode-back" href="../../src.html#src.app.toggle_collapse">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;collapse&quot;</span><span class="p">,</span> <span class="s2">&quot;is_open&quot;</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;collapse-button&quot;</span><span class="p">,</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;is_loaded&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s2">&quot;collapse&quot;</span><span class="p">,</span> <span class="s2">&quot;is_open&quot;</span><span class="p">)],</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">toggle_collapse</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_open</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">is_loaded</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    toggle_collapse returns a boolean that contols the behaviour of the toggle menu</span>
+<span class="sd">    of the settings</span>
+
+<span class="sd">    :param n: an integer corresponding to the cumulative number of clicks since the</span>
+<span class="sd">    start of the session</span>
+<span class="sd">    :param is_open: a boolean indicating whether the toggle menu is open</span>
+<span class="sd">    :param is_loaded: a boolean indicating whether the settings are loaded</span>
+
+<span class="sd">    :return: a boolean to control the behaviour of the toggle menu of the settings</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">is_loaded</span><span class="p">:</span>
+        <span class="n">is_open</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">is_open</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">is_open</span></div>
+
+
+
+<div class="viewcode-block" id="toggle_modal">
+<a class="viewcode-back" href="../../src.html#src.app.toggle_modal">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;modal&quot;</span><span class="p">,</span> <span class="s2">&quot;is_open&quot;</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span> <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">)],</span>
+    <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s2">&quot;modal&quot;</span><span class="p">,</span> <span class="s2">&quot;is_open&quot;</span><span class="p">)],</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">toggle_modal</span><span class="p">(</span><span class="n">open_clicks</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">close_clicks</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_open</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    toggle_collapse returns a boolean that contol the behaviour of the modal (Info)</span>
+
+<span class="sd">    :param open_clicks: (int) the cumulative number of clicks to open the modal</span>
+<span class="sd">    :param close_clicks: (int) the cumulative number of clicks to close the modal</span>
+<span class="sd">    :param is_open: a boolean indicating whether the modal is open</span>
+
+<span class="sd">    :return: a boolean that contol the behaviour of the modal (Info)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">open_clicks</span> <span class="ow">or</span> <span class="n">close_clicks</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">is_open</span>
+    <span class="k">return</span> <span class="n">is_open</span></div>
+
+
+
+<div class="viewcode-block" id="snake_case">
+<a class="viewcode-back" href="../../src.html#src.app.snake_case">[docs]</a>
+<span class="k">def</span> <span class="nf">snake_case</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    snake_case returns snake cased string</span>
+
+<span class="sd">    :param string: a string to be snake cased</span>
+<span class="sd">    :param is_open: a boolean indicating whether the modal is open</span>
+
+<span class="sd">    :return: the input string snake cased</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">sub</span><span class="p">(</span>
+            <span class="s2">&quot;([A-Z][a-z]+)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot; \1&quot;</span><span class="p">,</span> <span class="n">sub</span><span class="p">(</span><span class="s2">&quot;([A-Z]+)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot; \1&quot;</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="load_yamlfile">
+<a class="viewcode-back" href="../../src.html#src.app.load_yamlfile">[docs]</a>
+<span class="k">def</span> <span class="nf">load_yamlfile</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    load_yamlfile returns the loaded settings from the YAML file</span>
+
+<span class="sd">    :param filename: a string corresponding to the YAML file</span>
+<span class="sd">    :param folder: a string corresponding to the YAML file folder location</span>
+
+<span class="sd">    :return: a dictionary with loaded settings from the YAML file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+        
+        <span class="k">if</span> <span class="n">folder</span><span class="p">:</span>
+            <span class="n">fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">settings</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">settings</span>
+
+    <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span> <span class="kn">from</span> <span class="nn">e</span></div>
+
+
+
+<div class="viewcode-block" id="load_yaml">
+<a class="viewcode-back" href="../../src.html#src.app.load_yaml">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;yaml_file&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;href&quot;</span><span class="p">)],</span> <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_yaml</span><span class="p">(</span><span class="n">href</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    load_yaml returns the location of the YAML file whose dashID matches</span>
+<span class="sd">    the string provided in the href of the URL</span>
+
+<span class="sd">    :param href: a string corresponding to the dashID</span>
+
+<span class="sd">    :return: a string with the location of the requested YAML file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;yaml/*.yaml&quot;</span><span class="p">)</span>
+        <span class="n">yaml_files</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">yaml_content</span> <span class="o">=</span> <span class="n">load_yamlfile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">dash_file_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dash_id&quot;</span><span class="p">:</span> <span class="n">yaml_content</span><span class="p">[</span><span class="s2">&quot;DashID&quot;</span><span class="p">],</span> <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">file</span><span class="p">}</span>
+            <span class="n">yaml_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dash_file_map</span><span class="p">)</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="n">furl</span><span class="p">(</span><span class="n">href</span><span class="p">)</span>
+        <span class="n">dash_id_url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">dash_id_url_s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dash_id_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">dash_id_url</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PreventUpdate</span>
+
+        <span class="n">yaml_location</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">yaml_files</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;dash_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">dash_id_url_s</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">yaml_location</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_content">
+<a class="viewcode-back" href="../../src.html#src.app.load_content">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">allow_duplicate</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;is_loaded&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">allow_duplicate</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;yaml_file&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)],</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_content</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    load_content returns a dictionary with the settings from the YAML file</span>
+<span class="sd">    and a boolean on whether the settings are loaded</span>
+
+<span class="sd">    :param yaml_file: the relative path of the YAML file</span>
+
+<span class="sd">    :return: a dictionary with the settings and a boolean when the loading is completed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">yaml_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PreventUpdate</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">load_yamlfile</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">)</span>
+        <span class="n">is_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">is_loaded</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span> <span class="kn">from</span> <span class="nn">e</span></div>
+
+
+
+<div class="viewcode-block" id="update_output">
+<a class="viewcode-back" href="../../src.html#src.app.update_output">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;is_loaded&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;upload-data&quot;</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_output</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    update_output returns a dictionary with the settings from the YAML file selected</span>
+<span class="sd">    from the settings and a boolean on whether the settings are loaded</span>
+
+<span class="sd">    :param uploaded_file: the path of the YAML file</span>
+
+<span class="sd">    :return: a dictionary with the settings and a boolean when the loading is completed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">uploaded_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load_yamlfile</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">,</span> <span class="s2">&quot;yaml/&quot;</span><span class="p">)</span>
+    <span class="n">is_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">is_loaded</span></div>
+
+
+
+<div class="viewcode-block" id="get_dash_id">
+<a class="viewcode-back" href="../../src.html#src.app.get_dash_id">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;pathname&quot;</span><span class="p">),</span> <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span> <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_dash_id</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get_dash_id returns the snake cased DashID from the YAML file settings</span>
+
+<span class="sd">    :param i: a dictionary with settings from the YAML file</span>
+
+<span class="sd">    :return: a string with the snaked cased DashId</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">snake_case</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;DashID&quot;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_title_footer">
+<a class="viewcode-back" href="../../src.html#src.app.get_title_footer">[docs]</a>
+<span class="k">def</span> <span class="nf">get_title_footer</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get_title_footer returns a dictionary with entries with Row == 0</span>
+<span class="sd">    specified in the YAML file</span>
+
+<span class="sd">    :param data: a dictionary with settings from the YAML file</span>
+
+<span class="sd">    :return: a dictionary with the title and footer, or any other entry</span>
+<span class="sd">    with Row == 0 in the YAML file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dash_title_footer</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;Row&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dash_title_footer</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_title">
+<a class="viewcode-back" href="../../src.html#src.app.generate_title">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_title</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    generate_title returns the title from the YAML file</span>
+
+<span class="sd">    :param data: a dictionary with settings from the YAML file</span>
+<span class="sd">    :param key: the key (TITLE) from settings from the YAML file</span>
+
+<span class="sd">    :return: a html.Span with the title of the dashboard as specified in the YAML file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dash_title_footer</span> <span class="o">=</span> <span class="n">get_title_footer</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">element1</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dash_title_footer</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;chartType&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">key</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">element2</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;Subtitle&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dash_title_footer</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;chartType&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">key</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">element2</span><span class="p">:</span>
+            <span class="n">element</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">(</span><span class="n">element1</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">}),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H4</span><span class="p">(</span><span class="n">element2</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">}),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">element</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">(</span><span class="n">element1</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">}),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">element</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_footer">
+<a class="viewcode-back" href="../../src.html#src.app.generate_footer">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_footer</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    generate_footer returns the footer from the YAML file</span>
+
+<span class="sd">    :param data: a dictionary with settings from the YAML file</span>
+<span class="sd">    :param key: the key (FOOTER) from settings from the YAML file</span>
+
+<span class="sd">    :return: a html.Span with the footer of the dashboard as specified in the YAML file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dash_title_footer</span> <span class="o">=</span> <span class="n">get_title_footer</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">element1</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dash_title_footer</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;chartType&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">key</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">element2</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;Subtitle&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dash_title_footer</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;chartType&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">key</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">element2</span><span class="p">:</span>
+            <span class="n">element</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H6</span><span class="p">(</span>
+                        <span class="n">element1</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="s2">&quot;font-size&quot;</span><span class="p">:</span> <span class="s2">&quot;8px&quot;</span><span class="p">}</span>
+                    <span class="p">),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H6</span><span class="p">(</span>
+                        <span class="n">element2</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="s2">&quot;font-size&quot;</span><span class="p">:</span> <span class="s2">&quot;8px&quot;</span><span class="p">}</span>
+                    <span class="p">),</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">element</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">H1</span><span class="p">(</span><span class="n">element1</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">}),</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">element</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_dashboard_title">
+<a class="viewcode-back" href="../../src.html#src.app.get_dashboard_title">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;title_div&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_dashboard_title</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get_dashboard_title returns the title to the dashboard and controls</span>
+<span class="sd">    the behaviour of the loading spinner</span>
+
+<span class="sd">    :param data: a dictionary with settings from the YAML file</span>
+
+<span class="sd">    :return: a html.Span with the title of the dashboard and an integer</span>
+<span class="sd">    that controls the behaviour of the loading spinner</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">generate_title</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Rows&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;TITLE&quot;</span><span class="p">)</span>
+        <span class="n">spinner</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">title</span><span class="p">,</span> <span class="n">spinner</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_text_kpi">
+<a class="viewcode-back" href="../../src.html#src.app.get_text_kpi">[docs]</a>
+<span class="k">def</span> <span class="nf">get_text_kpi</span><span class="p">(</span><span class="n">kpi</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">chart</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">unit_show</span> <span class="o">=</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;UnitShow&quot;</span><span class="p">]</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">unit_show</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">unit_show</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">H2</span><span class="p">(</span>
+                    <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">kpi</span><span class="p">[</span><span class="n">code</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;Unit&quot;</span><span class="p">]],</span>
+                    <span class="n">className</span><span class="o">=</span><span class="s2">&quot;card-title&quot;</span><span class="p">,</span>
+                    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">},</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">H2</span><span class="p">(</span>
+                    <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">kpi</span><span class="p">[</span><span class="n">code</span><span class="p">][</span><span class="mi">1</span><span class="p">])],</span>
+                    <span class="n">className</span><span class="o">=</span><span class="s2">&quot;card-title&quot;</span><span class="p">,</span>
+                    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">},</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_icon_kpi">
+<a class="viewcode-back" href="../../src.html#src.app.get_icon_kpi">[docs]</a>
+<span class="k">def</span> <span class="nf">get_icon_kpi</span><span class="p">(</span><span class="n">kpi</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">chart</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">unit_icon</span> <span class="o">=</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;UnitIcon&quot;</span><span class="p">]</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">unit_icon</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">unit_icon</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="n">unit_icon</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">}),</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">H5</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">kpi</span><span class="p">[</span><span class="n">code</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">className</span><span class="o">=</span><span class="s2">&quot;card-title&quot;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">},</span>
+            <span class="p">),</span>
+            <span class="n">get_text_kpi</span><span class="p">(</span><span class="n">kpi</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">chart</span><span class="p">),</span>
+        <span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">H5</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">kpi</span><span class="p">[</span><span class="n">code</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">className</span><span class="o">=</span><span class="s2">&quot;card-title&quot;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">},</span>
+            <span class="p">),</span>
+            <span class="n">get_text_kpi</span><span class="p">(</span><span class="n">kpi</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">chart</span><span class="p">),</span>
+        <span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="draw_chart">
+<a class="viewcode-back" href="../../src.html#src.app.draw_chart">[docs]</a>
+<span class="k">def</span> <span class="nf">draw_chart</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">chart</span><span class="p">):</span>
+    <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Error in fetching the data, please check the YAML file: &quot;</span>
+
+    <span class="k">if</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;xAxisConcept&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please provide xAxisConcept&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">chart_type</span> <span class="o">=</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;chartType&quot;</span><span class="p">]</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;displayModeBar&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">chart_type</span> <span class="o">==</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">kpi</span> <span class="o">=</span> <span class="n">ChartGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">calculate_kpi</span><span class="p">(</span>
+                    <span class="n">df</span><span class="p">,</span>
+                    <span class="n">yAxisConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">],</span>
+                    <span class="n">xAxisConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;xAxisConcept&quot;</span><span class="p">],</span>
+                    <span class="n">legendConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">],</span>
+                    <span class="n">decimals</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;Decimals&quot;</span><span class="p">],</span>
+                <span class="p">)</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kpi</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">CardBody</span><span class="p">(</span>
+                        <span class="n">get_icon_kpi</span><span class="p">(</span><span class="n">kpi</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">chart</span><span class="p">),</span>
+                        <span class="n">className</span><span class="o">=</span><span class="s2">&quot;shadow-lg p-3 mb-5 bg-transparent rounded&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error_message</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))]))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">chart_type</span> <span class="o">==</span> <span class="s2">&quot;PIE&quot;</span><span class="p">:</span>
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">ChartGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">pie_chart</span><span class="p">(</span>
+                        <span class="n">df</span><span class="p">,</span>
+                        <span class="n">yAxisConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">],</span>
+                        <span class="n">xAxisConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;xAxisConcept&quot;</span><span class="p">],</span>
+                        <span class="n">legendLoc</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;legendLoc&quot;</span><span class="p">],</span>
+                        <span class="n">LabelsYN</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;LabelsYN&quot;</span><span class="p">],</span>
+                    <span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">chart_type</span> <span class="o">==</span> <span class="s2">&quot;BAR&quot;</span><span class="p">:</span>
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">ChartGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">bar_chart</span><span class="p">(</span>
+                        <span class="n">df</span><span class="p">,</span>
+                        <span class="n">yAxisConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">],</span>
+                        <span class="n">xAxisConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;xAxisConcept&quot;</span><span class="p">],</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">],</span>
+                        <span class="n">legendLoc</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;legendLoc&quot;</span><span class="p">],</span>
+                    <span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">ChartGenerator</span><span class="p">()</span><span class="o">.</span><span class="n">time_series_chart</span><span class="p">(</span>
+                        <span class="n">df</span><span class="p">,</span>
+                        <span class="n">yAxisConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">],</span>
+                        <span class="n">xAxisConcept</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;xAxisConcept&quot;</span><span class="p">],</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">],</span>
+                        <span class="n">legendLoc</span><span class="o">=</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;legendLoc&quot;</span><span class="p">],</span>
+                    <span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">CardBody</span><span class="p">(</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">),</span>
+                            <span class="n">className</span><span class="o">=</span><span class="s2">&quot;shadow-lg p-3 mb-5 bg-transparent rounded&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">),</span>
+                    <span class="n">align</span><span class="o">=</span><span class="s2">&quot;start&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">dbc</span><span class="o">.</span><span class="n">CardBody</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error_message</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))]))</span>
+                <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="open_metadata_offcanvas">
+<a class="viewcode-back" href="../../src.html#src.app.open_metadata_offcanvas">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;off-canvas&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">MATCH</span><span class="p">},</span> <span class="s2">&quot;is_open&quot;</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-item&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">MATCH</span><span class="p">},</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">open_metadata_offcanvas</span><span class="p">(</span><span class="n">click</span><span class="p">):</span>
+    <span class="n">open_offcanvas</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">click</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">open_offcanvas</span></div>
+
+
+
+<div class="viewcode-block" id="create_info_button">
+<a class="viewcode-back" href="../../src.html#src.app.create_info_button">[docs]</a>
+<span class="k">def</span> <span class="nf">create_info_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-info-circle-fill&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">),</span>
+        <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textDecoration&quot;</span><span class="p">:</span> <span class="s2">&quot;underline&quot;</span><span class="p">,</span> <span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">},</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;open-offcanvas&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_table_button">
+<a class="viewcode-back" href="../../src.html#src.app.create_table_button">[docs]</a>
+<span class="k">def</span> <span class="nf">create_table_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-table&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">),</span>
+        <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textDecoration&quot;</span><span class="p">:</span> <span class="s2">&quot;underline&quot;</span><span class="p">,</span> <span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_download_button">
+<a class="viewcode-back" href="../../src.html#src.app.create_download_button">[docs]</a>
+<span class="k">def</span> <span class="nf">create_download_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span>
+            <span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-download&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-download&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">}</span>
+        <span class="p">),</span>
+        <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textDecoration&quot;</span><span class="p">:</span> <span class="s2">&quot;underline&quot;</span><span class="p">,</span> <span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_dataflow_metadata">
+<a class="viewcode-back" href="../../src.html#src.app.get_dataflow_metadata">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dataflow_metadata</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">meta</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">meta</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">H2</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">([</span><span class="n">cleanhtml</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="mi">1</span><span class="p">])])])]</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">meta</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">H2</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">CardHeader</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_offcanvas">
+<a class="viewcode-back" href="../../src.html#src.app.create_offcanvas">[docs]</a>
+<span class="k">def</span> <span class="nf">create_offcanvas</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Offcanvas</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">get_dataflow_metadata</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">)],</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;off-canvas&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
+                    <span class="n">is_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">scrollable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">CardHeader</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="open_table_offcanvas">
+<a class="viewcode-back" href="../../src.html#src.app.open_table_offcanvas">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;off-canvas2&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">MATCH</span><span class="p">},</span> <span class="s2">&quot;is_open&quot;</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-item2&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">MATCH</span><span class="p">},</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">open_table_offcanvas</span><span class="p">(</span><span class="n">click</span><span class="p">):</span>
+    <span class="n">open_offcanvas</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">click</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">open_offcanvas</span></div>
+
+
+
+<div class="viewcode-block" id="create_download">
+<a class="viewcode-back" href="../../src.html#src.app.create_download">[docs]</a>
+<span class="k">def</span> <span class="nf">create_download</span><span class="p">(</span><span class="n">chart_id</span><span class="p">):</span>
+    <span class="n">listgroup_item_down</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">ListGroupItem</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="s2">&quot;Click the icon to download the table :&quot;</span><span class="p">,</span>
+                    <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                    <span class="n">create_download_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">),</span>
+                <span class="p">],</span>
+                <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">],</span>
+        <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-download&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
+        <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s2">&quot;border-0 text-nowrap list-group-item-action&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">toast</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Toast</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="n">listgroup_item_down</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mb-0&quot;</span><span class="p">)],</span>
+                        <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Download&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">toast</span></div>
+
+
+
+<div class="viewcode-block" id="create_offcanvas_table">
+<a class="viewcode-back" href="../../src.html#src.app.create_offcanvas_table">[docs]</a>
+<span class="k">def</span> <span class="nf">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Check if the data has a &quot;downloadYN&quot; flag set to &quot;Y&quot; for enabling downloads.</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;downloadYN&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+            <span class="c1"># Create an HTML strucesture with an off-canvas element for a chart</span>
+            <span class="c1"># with download capability.</span>
+            <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Offcanvas</span><span class="p">(</span>
+                        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+                                <span class="p">[</span>
+                                    <span class="c1"># Create a column for displaying unit information</span>
+                                    <span class="c1"># and source URL as toasts.</span>
+                                    <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                                        <span class="p">[</span>
+                                            <span class="n">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Unit&quot;</span><span class="p">],</span> <span class="s2">&quot;Unit&quot;</span><span class="p">),</span>
+                                            <span class="n">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="s2">&quot;Source URL&quot;</span><span class="p">),</span>
+                                            <span class="n">create_download</span><span class="p">(</span><span class="n">chart_id</span><span class="p">),</span>
+                                        <span class="p">],</span>
+                                        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;start&quot;</span><span class="p">,</span>
+                                        <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                    <span class="p">),</span>
+                                    <span class="c1"># Create a column for displaying the table</span>
+                                    <span class="c1"># associated with the chart.</span>
+                                    <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                                        <span class="p">[</span><span class="n">create_table</span><span class="p">(</span><span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">)],</span>
+                                        <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+                                        <span class="n">width</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                                    <span class="p">),</span>
+                                <span class="p">],</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="p">],</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;off-canvas2&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
+                        <span class="n">is_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">scrollable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">placement</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+                        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="s2">&quot;500px&quot;</span><span class="p">},</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Create an HTML structure with an off-canvas element for a chart</span>
+            <span class="c1"># without download capability.</span>
+            <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Offcanvas</span><span class="p">(</span>
+                        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+                                <span class="p">[</span>
+                                    <span class="c1"># Create a column for displaying unit information</span>
+                                    <span class="c1"># and source URL as toasts.</span>
+                                    <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                                        <span class="p">[</span>
+                                            <span class="n">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Unit&quot;</span><span class="p">],</span> <span class="s2">&quot;Unit&quot;</span><span class="p">),</span>
+                                            <span class="n">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="s2">&quot;Source URL&quot;</span><span class="p">),</span>
+                                        <span class="p">],</span>
+                                        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                                        <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                    <span class="p">),</span>
+                                    <span class="c1"># Create a column for displaying the table</span>
+                                    <span class="c1"># associated with the chart.</span>
+                                    <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                                        <span class="p">[</span><span class="n">create_table</span><span class="p">(</span><span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">)],</span>
+                                        <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+                                        <span class="n">width</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                                    <span class="p">),</span>
+                                <span class="p">]</span>
+                            <span class="p">)</span>
+                        <span class="p">],</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;off-canvas2&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
+                        <span class="n">is_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">scrollable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">placement</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+                        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="s2">&quot;500px&quot;</span><span class="p">},</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Handle exceptions and print the error message.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">CardHeader</span><span class="p">(</span><span class="n">chart_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="download_table">
+<a class="viewcode-back" href="../../src.html#src.app.download_table">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;download_data&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-download&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">ALL</span><span class="p">},</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+    <span class="n">State</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;data_table&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">ALL</span><span class="p">},</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">download_table</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    download_table returns the export table in CSV.</span>
+
+<span class="sd">    :param n_clicks: An integer that represents the number of times that the</span>
+<span class="sd">    list-download chart-id has been clicked on</span>
+<span class="sd">    :param data: The DataTable returned by create_table()</span>
+
+<span class="sd">    :return: Triggers dcc.send_data_frame to download the table as CSV</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">id_tag</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">triggered_id</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">states_list</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">states_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">states_list</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">][</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">id_tag</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_clicks</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dcc</span><span class="o">.</span><span class="n">send_data_frame</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">,</span> <span class="s2">&quot;export_table.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_table">
+<a class="viewcode-back" href="../../src.html#src.app.create_table">[docs]</a>
+<span class="k">def</span> <span class="nf">create_table</span><span class="p">(</span><span class="n">chart_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create_table returns the Dash DataTable to be displayed in the offcanvas</span>
+<span class="sd">    and exported.</span>
+
+<span class="sd">    :param chart_id: The unique chart ID which correspond to the row and the</span>
+<span class="sd">    sequential number (int) of the chart as specified in the YAML</span>
+<span class="sd">    :param df: The pd.DataFrame associated with the chart ID</span>
+
+<span class="sd">    :return: Dash DataTable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert the DataFrame to a list of records and configure DataTable</span>
+    <span class="k">return</span> <span class="n">DataTable</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">),</span>
+        <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;data_table&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
+        <span class="n">sort_action</span><span class="o">=</span><span class="s2">&quot;native&quot;</span><span class="p">,</span>
+        <span class="n">style_table</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;overflowX&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">},</span>
+        <span class="n">style_cell</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">},</span>
+        <span class="n">style_header</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;backgroundColor&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fontWeight&quot;</span><span class="p">:</span> <span class="s2">&quot;bold&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="c1"># editable=False  # Enable editing</span>
+        <span class="c1"># row_deletable=False  # Enable row deletion</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_chart_item">
+<a class="viewcode-back" href="../../src.html#src.app.create_chart_item">[docs]</a>
+<span class="k">def</span> <span class="nf">create_chart_item</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create_chart_item returns the HTML div for the info and table buttons</span>
+
+<span class="sd">    :param data: The settings of the chart as specified in the YAML</span>
+<span class="sd">    :param chart_id: The unique chart ID which correspond to the row and the sequential</span>
+<span class="sd">    number (int) of the chart as specified in the YAML</span>
+<span class="sd">    :param df_metadata: The list of metadata associated with the chart</span>
+<span class="sd">    :param df: The pd.DataFrame associated with the chart ID</span>
+
+<span class="sd">    :return: html.Div with the info and table buttons</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Create a list group item with an info button for displaying metadata.</span>
+    <span class="n">listgroup_item</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">ListGroupItem</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">create_info_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">)])],</span>
+        <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-item&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
+        <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s2">&quot;border-0 text-nowrap list-group-item-action&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Create a list group item with a table button for displaying chart-related tables.</span>
+    <span class="n">listgroup_item_down</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">ListGroupItem</span><span class="p">(</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">create_table_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">)],</span>
+            <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-item2&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
+            <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">className</span><span class="o">=</span><span class="s2">&quot;border-0 text-nowrap list-group-item-action&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Check if metadata link exists and metadata is available.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;metadataLink&quot;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">df_metadata</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create a row with two columns: one for info button and off-canvas,</span>
+            <span class="c1"># and another for table button and off-canvas.</span>
+            <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                            <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                                <span class="n">listgroup_item</span><span class="p">,</span>
+                                <span class="n">create_offcanvas</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">),</span>
+                            <span class="p">]</span>
+                        <span class="p">)</span>
+                    <span class="p">),</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                            <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                                <span class="n">listgroup_item_down</span><span class="p">,</span>
+                                <span class="n">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">),</span>
+                            <span class="p">]</span>
+                        <span class="p">)</span>
+                    <span class="p">),</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Handle exceptions and print the error message.</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create a row with a single column for the table button and off-canvas.</span>
+            <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                                <span class="p">[</span>
+                                    <span class="n">listgroup_item_down</span><span class="p">,</span>
+                                    <span class="n">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">),</span>
+                                <span class="p">]</span>
+                            <span class="p">)</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Handle exceptions and print the error message.</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([])</span>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([])</span></div>
+
+
+
+<div class="viewcode-block" id="create_toast">
+<a class="viewcode-back" href="../../src.html#src.app.create_toast">[docs]</a>
+<span class="k">def</span> <span class="nf">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create_toast returns the dbc.Toast with the statistic metadata set in the YAML</span>
+
+<span class="sd">    :param data: The corresponding value of the chart as specified in the YAML</span>
+<span class="sd">    :param header: The corresponding key associated to each chart in the YAML file</span>
+
+<span class="sd">    :return: dbc.Toast with the statistic metadata,</span>
+<span class="sd">                 Unit and source (DATA) set in the YAML</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">toast</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">dbc</span><span class="o">.</span><span class="n">Toast</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mb-0&quot;</span><span class="p">)],</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">)])]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">toast</span></div>
+
+
+
+<div class="viewcode-block" id="get_static_metatada">
+<a class="viewcode-back" href="../../src.html#src.app.get_static_metatada">[docs]</a>
+<span class="k">def</span> <span class="nf">get_static_metatada</span><span class="p">(</span><span class="n">chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get_static_metatada returns the HTML div for the info and table buttons</span>
+
+<span class="sd">    :param chart: The settings of the chart as specified in the YAML</span>
+<span class="sd">    :param chart_id: The unique chart ID which correspond to the row and the sequential</span>
+<span class="sd">    number (int) of the chart as specified in the YAML</span>
+<span class="sd">    :param df_metadata: The list of metadata associated with the chart</span>
+<span class="sd">    :param df: The pd.DataFrame associated with the chart ID</span>
+
+<span class="sd">    :return: html.Div with the dbc.CardBody containing the title, subtitle and</span>
+<span class="sd">    the buttons (table and info)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">concept</span> <span class="o">=</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">]</span>
+    <span class="n">title_default</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">])</span>
+    <span class="n">subtitle_default</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">chart</span><span class="p">[</span><span class="s2">&quot;Subtitle&quot;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">df_metadata</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">title_default</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span> <span class="ow">or</span> <span class="n">title_default</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df_metadata</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">title_default</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">title_default</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">subtitle_default</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span> <span class="ow">or</span> <span class="n">title_default</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">subtitle</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">elif</span> <span class="n">subtitle_default</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">subtitle</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">subtitle</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">subtitle</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">subtitle</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="n">subtitle</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">subtitle</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                            <span class="n">subtitle</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">subtitle</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                        <span class="n">subtitle</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">subtitle</span> <span class="o">=</span> <span class="n">subtitle_default</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">subtitle</span> <span class="o">=</span> <span class="n">subtitle_default</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">title_default</span>
+        <span class="n">subtitle</span> <span class="o">=</span> <span class="n">subtitle_default</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">CardBody</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+                    <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                                <span class="p">[</span>
+                                    <span class="n">html</span><span class="o">.</span><span class="n">H4</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;card-title&quot;</span><span class="p">),</span>
+                                    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                                        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                                            <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span>
+                                                <span class="p">[</span>
+                                                    <span class="n">subtitle</span><span class="p">,</span>
+                                                    <span class="n">create_chart_item</span><span class="p">(</span>
+                                                        <span class="n">chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">,</span> <span class="n">df</span>
+                                                    <span class="p">),</span>
+                                                <span class="p">],</span>
+                                                <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+                                            <span class="p">),</span>
+                                            <span class="n">html</span><span class="o">.</span><span class="n">Hr</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;my-2&quot;</span><span class="p">),</span>
+                                        <span class="p">]</span>
+                                    <span class="p">),</span>
+                                <span class="p">]</span>
+                            <span class="p">),</span>
+                            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;end&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">},</span>
+            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;end&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">CardBody</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+                    <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                                <span class="p">[</span>
+                                    <span class="n">html</span><span class="o">.</span><span class="n">H2</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;card-title&quot;</span><span class="p">),</span>
+                                    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                                        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                                            <span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span>
+                                                <span class="p">[</span>
+                                                    <span class="n">subtitle</span><span class="p">,</span>
+                                                    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="s2">&quot;Error: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)]),</span>
+                                                <span class="p">],</span>
+                                                <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+                                            <span class="p">)</span>
+                                        <span class="p">]</span>
+                                    <span class="p">),</span>
+                                <span class="p">]</span>
+                            <span class="p">),</span>
+                            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;end&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">},</span>
+            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;end&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">content</span></div>
+
+
+
+<div class="viewcode-block" id="get_rows">
+<a class="viewcode-back" href="../../src.html#src.app.get_rows">[docs]</a>
+<span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">max_charts_per_row</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get_rows returns the distribution of the charts per row in the dashboard</span>
+
+<span class="sd">    :param data: The settings of the chart as specified in the YAML</span>
+<span class="sd">    :param max_charts_per_row: An integer specifying the maximum chart per row</span>
+
+<span class="sd">    :return: list with the distribution of the charts per row</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">({</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;Row&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">})</span>
+        <span class="n">charts_per_row</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">charts_in_row</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;Row&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">row</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">charts_in_row</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_charts_per_row</span><span class="p">:</span>
+                <span class="n">charts_in_row</span> <span class="o">=</span> <span class="n">charts_in_row</span><span class="p">[:</span><span class="n">max_charts_per_row</span><span class="p">]</span>
+            <span class="n">charts_per_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">charts_in_row</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">charts_per_row</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="download_single_chart">
+<a class="viewcode-back" href="../../src.html#src.app.download_single_chart">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">download_single_chart</span><span class="p">(</span><span class="n">data_chart</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download data for a single chart</span>
+
+<span class="sd">    :param data_chart: The settings of the single chart</span>
+<span class="sd">    :param z: (int) Row number</span>
+<span class="sd">    :param y: (int) Position in row</span>
+
+<span class="sd">    :return: dict with chart settings and data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">chart_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="si">}{</span><span class="n">pos</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Data</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting data&quot;</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">SDMXData</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">get_data_async</span><span class="p">(</span>
+        <span class="n">yAxisConcept</span><span class="o">=</span><span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting metadata&quot;</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">)</span>
+
+    <span class="n">concept</span> <span class="o">=</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># If dsdLink is provided, this increases significantly the overall performance</span>
+        <span class="n">dsdLink</span> <span class="o">=</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;dsdLink&quot;</span><span class="p">]</span>
+        <span class="n">metadata_components</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_components_async</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;metadataLink&quot;</span><span class="p">],</span> <span class="n">descendants</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">metadata_dataflow</span> <span class="o">=</span> <span class="n">SDMXMetadata</span><span class="p">(</span>
+            <span class="n">components</span><span class="o">=</span><span class="n">metadata_components</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">dataflow_metadata</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">concept</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_components_async</span><span class="p">(</span><span class="n">dsdLink</span><span class="p">,</span> <span class="n">descendants</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">cl_name</span> <span class="o">=</span> <span class="n">SDMXMetadata</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">concept</span><span class="p">)</span><span class="o">.</span><span class="n">get_codelist_name</span><span class="p">()</span>
+            <span class="n">cl_url</span> <span class="o">=</span> <span class="n">get_url_cl</span><span class="p">(</span><span class="n">dsdLink</span><span class="p">,</span> <span class="n">cl_name</span><span class="p">)</span>
+            <span class="n">cl_id_all</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_components_async</span><span class="p">(</span><span class="n">cl_url</span><span class="p">,</span> <span class="n">descendants</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">cl_id</span> <span class="o">=</span> <span class="n">cl_id_all</span><span class="p">[</span><span class="s2">&quot;Codelists&quot;</span><span class="p">][</span><span class="n">cl_name</span><span class="p">]</span>
+            <span class="n">cl_items</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">i</span><span class="p">:</span> <span class="n">get_cl_item_name</span><span class="p">(</span><span class="n">cl_id</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="p">]))</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                    <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
+                <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Fallback to descendants but less performant</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">: dsdLink failed for </span><span class="si">{</span><span class="n">chart_id</span><span class="si">}</span><span class="s2">, use descendants.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;metadataLink&quot;</span><span class="p">]:</span>
+            <span class="c1"># Metadata</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">metadata_components</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_components_async</span><span class="p">(</span>
+                    <span class="n">url</span><span class="o">=</span><span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;metadataLink&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="c1"># Dataflow</span>
+                <span class="n">metadata_dataflow</span> <span class="o">=</span> <span class="n">SDMXMetadata</span><span class="p">(</span>
+                    <span class="n">components</span><span class="o">=</span><span class="n">metadata_components</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">dataflow_metadata</span><span class="p">()</span>
+                <span class="c1"># Codelist</span>
+
+                <span class="k">if</span> <span class="n">concept</span><span class="p">:</span>
+                    <span class="n">cl_id</span> <span class="o">=</span> <span class="n">SDMXMetadata</span><span class="p">(</span>
+                        <span class="n">metadata_components</span><span class="p">,</span> <span class="n">concept</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">get_codelist_name</span><span class="p">()</span>
+                    <span class="n">cl_items</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="n">i</span><span class="p">:</span> <span class="n">get_cl_item_name</span><span class="p">(</span><span class="n">cl_id</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="p">]))</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                            <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
+                        <span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">metadata_dataflow</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]},</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;Subtitle&quot;</span><span class="p">]</span>
+                            <span class="o">+</span> <span class="s2">&quot; Please provide a valid dataflow link</span><span class="se">\</span>
+<span class="s2">                                to retreive the metadata&quot;</span>
+                        <span class="p">)</span>
+                    <span class="p">},</span>
+                <span class="p">}</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metadata_dataflow</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]},</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;Subtitle&quot;</span><span class="p">])</span>
+                    <span class="o">+</span> <span class="s2">&quot; Please add a dataflow link in your configuration file</span><span class="se">\</span>
+<span class="s2">                        to retreive the metadata&quot;</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+            <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;chart_id&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">,</span>
+        <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="n">data_chart</span><span class="p">,</span>
+        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;metadata_dataflow&quot;</span><span class="p">:</span> <span class="n">metadata_dataflow</span><span class="p">,</span>
+        <span class="s2">&quot;metadata_codelist&quot;</span><span class="p">:</span> <span class="n">metadata_codelist</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done with&quot;</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="download_charts">
+<a class="viewcode-back" href="../../src.html#src.app.download_charts">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">download_charts</span><span class="p">(</span><span class="n">chart_per_rows</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download chart data asyncronously</span>
+
+<span class="sd">    :param chart_per_rows: output of get_rows()</span>
+
+<span class="sd">    :return: chart data and metadata, split in row lists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_cors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">row_lengths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">chart</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chart_per_rows</span><span class="p">):</span>
+        <span class="n">data_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chart</span><span class="p">)</span>
+        <span class="n">row_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_charts</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">data_chart</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_charts</span><span class="p">):</span>
+            <span class="n">cor</span> <span class="o">=</span> <span class="n">download_single_chart</span><span class="p">(</span><span class="n">data_chart</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+            <span class="n">all_cors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cor</span><span class="p">)</span>
+
+    <span class="n">all_charts</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">all_cors</span><span class="p">)</span>
+    <span class="n">all_charts</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">all_charts</span><span class="p">)</span>
+    <span class="n">charts_per_r</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="n">all_charts</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">row_lengths</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">charts_per_r</span></div>
+
+
+
+<div class="viewcode-block" id="download_data">
+<a class="viewcode-back" href="../../src.html#src.app.download_data">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;get_data&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;footer&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner-id&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner-id2&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)],</span>
+    <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;spinner&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">download_data</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    download_data returns the cached data and the footer required to build the</span>
+<span class="sd">    charts_div and footer_div</span>
+
+<span class="sd">    :param data: The settings of the chart as specified in the YAML</span>
+<span class="sd">    :param value: Any value that controls the behaviour of the spinner</span>
+
+<span class="sd">    :return: a dictionary with the cached data required to build the charts_div,</span>
+<span class="sd">             the footer, the spinners 1 and 2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">settings</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="p">:</span>
+        <span class="n">charts</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;Rows&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;Row&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">chart_per_rows</span> <span class="o">=</span> <span class="n">get_rows</span><span class="p">(</span><span class="n">charts</span><span class="p">)</span>
+        <span class="n">footer</span> <span class="o">=</span> <span class="n">generate_footer</span><span class="p">(</span><span class="n">settings</span><span class="p">[</span><span class="s2">&quot;Rows&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;FOOTER&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop_policy</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">WindowsSelectorEventLoopPolicy</span><span class="p">())</span>
+        <span class="n">charts_per_r</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">download_charts</span><span class="p">(</span><span class="n">chart_per_rows</span><span class="p">))</span>
+        <span class="n">spinner</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">charts_per_r</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">spinner</span></div>
+
+
+
+<div class="viewcode-block" id="add_graphs">
+<a class="viewcode-back" href="../../src.html#src.app.add_graphs">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;charts_div&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;footer_div&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner-id2&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;get_data&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)],</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;footer&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)],</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;locale&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)],</span>
+    <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;spinner2&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">add_graphs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    add_graphs returns the charts div in the dashboard page</span>
+
+<span class="sd">    :param data: The cached data of the charts as returned by download_data</span>
+<span class="sd">    :param footer: The footer div generated by download_data</span>
+<span class="sd">    :param lang: The language selected in the dropdown</span>
+<span class="sd">    :param value: Any value that controls the behaviour of the spinner</span>
+
+<span class="sd">    :return: html.Div with the charts loaded in the cache</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">global</span> <span class="n">LANG</span>
+    <span class="n">LANG</span> <span class="o">=</span> <span class="n">lang</span>
+
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+
+    <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">charts_per_r</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">data_per_row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">graphs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">texts</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">data_per_row_pos</span> <span class="ow">in</span> <span class="n">data_per_row</span><span class="p">:</span>
+                    <span class="n">chart_id</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;chart_id&quot;</span><span class="p">]</span>
+                    <span class="n">data_chart</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;settings&quot;</span><span class="p">]</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+                    <span class="n">metadata_dataflow</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;metadata_dataflow&quot;</span><span class="p">]</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">metadata_dataflow_translated</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="n">get_translation</span><span class="p">(</span><span class="n">metadata_dataflow</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">lang</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">metadata_dataflow</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                        <span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+                    <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;metadata_codelist&quot;</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="n">metadata_codelist</span><span class="p">:</span>
+                        <span class="n">metadata_codelist_items_translated</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="n">i</span><span class="p">:</span> <span class="n">get_translation</span><span class="p">(</span><span class="n">metadata_codelist</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">lang</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">metadata_codelist</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                        <span class="p">}</span>
+                        <span class="n">concept</span> <span class="o">=</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">]</span>
+                        <span class="n">df</span> <span class="o">=</span> <span class="n">translate_df</span><span class="p">(</span>
+                            <span class="n">df</span><span class="p">,</span> <span class="n">concept</span><span class="p">,</span> <span class="n">metadata_codelist_items_translated</span>
+                        <span class="p">)</span>
+
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">draw_chart</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">data_chart</span><span class="p">)</span>
+
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">get_static_metatada</span><span class="p">(</span>
+                        <span class="n">data_chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">metadata_dataflow_translated</span><span class="p">,</span> <span class="n">df</span>
+                    <span class="p">)</span>
+
+                    <span class="n">texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+                    <span class="n">graphs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+                <span class="n">chart</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Card</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;d-flex justify-content-around&quot;</span><span class="p">),</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span><span class="n">graphs</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;d-flex justify-content-around&quot;</span><span class="p">),</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">charts_per_r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chart</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">charts_per_r</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="n">value</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
