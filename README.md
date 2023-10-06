@@ -17,7 +17,7 @@
 </div>
 
   <p align="center">
-    <img src="images/coverage.svg" alt="Coverage"> <img src="images/pylint.svg" alt="Coverage">
+    <img src="images/coverage.svg" alt="Coverage"> <img src="images/pylint.svg" alt="Coverage"> <img src="images/apache20.svg" alt="Apache 2.0"> <img src="images/active.svg" alt="Active repo">
   </p>
 
 <details>
