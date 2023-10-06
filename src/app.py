@@ -37,6 +37,7 @@ app = Dash(
     __name__,
     external_stylesheets=external_stylesheets,
     prevent_initial_callbacks="initial_duplicate",
+    suppress_callback_exceptions=True,
     meta_tags=[
         {
             "name": "viewport",
@@ -164,7 +165,7 @@ app.layout = html.Div(
                         dcc.Loading(
                             id="loading-1",
                             type="default",
-                            children=html.Div(id="spinner-id", style="secondary"),
+                            children=html.Div(id="spinner-id"),
                         )
                     ]
                 ),
@@ -173,7 +174,7 @@ app.layout = html.Div(
                         dcc.Loading(
                             id="loading-2",
                             type="default",
-                            children=html.Div(id="spinner-id2", style="primary"),
+                            children=html.Div(id="spinner-id2"),
                         )
                     ]
                 ),
@@ -528,7 +529,7 @@ def get_dashboard_title(data):
 
     try:
         title = generate_title(data["Rows"], key="TITLE")
-        spinner = 1
+        spinner = ""
         return title, spinner
 
     except Exception as e:
@@ -1332,7 +1333,7 @@ async def download_charts(chart_per_rows):
     Output("get_data", "data"),
     Output("footer", "data"),
     Output("spinner-id", "children"),
-    Output("spinner-id2", "data"),
+    Output("spinner2", "data"),
     [Input("settings", "data")],
     Input("spinner", "data"),
     prevent_initial_call=True,
@@ -1359,7 +1360,7 @@ def download_data(settings, value):
         if platform.system() == "Windows":
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         charts_per_r = asyncio.run(download_charts(chart_per_rows))
-        spinner = 1
+        spinner = ""
 
         return charts_per_r, footer, value, spinner
 
@@ -1449,4 +1450,4 @@ def add_graphs(data, footer, lang, value):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=False,dev_tools_ui=False,dev_tools_props_check=False)
