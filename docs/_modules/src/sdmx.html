@@ -77,31 +77,15 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">sdmxthon</span>
-<span class="kn">import</span> <span class="nn">ujson</span>
 
 
 <div class="viewcode-block" id="SDMXData">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXData">[docs]</a>
 <span class="k">class</span> <span class="nc">SDMXData</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to get the data from SDMX API in SDMX format</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to get the data from SDMX API in SDMX format</span>
 
-<span class="sd">    ...</span>
+<span class="sd">    :param url_data: the API URL from which to pull the data</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    url_data : str</span>
-<span class="sd">       the API URL from which to pull the data</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    get_data(yAxisConcept:str):</span>
-<span class="sd">        Returns a Pandas DataFrame with the data requested and set the yAxisConcept</span>
-<span class="sd">        as float (optional)</span>
-
-<span class="sd">    get_data_async(yAxisConcept:str):</span>
-<span class="sd">        Asynchronously returns a Pandas DataFrame with the data requested and set the</span>
-<span class="sd">        yAxisConcept as float (optional)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -109,7 +93,14 @@
 
 <div class="viewcode-block" id="SDMXData.get_data">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXData.get_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yAxisConcept</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yAxisConcept</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a Pandas DataFrame with the data requested and optionally</span>
+<span class="sd">        set the yAxisConcept as float.</span>
+
+<span class="sd">        :param yAxisConcept: str, optional: the y-axis to convert to numeric.</span>
+<span class="sd">        :returns: pd.DataFrame: the requested data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_data</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 
@@ -141,6 +132,13 @@
 <div class="viewcode-block" id="SDMXData.get_data_async">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXData.get_data_async">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_data_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yAxisConcept</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asynchronously returns a Pandas DataFrame with the data requested and</span>
+<span class="sd">        optionally set the yAxisConcept as float.</span>
+
+<span class="sd">        :param yAxisConcept: str, optional: the y-axis to convert to numeric.</span>
+<span class="sd">        :returns: pd.DataFrame: the requested data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
                 <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_data</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
@@ -171,7 +169,14 @@
 
 
 
-<span class="k">def</span> <span class="nf">_check_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_check_string</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks that the url contains the string and if not formats it appropriately</span>
+
+<span class="sd">    :param string: str: the string that needs to be contained in the url</span>
+<span class="sd">    :param url: str: the url</span>
+<span class="sd">    :returns: str: the formatted url</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
             <span class="k">pass</span>
@@ -185,35 +190,16 @@
     <span class="k">return</span> <span class="n">url</span>
 
 
-<div class="viewcode-block" id="download_metadata">
-<a class="viewcode-back" href="../../src.html#src.sdmx.download_metadata">[docs]</a>
-<span class="k">def</span> <span class="nf">download_metadata</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    download_metadata returns a JSON dictionary with the SDMX file,</span>
-<span class="sd">    including all descendants</span>
-
-<span class="sd">    :param url: the API URL from which to pull the data</span>
-
-<span class="sd">    :return: a dictionary in JSON format with the data/metadata requested</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">url</span> <span class="o">=</span> <span class="n">_check_string</span><span class="p">(</span><span class="s2">&quot;references=descendants&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-    <span class="n">response_json</span> <span class="o">=</span> <span class="n">ujson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">response_json</span></div>
-
-
-
 <div class="viewcode-block" id="get_components">
 <a class="viewcode-back" href="../../src.html#src.sdmx.get_components">[docs]</a>
 <span class="k">def</span> <span class="nf">get_components</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">descendants</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_components returns a dictionary with the SDMX file</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve a dictionary with the SDMX data</span>
 
-<span class="sd">    :param url: the API URL from which to pull the data</span>
-<span class="sd">    :param descendants: a boolean to include all descendants in the call to the API</span>
+<span class="sd">    :param url: str: the API URL from which to pull the data</span>
+<span class="sd">    :param descendants: bool: whether to include all descendants in the call to the API</span>
+<span class="sd">                              (Default = True)</span>
+<span class="sd">    :returns: dict: a dictionary in JSON format with the data/metadata requested.</span>
 
-<span class="sd">    :return: a dictionary in JSON format with the data/metadata requested</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -236,13 +222,12 @@
 <div class="viewcode-block" id="get_components_async">
 <a class="viewcode-back" href="../../src.html#src.sdmx.get_components_async">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">get_components_async</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">descendants</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_components_async asyncronously returns a dictionary with the SDMX file</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Asynchronously retrieve a dictionary with the SDMX data</span>
 
-<span class="sd">    :param url: the API URL from which to pull the data</span>
-<span class="sd">    :param descendants: a boolean to include all descendants in the call to the API</span>
-
-<span class="sd">    :return: a dictionary in JSON format with the data/metadata requested</span>
+<span class="sd">    :param url: str: the API URL from which to pull the data</span>
+<span class="sd">    :param descendants: bool: whether to include all descendants in the call to the API</span>
+<span class="sd">                              (Default = True)</span>
+<span class="sd">    :returns: dict: a dictionary in JSON format with the data/metadata requested</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -265,45 +250,11 @@
 <div class="viewcode-block" id="SDMXMetadata">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXMetadata">[docs]</a>
 <span class="k">class</span> <span class="nc">SDMXMetadata</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to get the metadata from SDMX API in SDMX format</span>
-<span class="sd">    ...</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to get the metadata from SDMX API in SDMX format</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    :param component: Any object compatible with the `Component object \</span>
+<span class="sd">    :param component: any object compatible with the `Component object \</span>
 <span class="sd">                      &lt;https://docs.sdmxthon.meaningfuldata.eu/packages/model/component.html&gt;`_</span>
-<span class="sd">    :param concept: A string that denotes the concept to translate</span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    parse_message(component_type:str):</span>
-<span class="sd">        :param component_type: A string that can only take the following values:</span>
-<span class="sd">        Dataflows, Codelists, DataStructures, Concepts</span>
-
-<span class="sd">        Returns a dictionary with the children artefacts associated to a component type.</span>
-
-<span class="sd">    dataflow_metadata():</span>
-<span class="sd">        Returns a dictionary with the name and description of the dataflow</span>
-
-<span class="sd">    datastructure_metadata():</span>
-<span class="sd">        Returns a dictionary with the id, dimensions, attributes and measures of the</span>
-<span class="sd">        queried DSD</span>
-
-<span class="sd">    get_codelists():</span>
-<span class="sd">        Returns a `model.itemScheme.Codelist\</span>
-<span class="sd">        &lt;https://docs.sdmxthon.meaningfuldata.eu/packages/model/itemScheme.html#codelist&gt;`_</span>
-
-<span class="sd">    get_codelist_name():</span>
-<span class="sd">        Returns a string with the Agency, ID and version of of the codelist or a</span>
-<span class="sd">        `model.itemScheme.Codelist\</span>
-<span class="sd">        &lt;https://docs.sdmxthon.meaningfuldata.eu/packages/model/itemScheme.html#codelist&gt;`_</span>
-<span class="sd">        if all descendants are included in the SDMX URL call</span>
-
-<span class="sd">    get_cl():</span>
-<span class="sd">        Returns a Tuple with the name (str), description (str) and</span>
-<span class="sd">        `model.itemScheme.Code\</span>
-<span class="sd">        &lt;https://docs.sdmxthon.meaningfuldata.eu/packages/model/item.html#code&gt;`_</span>
+<span class="sd">    :param concept: a string that denotes the concept to translate</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -318,6 +269,14 @@
 <div class="viewcode-block" id="SDMXMetadata.parse_message">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXMetadata.parse_message">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses the appropriate component and returns children artefacts.</span>
+
+<span class="sd">        :param component_type: a string that can only take the following values:</span>
+<span class="sd">                               Dataflows, Codelists, DataStructures, Concepts</span>
+<span class="sd">        :returns: a dictionary with the children artefacts associated to</span>
+<span class="sd">                  a component type.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">valid</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Dataflows&quot;</span><span class="p">,</span> <span class="s2">&quot;Codelists&quot;</span><span class="p">,</span> <span class="s2">&quot;DataStructures&quot;</span><span class="p">,</span> <span class="s2">&quot;Concepts&quot;</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">component_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: component_type must be one of </span><span class="si">{</span><span class="n">valid</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -340,6 +299,7 @@
 <div class="viewcode-block" id="SDMXMetadata.dataflow_metadata">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXMetadata.dataflow_metadata">[docs]</a>
     <span class="k">def</span> <span class="nf">dataflow_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a dictionary with the name and description of the dataflow&quot;&quot;&quot;</span>
         <span class="n">dataflow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_message</span><span class="p">(</span><span class="n">component_type</span><span class="o">=</span><span class="s2">&quot;Dataflows&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">dataflow</span><span class="p">:</span>
@@ -359,6 +319,11 @@
 <div class="viewcode-block" id="SDMXMetadata.datastructure_metadata">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXMetadata.datastructure_metadata">[docs]</a>
     <span class="k">def</span> <span class="nf">datastructure_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a dictionary with the id, dimensions, attributes and measures of the</span>
+<span class="sd">        queried DSD</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">dsd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_message</span><span class="p">(</span><span class="n">component_type</span><span class="o">=</span><span class="s2">&quot;DataStructures&quot;</span><span class="p">)</span>
 
@@ -405,6 +370,10 @@
 <div class="viewcode-block" id="SDMXMetadata.get_codelists">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXMetadata.get_codelists">[docs]</a>
     <span class="k">def</span> <span class="nf">get_codelists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a `model.itemScheme.Codelist\</span>
+<span class="sd">        &lt;https://docs.sdmxthon.meaningfuldata.eu/packages/model/itemScheme.html#codelist&gt;`_</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">codelists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_message</span><span class="p">(</span><span class="n">component_type</span><span class="o">=</span><span class="s2">&quot;Codelists&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">codelists</span>
@@ -415,7 +384,13 @@
 
 <div class="viewcode-block" id="SDMXMetadata.get_codelist_name">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXMetadata.get_codelist_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_codelist_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_codelist_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a string with the Agency, ID and version of of the codelist or a</span>
+<span class="sd">        `model.itemScheme.Codelist\</span>
+<span class="sd">        &lt;https://docs.sdmxthon.meaningfuldata.eu/packages/model/itemScheme.html#codelist&gt;`_</span>
+<span class="sd">        if all descendants are included in the SDMX URL call</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">default</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">}</span>
         <span class="n">mode</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span>
 
@@ -438,6 +413,11 @@
 <div class="viewcode-block" id="SDMXMetadata.get_cl">
 <a class="viewcode-back" href="../../src.html#src.sdmx.SDMXMetadata.get_cl">[docs]</a>
     <span class="k">def</span> <span class="nf">get_cl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a Tuple with the name (str), description (str) and</span>
+<span class="sd">        `model.itemScheme.Code\</span>
+<span class="sd">        &lt;https://docs.sdmxthon.meaningfuldata.eu/packages/model/item.html#code&gt;`_</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">cl_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_codelist_name</span><span class="p">()</span>
 
@@ -467,25 +447,24 @@
 <div class="viewcode-block" id="get_url_cl">
 <a class="viewcode-back" href="../../src.html#src.sdmx.get_url_cl">[docs]</a>
 <span class="k">def</span> <span class="nf">get_url_cl</span><span class="p">(</span><span class="n">url_dsd</span><span class="p">,</span> <span class="n">cl_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_url_cl returns a string with the URL of the codelist</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_url_cl returns a string with the URL of the codelist</span>
 
 <span class="sd">    :param url_dsd: the API URL of the DSD</span>
 <span class="sd">    :param cl_name: the Agency, ID and version of the codelist (eg ESTAT:CL_AREA(1.0))</span>
+<span class="sd">    :returns: a string with the URL to query against the API</span>
 
-<span class="sd">    :return: a string with the URL to query against the API</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">endpoint</span> <span class="o">=</span> <span class="n">url_dsd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;datastructure&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">agency_ID</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(.+?):&quot;</span><span class="p">,</span> <span class="n">cl_name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
-    <span class="n">resource_ID</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?&lt;=\:)(.*?)(?=\()&quot;</span><span class="p">,</span> <span class="n">cl_name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+    <span class="n">agency_id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(.+?):&quot;</span><span class="p">,</span> <span class="n">cl_name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+    <span class="n">resource_id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?&lt;=\:)(.*?)(?=\()&quot;</span><span class="p">,</span> <span class="n">cl_name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
     <span class="n">version</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?&lt;=\()(.*?)(?=\))&quot;</span><span class="p">,</span> <span class="n">cl_name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
     <span class="n">cl_url</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">endpoint</span>
         <span class="o">+</span> <span class="s2">&quot;codelist/&quot;</span>
-        <span class="o">+</span> <span class="n">agency_ID</span>
+        <span class="o">+</span> <span class="n">agency_id</span>
         <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
-        <span class="o">+</span> <span class="n">resource_ID</span>
+        <span class="o">+</span> <span class="n">resource_id</span>
         <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
         <span class="o">+</span> <span class="n">version</span>
         <span class="o">+</span> <span class="s2">&quot;?detail=full&quot;</span>
@@ -497,13 +476,12 @@
 <div class="viewcode-block" id="get_cl_item_name">
 <a class="viewcode-back" href="../../src.html#src.sdmx.get_cl_item_name">[docs]</a>
 <span class="k">def</span> <span class="nf">get_cl_item_name</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_cl_item_name returns a string with code name</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_cl_item_name returns a string with code name</span>
 
 <span class="sd">    :param items: a dictionary with the codes of the codelist</span>
 <span class="sd">    :param item: a string with the code name</span>
+<span class="sd">    :returns: the code name</span>
 
-<span class="sd">    :return: the code name</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">cl_items</span> <span class="o">=</span> <span class="n">items</span>
@@ -523,16 +501,15 @@
 <div class="viewcode-block" id="get_translation">
 <a class="viewcode-back" href="../../src.html#src.sdmx.get_translation">[docs]</a>
 <span class="k">def</span> <span class="nf">get_translation</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">locale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_translation returns a translated string, if any language other than\</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_translation returns a translated string, if any language other than\</span>
 <span class="sd">                    is available. Only fr, es, de are currently supported\</span>
 <span class="sd">                    but this list can be easily expanded. If no language is</span>
 <span class="sd">                    detected, it defaults back to English</span>
 
 <span class="sd">    :param content: a dictionary of dictionaries to translate</span>
-<span class="sd">    :param locale: a string with the language code (en, es, de, fr)</span>
+<span class="sd">    :param locale: str: the language code (en, es, de, fr); defaults to &quot;en&quot;.</span>
+<span class="sd">    :returns: the string translated if any language is available</span>
 
-<span class="sd">    :return: the string translated if any language is available</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -560,14 +537,13 @@
 <div class="viewcode-block" id="translate_df">
 <a class="viewcode-back" href="../../src.html#src.sdmx.translate_df">[docs]</a>
 <span class="k">def</span> <span class="nf">translate_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">concept</span><span class="p">,</span> <span class="n">items_translated</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    translate_df returns a translated Pandas DataFrame</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;translate_df returns a translated Pandas DataFrame</span>
 
 <span class="sd">    :param df: a Pandas DataFrame</span>
 <span class="sd">    :param concept: a string with the column to translate</span>
 <span class="sd">    :param items_translated: a dictionary with the codes translated</span>
+<span class="sd">    :returns: pd.DataFrame: the translated DataFrame</span>
 
-<span class="sd">    :return: the translated Pandas DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">concept</span><span class="p">:</span>

@@ -109,6 +109,7 @@
     <span class="vm">__name__</span><span class="p">,</span>
     <span class="n">external_stylesheets</span><span class="o">=</span><span class="n">external_stylesheets</span><span class="p">,</span>
     <span class="n">prevent_initial_callbacks</span><span class="o">=</span><span class="s2">&quot;initial_duplicate&quot;</span><span class="p">,</span>
+    <span class="n">suppress_callback_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">meta_tags</span><span class="o">=</span><span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;viewport&quot;</span><span class="p">,</span>
@@ -127,7 +128,7 @@
         <span class="n">dcc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="n">refresh</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
         <span class="n">dbc</span><span class="o">.</span><span class="n">NavbarSimple</span><span class="p">(</span>
             <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;mb-3&quot;</span><span class="p">,</span>
-            <span class="n">brand</span><span class="o">=</span><span class="s2">&quot;SDMX Hackathon.</span><span class="se">\</span>
+            <span class="n">brand</span><span class="o">=</span><span class="s2">&quot;SDMX Dashboard Generator.</span><span class="se">\</span>
 <span class="s2">                A web application for SMDX data and metadata rendering&quot;</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span>
             <span class="n">dark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -157,11 +158,29 @@
                 <span class="p">),</span>
                 <span class="n">dbc</span><span class="o">.</span><span class="n">Modal</span><span class="p">(</span>
                     <span class="p">[</span>
-                        <span class="c1"># NOTE: It may be a good idea to import the info button content</span>
-                        <span class="c1"># from a markdown file</span>
-                        <span class="n">dbc</span><span class="o">.</span><span class="n">ModalHeader</span><span class="p">(</span><span class="n">dbc</span><span class="o">.</span><span class="n">ModalTitle</span><span class="p">(</span><span class="s2">&quot;Header&quot;</span><span class="p">)),</span>
-                        <span class="n">dbc</span><span class="o">.</span><span class="n">ModalBody</span><span class="p">(</span>
-                            <span class="s2">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&quot;</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">ModalHeader</span><span class="p">(</span><span class="n">dbc</span><span class="o">.</span><span class="n">ModalTitle</span><span class="p">(</span><span class="s2">&quot;SDMX Dashboard Generator&quot;</span><span class="p">)),</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">ModalBody</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="s2">&quot;SDMX Dashboard Generator&quot;</span><span class="p">),</span>
+                            <span class="s2">&quot; is an open-source Dash </span><span class="se">\</span>
+<span class="s2">                            application that generates dynamic dashboards by</span><span class="se">\</span>
+<span class="s2">                            pulling data and metadata from SDMX Rest API. </span><span class="se">\</span>
+<span class="s2">                            It supports the version 2.1 of the standard.&quot;</span><span class="p">,</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                            <span class="s2">&quot;It leverages the open-source library SDMXthon to</span><span class="se">\</span>
+<span class="s2">                            retrieve and parse data and metadata in SDMX.</span><span class="se">\</span>
+<span class="s2">                            A dashboard is composed of several visualizations </span><span class="se">\</span>
+<span class="s2">                            as defined by the specifications provided in </span><span class="se">\</span>
+<span class="s2">                            a .yaml file stored in the /yaml folder.&quot;</span><span class="p">,</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">Br</span><span class="p">(),</span>
+                            <span class="s2">&quot;The full documentation is available at &quot;</span><span class="p">,</span>
+                            <span class="n">html</span><span class="o">.</span><span class="n">A</span><span class="p">(</span>
+                                <span class="p">[</span><span class="s2">&quot;GitHub Pages&quot;</span><span class="p">],</span>
+                                <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://psychic-memory-8pyqygk.pages.github.io&quot;</span><span class="p">,</span>
+                                <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span>
+                            <span class="p">)]</span>
+                        <span class="p">)]</span>
                         <span class="p">),</span>
                         <span class="n">dbc</span><span class="o">.</span><span class="n">ModalFooter</span><span class="p">(</span>
                             <span class="n">dbc</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
@@ -218,7 +237,7 @@
                         <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span>
                             <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;loading-1&quot;</span><span class="p">,</span>
                             <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-                            <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner-id&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;secondary&quot;</span><span class="p">),</span>
+                            <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner-id&quot;</span><span class="p">),</span>
                         <span class="p">)</span>
                     <span class="p">]</span>
                 <span class="p">),</span>
@@ -227,7 +246,7 @@
                         <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span>
                             <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;loading-2&quot;</span><span class="p">,</span>
                             <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-                            <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner-id2&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">),</span>
+                            <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner-id2&quot;</span><span class="p">),</span>
                         <span class="p">)</span>
                     <span class="p">]</span>
                 <span class="p">),</span>
@@ -279,16 +298,14 @@
     <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">toggle_collapse</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_open</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">is_loaded</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    toggle_collapse returns a boolean that contols the behaviour of the toggle menu</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;toggle_collapse returns a boolean that contols the behaviour of the toggle menu</span>
 <span class="sd">    of the settings</span>
 
-<span class="sd">    :param n: an integer corresponding to the cumulative number of clicks since the</span>
-<span class="sd">    start of the session</span>
-<span class="sd">    :param is_open: a boolean indicating whether the toggle menu is open</span>
-<span class="sd">    :param is_loaded: a boolean indicating whether the settings are loaded</span>
+<span class="sd">    :param n: int: the cumulative number of clicks since the start of the session</span>
+<span class="sd">    :param is_open: bool: whether the toggle menu is open</span>
+<span class="sd">    :param is_loaded: bool: whether the settings are loaded</span>
+<span class="sd">    :returns: a boolean to control the behaviour of the toggle menu of the settings</span>
 
-<span class="sd">    :return: a boolean to control the behaviour of the toggle menu of the settings</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">is_loaded</span><span class="p">:</span>
@@ -307,14 +324,13 @@
     <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s2">&quot;modal&quot;</span><span class="p">,</span> <span class="s2">&quot;is_open&quot;</span><span class="p">)],</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">toggle_modal</span><span class="p">(</span><span class="n">open_clicks</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">close_clicks</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_open</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    toggle_collapse returns a boolean that contol the behaviour of the modal (Info)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;toggle_collapse returns a boolean that contol the behaviour of the modal (Info)</span>
 
-<span class="sd">    :param open_clicks: (int) the cumulative number of clicks to open the modal</span>
-<span class="sd">    :param close_clicks: (int) the cumulative number of clicks to close the modal</span>
-<span class="sd">    :param is_open: a boolean indicating whether the modal is open</span>
+<span class="sd">    :param open_clicks: int: the cumulative number of clicks to open the modal</span>
+<span class="sd">    :param close_clicks: int: the cumulative number of clicks to close the modal</span>
+<span class="sd">    :param is_open: bool: whether the modal is open</span>
+<span class="sd">    :returns: a boolean that contol the behaviour of the modal (Info)</span>
 
-<span class="sd">    :return: a boolean that contol the behaviour of the modal (Info)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">open_clicks</span> <span class="ow">or</span> <span class="n">close_clicks</span><span class="p">:</span>
@@ -326,13 +342,11 @@
 <div class="viewcode-block" id="snake_case">
 <a class="viewcode-back" href="../../src.html#src.app.snake_case">[docs]</a>
 <span class="k">def</span> <span class="nf">snake_case</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    snake_case returns snake cased string</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;snake_case returns snake cased string</span>
 
-<span class="sd">    :param string: a string to be snake cased</span>
-<span class="sd">    :param is_open: a boolean indicating whether the modal is open</span>
+<span class="sd">    :param string: str: input to be snake cased</span>
+<span class="sd">    :returns: the input string snake cased</span>
 
-<span class="sd">    :return: the input string snake cased</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -346,18 +360,16 @@
 <div class="viewcode-block" id="load_yamlfile">
 <a class="viewcode-back" href="../../src.html#src.app.load_yamlfile">[docs]</a>
 <span class="k">def</span> <span class="nf">load_yamlfile</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    load_yamlfile returns the loaded settings from the YAML file</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;load_yamlfile returns the loaded settings from the YAML file</span>
 
-<span class="sd">    :param filename: a string corresponding to the YAML file</span>
-<span class="sd">    :param folder: a string corresponding to the YAML file folder location</span>
+<span class="sd">    :param filename: str: the YAML file</span>
+<span class="sd">    :param folder: str, optional: the YAML file folder location</span>
+<span class="sd">    :returns: a dictionary with loaded settings from the YAML file</span>
 
-<span class="sd">    :return: a dictionary with loaded settings from the YAML file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
-        
         <span class="k">if</span> <span class="n">folder</span><span class="p">:</span>
             <span class="n">fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -382,13 +394,12 @@
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;yaml_file&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;href&quot;</span><span class="p">)],</span> <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">load_yaml</span><span class="p">(</span><span class="n">href</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    load_yaml returns the location of the YAML file whose dashID matches</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;load_yaml returns the location of the YAML file whose dashID matches</span>
 <span class="sd">    the string provided in the href of the URL</span>
 
-<span class="sd">    :param href: a string corresponding to the dashID</span>
+<span class="sd">    :param href: str: the dashID</span>
+<span class="sd">    :returns: a string with the location of the requested YAML file</span>
 
-<span class="sd">    :return: a string with the location of the requested YAML file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -426,13 +437,12 @@
     <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">load_content</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    load_content returns a dictionary with the settings from the YAML file</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;load_content returns a dictionary with the settings from the YAML file</span>
 <span class="sd">    and a boolean on whether the settings are loaded</span>
 
 <span class="sd">    :param yaml_file: the relative path of the YAML file</span>
+<span class="sd">    :returns: a dictionary with the settings and a boolean when the loading is completed</span>
 
-<span class="sd">    :return: a dictionary with the settings and a boolean when the loading is completed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -456,13 +466,12 @@
     <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;upload-data&quot;</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">update_output</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    update_output returns a dictionary with the settings from the YAML file selected</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;update_output returns a dictionary with the settings from the YAML file selected</span>
 <span class="sd">    from the settings and a boolean on whether the settings are loaded</span>
 
 <span class="sd">    :param uploaded_file: the path of the YAML file</span>
+<span class="sd">    :returns: a dictionary with the settings and a boolean when the loading is completed</span>
 
-<span class="sd">    :return: a dictionary with the settings and a boolean when the loading is completed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">uploaded_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -480,12 +489,11 @@
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;pathname&quot;</span><span class="p">),</span> <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span> <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_dash_id</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_dash_id returns the snake cased DashID from the YAML file settings</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_dash_id returns the snake cased DashID from the YAML file settings</span>
 
 <span class="sd">    :param i: a dictionary with settings from the YAML file</span>
+<span class="sd">    :returns: a string with the snaked cased DashId</span>
 
-<span class="sd">    :return: a string with the snaked cased DashId</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -499,14 +507,13 @@
 <div class="viewcode-block" id="get_title_footer">
 <a class="viewcode-back" href="../../src.html#src.app.get_title_footer">[docs]</a>
 <span class="k">def</span> <span class="nf">get_title_footer</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_title_footer returns a dictionary with entries with Row == 0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_title_footer returns a dictionary with entries with Row == 0</span>
 <span class="sd">    specified in the YAML file</span>
 
 <span class="sd">    :param data: a dictionary with settings from the YAML file</span>
+<span class="sd">    :returns: a dictionary with the title and footer, or any other entry</span>
+<span class="sd">              with Row == 0 in the YAML file</span>
 
-<span class="sd">    :return: a dictionary with the title and footer, or any other entry</span>
-<span class="sd">    with Row == 0 in the YAML file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -520,13 +527,12 @@
 <div class="viewcode-block" id="generate_title">
 <a class="viewcode-back" href="../../src.html#src.app.generate_title">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_title</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    generate_title returns the title from the YAML file</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;generate_title returns the title from the YAML file</span>
 
 <span class="sd">    :param data: a dictionary with settings from the YAML file</span>
-<span class="sd">    :param key: the key (TITLE) from settings from the YAML file</span>
+<span class="sd">    :param key: str: the key (TITLE) from settings from the YAML file</span>
+<span class="sd">    :returns: a html.Span with the title of the dashboard as specified in the YAML file</span>
 
-<span class="sd">    :return: a html.Span with the title of the dashboard as specified in the YAML file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -567,13 +573,12 @@
 <div class="viewcode-block" id="generate_footer">
 <a class="viewcode-back" href="../../src.html#src.app.generate_footer">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_footer</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    generate_footer returns the footer from the YAML file</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;generate_footer returns the footer from the YAML file</span>
 
 <span class="sd">    :param data: a dictionary with settings from the YAML file</span>
-<span class="sd">    :param key: the key (FOOTER) from settings from the YAML file</span>
+<span class="sd">    :param key: str: the key (FOOTER) from settings from the YAML file</span>
+<span class="sd">    :returns: a html.Span with the footer of the dashboard as specified in the YAML file</span>
 
-<span class="sd">    :return: a html.Span with the footer of the dashboard as specified in the YAML file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -623,19 +628,18 @@
     <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_dashboard_title</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_dashboard_title returns the title to the dashboard and controls</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_dashboard_title returns the title to the dashboard and controls</span>
 <span class="sd">    the behaviour of the loading spinner</span>
 
 <span class="sd">    :param data: a dictionary with settings from the YAML file</span>
+<span class="sd">    :returns: a html.Span with the title of the dashboard and an integer</span>
+<span class="sd">              that controls the behaviour of the loading spinner</span>
 
-<span class="sd">    :return: a html.Span with the title of the dashboard and an integer</span>
-<span class="sd">    that controls the behaviour of the loading spinner</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">generate_title</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Rows&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;TITLE&quot;</span><span class="p">)</span>
-        <span class="n">spinner</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">spinner</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="n">title</span><span class="p">,</span> <span class="n">spinner</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1023,14 +1027,13 @@
     <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">download_table</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    download_table returns the export table in CSV.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;download_table returns the export table in CSV.</span>
 
-<span class="sd">    :param n_clicks: An integer that represents the number of times that the</span>
-<span class="sd">    list-download chart-id has been clicked on</span>
-<span class="sd">    :param data: The DataTable returned by create_table()</span>
+<span class="sd">    :param n_clicks: int: the number of times that the list-download</span>
+<span class="sd">                          chart-id has been clicked on</span>
+<span class="sd">    :param data: the DataTable returned by create_table()</span>
+<span class="sd">    :returns: triggers dcc.send_data_frame to download the table as CSV</span>
 
-<span class="sd">    :return: Triggers dcc.send_data_frame to download the table as CSV</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">id_tag</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">triggered_id</span><span class="o">.</span><span class="n">index</span>
@@ -1048,15 +1051,14 @@
 <div class="viewcode-block" id="create_table">
 <a class="viewcode-back" href="../../src.html#src.app.create_table">[docs]</a>
 <span class="k">def</span> <span class="nf">create_table</span><span class="p">(</span><span class="n">chart_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    create_table returns the Dash DataTable to be displayed in the offcanvas</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;create_table returns the Dash DataTable to be displayed in the offcanvas</span>
 <span class="sd">    and exported.</span>
 
-<span class="sd">    :param chart_id: The unique chart ID which correspond to the row and the</span>
-<span class="sd">    sequential number (int) of the chart as specified in the YAML</span>
-<span class="sd">    :param df: The pd.DataFrame associated with the chart ID</span>
+<span class="sd">    :param chart_id: str: the unique chart ID which correspond to the row and the</span>
+<span class="sd">                          sequential number (int) of the chart as specified in the YAML</span>
+<span class="sd">    :param df: pd.DataFrame: the pd.DataFrame associated with the chart ID</span>
+<span class="sd">    :returns: Dash DataTable</span>
 
-<span class="sd">    :return: Dash DataTable</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Convert the DataFrame to a list of records and configure DataTable</span>
     <span class="k">return</span> <span class="n">DataTable</span><span class="p">(</span>
@@ -1079,16 +1081,15 @@
 <div class="viewcode-block" id="create_chart_item">
 <a class="viewcode-back" href="../../src.html#src.app.create_chart_item">[docs]</a>
 <span class="k">def</span> <span class="nf">create_chart_item</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    create_chart_item returns the HTML div for the info and table buttons</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;create_chart_item returns the HTML div for the info and table buttons</span>
 
-<span class="sd">    :param data: The settings of the chart as specified in the YAML</span>
-<span class="sd">    :param chart_id: The unique chart ID which correspond to the row and the sequential</span>
-<span class="sd">    number (int) of the chart as specified in the YAML</span>
-<span class="sd">    :param df_metadata: The list of metadata associated with the chart</span>
-<span class="sd">    :param df: The pd.DataFrame associated with the chart ID</span>
+<span class="sd">    :param data: dict: the settings of the chart as specified in the YAML</span>
+<span class="sd">    :param chart_id: str: the unique chart ID which correspond to the row and the</span>
+<span class="sd">                          sequential number (int) of the chart as specified in the YAML</span>
+<span class="sd">    :param df_metadata: list: the list of metadata associated with the chart</span>
+<span class="sd">    :param df: pd.DataFrame: the DataFrame associated with the chart ID</span>
+<span class="sd">    :returns: html.Div with the info and table buttons</span>
 
-<span class="sd">    :return: html.Div with the info and table buttons</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Create a list group item with an info button for displaying metadata.</span>
@@ -1166,14 +1167,13 @@
 <div class="viewcode-block" id="create_toast">
 <a class="viewcode-back" href="../../src.html#src.app.create_toast">[docs]</a>
 <span class="k">def</span> <span class="nf">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    create_toast returns the dbc.Toast with the statistic metadata set in the YAML</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;create_toast returns the dbc.Toast with the statistic metadata set in the YAML</span>
 
-<span class="sd">    :param data: The corresponding value of the chart as specified in the YAML</span>
-<span class="sd">    :param header: The corresponding key associated to each chart in the YAML file</span>
+<span class="sd">    :param data: the corresponding value of the chart as specified in the YAML</span>
+<span class="sd">    :param header: str: the corresponding key associated to each chart in the YAML file</span>
+<span class="sd">    :returns: dbc.Toast with the statistic metadata,</span>
+<span class="sd">              Unit and source (DATA) set in the YAML</span>
 
-<span class="sd">    :return: dbc.Toast with the statistic metadata,</span>
-<span class="sd">                 Unit and source (DATA) set in the YAML</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">toast</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
@@ -1186,17 +1186,16 @@
 <div class="viewcode-block" id="get_static_metatada">
 <a class="viewcode-back" href="../../src.html#src.app.get_static_metatada">[docs]</a>
 <span class="k">def</span> <span class="nf">get_static_metatada</span><span class="p">(</span><span class="n">chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_static_metatada returns the HTML div for the info and table buttons</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_static_metatada returns the HTML div for the info and table buttons</span>
 
-<span class="sd">    :param chart: The settings of the chart as specified in the YAML</span>
-<span class="sd">    :param chart_id: The unique chart ID which correspond to the row and the sequential</span>
-<span class="sd">    number (int) of the chart as specified in the YAML</span>
-<span class="sd">    :param df_metadata: The list of metadata associated with the chart</span>
-<span class="sd">    :param df: The pd.DataFrame associated with the chart ID</span>
+<span class="sd">    :param chart: the settings of the chart as specified in the YAML</span>
+<span class="sd">    :param chart_id: the unique chart ID which correspond to the row and the sequential</span>
+<span class="sd">                     number (int) of the chart as specified in the YAML</span>
+<span class="sd">    :param df_metadata: the list of metadata associated with the chart</span>
+<span class="sd">    :param df: the pd.DataFrame associated with the chart ID</span>
+<span class="sd">    :returns: html.Div with the dbc.CardBody containing the title, subtitle and</span>
+<span class="sd">              the buttons (table and info)</span>
 
-<span class="sd">    :return: html.Div with the dbc.CardBody containing the title, subtitle and</span>
-<span class="sd">    the buttons (table and info)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">concept</span> <span class="o">=</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">]</span>
@@ -1321,13 +1320,12 @@
 <div class="viewcode-block" id="get_rows">
 <a class="viewcode-back" href="../../src.html#src.app.get_rows">[docs]</a>
 <span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">max_charts_per_row</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    get_rows returns the distribution of the charts per row in the dashboard</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_rows returns the distribution of the charts per row in the dashboard</span>
 
-<span class="sd">    :param data: The settings of the chart as specified in the YAML</span>
-<span class="sd">    :param max_charts_per_row: An integer specifying the maximum chart per row</span>
+<span class="sd">    :param data: dict: the settings of the chart as specified in the YAML</span>
+<span class="sd">    :param max_charts_per_row: int: the maximum charts per row (Default value = 3)</span>
+<span class="sd">    :returns: list with the distribution of the charts per row</span>
 
-<span class="sd">    :return: list with the distribution of the charts per row</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -1348,14 +1346,13 @@
 <div class="viewcode-block" id="download_single_chart">
 <a class="viewcode-back" href="../../src.html#src.app.download_single_chart">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">download_single_chart</span><span class="p">(</span><span class="n">data_chart</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Download data for a single chart</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download data for a single chart</span>
 
-<span class="sd">    :param data_chart: The settings of the single chart</span>
-<span class="sd">    :param z: (int) Row number</span>
-<span class="sd">    :param y: (int) Position in row</span>
+<span class="sd">    :param data_chart: the settings of the single chart</span>
+<span class="sd">    :param z: int: Row number</span>
+<span class="sd">    :param y: int: Position in row</span>
+<span class="sd">    :returns: dict with chart settings and data</span>
 
-<span class="sd">    :return: dict with chart settings and data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">chart_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="si">}{</span><span class="n">pos</span><span class="si">}</span><span class="s2">&quot;</span>
 
@@ -1479,12 +1476,11 @@
 <div class="viewcode-block" id="download_charts">
 <a class="viewcode-back" href="../../src.html#src.app.download_charts">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">download_charts</span><span class="p">(</span><span class="n">chart_per_rows</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Download chart data asyncronously</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download chart data asyncronously</span>
 
 <span class="sd">    :param chart_per_rows: output of get_rows()</span>
+<span class="sd">    :returns: chart data and metadata, split in row lists</span>
 
-<span class="sd">    :return: chart data and metadata, split in row lists</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">all_cors</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">row_lengths</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1510,21 +1506,20 @@
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;get_data&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;footer&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner-id&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">),</span>
-    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner-id2&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner2&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
     <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)],</span>
     <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;spinner&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
     <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">download_data</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    download_data returns the cached data and the footer required to build the</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;download_data returns the cached data and the footer required to build the</span>
 <span class="sd">    charts_div and footer_div</span>
 
-<span class="sd">    :param data: The settings of the chart as specified in the YAML</span>
-<span class="sd">    :param value: Any value that controls the behaviour of the spinner</span>
-
-<span class="sd">    :return: a dictionary with the cached data required to build the charts_div,</span>
+<span class="sd">    :param settings: the settings of the chart as specified in the YAML</span>
+<span class="sd">    :param value: any value that controls the behaviour of the spinner</span>
+<span class="sd">    :returns: a dictionary with the cached data required to build the charts_div,</span>
 <span class="sd">             the footer, the spinners 1 and 2</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">settings</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1538,7 +1533,7 @@
         <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
             <span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop_policy</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">WindowsSelectorEventLoopPolicy</span><span class="p">())</span>
         <span class="n">charts_per_r</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">download_charts</span><span class="p">(</span><span class="n">chart_per_rows</span><span class="p">))</span>
-        <span class="n">spinner</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">spinner</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">charts_per_r</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">spinner</span></div>
 
@@ -1557,15 +1552,14 @@
     <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">add_graphs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    add_graphs returns the charts div in the dashboard page</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;add_graphs returns the charts div in the dashboard page</span>
 
-<span class="sd">    :param data: The cached data of the charts as returned by download_data</span>
-<span class="sd">    :param footer: The footer div generated by download_data</span>
-<span class="sd">    :param lang: The language selected in the dropdown</span>
-<span class="sd">    :param value: Any value that controls the behaviour of the spinner</span>
+<span class="sd">    :param data: the cached data of the charts as returned by download_data</span>
+<span class="sd">    :param footer: the footer div generated by download_data</span>
+<span class="sd">    :param lang: the language selected in the dropdown</span>
+<span class="sd">    :param value: anyvalue that controls the behaviour of the spinner</span>
+<span class="sd">    :returns: html.Div with the charts loaded in the cache</span>
 
-<span class="sd">    :return: html.Div with the charts loaded in the cache</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">global</span> <span class="n">LANG</span>
@@ -1633,7 +1627,7 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">dev_tools_ui</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">dev_tools_props_check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
            </div>

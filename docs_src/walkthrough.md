@@ -52,7 +52,7 @@ Main features of the application:
 1. Clone the repo
 
    ```sh
-   git clone https://github.com/bank-for-international-settlements/SDMX-dashboard-generator.git
+   git clone https://github.com/bis-med-it/SDMX-dashboard-generator.git
    ```
 
 2. Install dependencies
