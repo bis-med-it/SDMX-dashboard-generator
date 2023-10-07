@@ -57,7 +57,7 @@ Source: <a href="https://www.sdmx2023.org/hackathon">SDMX 2023 Hackathon</a>
 
 SDMX Dashboard Generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. It supports the version 2.1 of the standard. It leverages the open-source library [SDMXthon](https://github.com/Meaningful-Data/sdmxthon) to retrieve and parse data and metadata in SDMX. A dashboard is composed of several visualizations as defined by the specifications provided in a `.yaml` file stored in the `/yaml` folder.
 
-The documentation for this app is freely available at [GitHub Pages](https://psychic-memory-8pyqygk.pages.github.io/).
+The documentation for this app is freely available at [GitHub Pages](https://urban-memory-73nlz2m.pages.github.io/index.html).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -105,7 +105,7 @@ app.layout = html.Div(
                             "The full documentation is available at ",
                             html.A(
                                 ["GitHub Pages"],
-                                href="https://psychic-memory-8pyqygk.pages.github.io",
+                                href="https://urban-memory-73nlz2m.pages.github.io",
                                 target="_blank"
                             )]
                         )]
