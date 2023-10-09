@@ -72,11 +72,11 @@
   <h1>Source code for src.app</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;application&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">asyncio.exceptions</span> <span class="kn">import</span> <span class="ne">TimeoutError</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
-<span class="kn">from</span> <span class="nn">re</span> <span class="kn">import</span> <span class="n">sub</span>
 
 <span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
@@ -91,14 +91,18 @@
 <span class="kn">from</span> <span class="nn">src.sdmx</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">SDMXData</span><span class="p">,</span>
     <span class="n">SDMXMetadata</span><span class="p">,</span>
-    <span class="n">get_cl_item_name</span><span class="p">,</span>
     <span class="n">get_components_async</span><span class="p">,</span>
     <span class="n">get_translation</span><span class="p">,</span>
     <span class="n">get_url_cl</span><span class="p">,</span>
     <span class="n">translate_df</span><span class="p">,</span>
+    <span class="n">retreive_codes_from_data</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">cleanhtml</span>
-
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">snake_case</span><span class="p">,</span>
+                       <span class="n">cleanhtml</span><span class="p">,</span>
+                       <span class="n">get_label</span><span class="p">,</span>
+                       <span class="n">error_box</span><span class="p">,</span>
+                       <span class="n">validate_yamlfile</span>
+<span class="p">)</span>
 <span class="n">external_stylesheets</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">dbc</span><span class="o">.</span><span class="n">themes</span><span class="o">.</span><span class="n">COSMO</span><span class="p">,</span>
     <span class="n">dbc</span><span class="o">.</span><span class="n">icons</span><span class="o">.</span><span class="n">FONT_AWESOME</span><span class="p">,</span>
@@ -177,7 +181,7 @@
                             <span class="s2">&quot;The full documentation is available at &quot;</span><span class="p">,</span>
                             <span class="n">html</span><span class="o">.</span><span class="n">A</span><span class="p">(</span>
                                 <span class="p">[</span><span class="s2">&quot;GitHub Pages&quot;</span><span class="p">],</span>
-                                <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://psychic-memory-8pyqygk.pages.github.io&quot;</span><span class="p">,</span>
+                                <span class="n">href</span><span class="o">=</span><span class="s2">&quot;https://urban-memory-73nlz2m.pages.github.io&quot;</span><span class="p">,</span>
                                 <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span>
                             <span class="p">)]</span>
                         <span class="p">)]</span>
@@ -200,6 +204,7 @@
         <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner&quot;</span><span class="p">),</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;spinner2&quot;</span><span class="p">),</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;get_data&quot;</span><span class="p">),</span>
+        <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;get_data_complete&quot;</span><span class="p">),</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;footer&quot;</span><span class="p">),</span>
         <span class="n">dbc</span><span class="o">.</span><span class="n">Container</span><span class="p">(</span>
             <span class="p">[</span>
@@ -253,6 +258,7 @@
                 <span class="n">dcc</span><span class="o">.</span><span class="n">Download</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;download_data&quot;</span><span class="p">),</span>
                 <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;charts_div&quot;</span><span class="p">),</span>
                 <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;footer_div&quot;</span><span class="p">),</span>
+                <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;yaml_file_invalid&quot;</span><span class="p">)</span>
             <span class="p">]</span>
         <span class="p">),</span>
     <span class="p">]</span>
@@ -339,23 +345,6 @@
 
 
 
-<div class="viewcode-block" id="snake_case">
-<a class="viewcode-back" href="../../src.html#src.app.snake_case">[docs]</a>
-<span class="k">def</span> <span class="nf">snake_case</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;snake_case returns snake cased string</span>
-
-<span class="sd">    :param string: str: input to be snake cased</span>
-<span class="sd">    :returns: the input string snake cased</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">sub</span><span class="p">(</span>
-            <span class="s2">&quot;([A-Z][a-z]+)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot; \1&quot;</span><span class="p">,</span> <span class="n">sub</span><span class="p">(</span><span class="s2">&quot;([A-Z]+)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot; \1&quot;</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
-
-
 
 <div class="viewcode-block" id="load_yamlfile">
 <a class="viewcode-back" href="../../src.html#src.app.load_yamlfile">[docs]</a>
@@ -377,7 +366,7 @@
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">settings</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">settings</span>
+            <span class="k">return</span> <span class="n">settings</span>
 
     <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
@@ -427,12 +416,12 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 
 
-
 <div class="viewcode-block" id="load_content">
 <a class="viewcode-back" href="../../src.html#src.app.load_content">[docs]</a>
 <span class="nd">@callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">allow_duplicate</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;is_loaded&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">allow_duplicate</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;yaml_file_invalid&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">,</span> <span class="n">allow_duplicate</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> 
     <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s2">&quot;yaml_file&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)],</span>
     <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
@@ -449,20 +438,22 @@
         <span class="k">if</span> <span class="n">yaml_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PreventUpdate</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">load_yamlfile</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">)</span>
-        <span class="n">is_loaded</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">is_loaded</span>
+        <span class="n">validation</span> <span class="o">=</span> <span class="n">validate_yamlfile</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">validation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">error_box</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid YAML file. Error:</span><span class="si">{</span><span class="n">validation</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">is_loaded</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
 
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">PreventUpdate</span> <span class="kn">from</span> <span class="nn">e</span></div>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span></div>
 
 
 
-<div class="viewcode-block" id="update_output">
-<a class="viewcode-back" href="../../src.html#src.app.update_output">[docs]</a>
 <span class="nd">@callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;settings&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;is_loaded&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;yaml_file_invalid&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">),</span> 
     <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;upload-data&quot;</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">update_output</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">):</span>
@@ -477,11 +468,17 @@
     <span class="k">if</span> <span class="n">uploaded_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">PreventUpdate</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="n">load_yamlfile</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">,</span> <span class="s2">&quot;yaml/&quot;</span><span class="p">)</span>
-    <span class="n">is_loaded</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">is_loaded</span></div>
-
-
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">load_yamlfile</span><span class="p">(</span><span class="n">uploaded_file</span><span class="p">,</span> <span class="s2">&quot;yaml/&quot;</span><span class="p">)</span>
+        <span class="n">validation</span> <span class="o">=</span> <span class="n">validate_yamlfile</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">validation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">error_box</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid YAML file. Error:</span><span class="si">{</span><span class="n">validation</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">is_loaded</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+        
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
 
 <div class="viewcode-block" id="get_dash_id">
 <a class="viewcode-back" href="../../src.html#src.app.get_dash_id">[docs]</a>
@@ -496,6 +493,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+    
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">snake_case</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;DashID&quot;</span><span class="p">])</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -637,6 +637,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">generate_title</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Rows&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;TITLE&quot;</span><span class="p">)</span>
         <span class="n">spinner</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -718,6 +720,7 @@
 <div class="viewcode-block" id="draw_chart">
 <a class="viewcode-back" href="../../src.html#src.app.draw_chart">[docs]</a>
 <span class="k">def</span> <span class="nf">draw_chart</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">chart</span><span class="p">):</span>
+    
     <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Error in fetching the data, please check the YAML file: &quot;</span>
 
     <span class="k">if</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;xAxisConcept&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -726,6 +729,9 @@
         <span class="n">chart_type</span> <span class="o">=</span> <span class="n">chart</span><span class="p">[</span><span class="s2">&quot;chartType&quot;</span><span class="p">]</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;displayModeBar&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">error_box</span><span class="p">(</span><span class="s2">&quot;Data is empty. Please check the YAML file&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">chart_type</span> <span class="o">==</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -746,7 +752,7 @@
                 <span class="p">)</span>
 
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error_message</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))]))</span>
+                <span class="k">return</span> <span class="n">error_box</span><span class="p">(</span><span class="s2">&quot;Something went wrong. Please check the YAML file: &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -813,8 +819,8 @@
     <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
         <span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-info-circle-fill&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">),</span>
         <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textDecoration&quot;</span><span class="p">:</span> <span class="s2">&quot;underline&quot;</span><span class="p">,</span> <span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">},</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;open-offcanvas&quot;</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">},</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;open-offcanvas&quot;</span>
     <span class="p">)</span></div>
 
 
@@ -825,7 +831,7 @@
     <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
         <span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-table&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">),</span>
         <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textDecoration&quot;</span><span class="p">:</span> <span class="s2">&quot;underline&quot;</span><span class="p">,</span> <span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">},</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">}</span>
     <span class="p">)</span></div>
 
 
@@ -835,10 +841,11 @@
 <span class="k">def</span> <span class="nf">create_download_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Span</span><span class="p">(</span>
         <span class="n">html</span><span class="o">.</span><span class="n">I</span><span class="p">(</span>
-            <span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-download&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-download&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">}</span>
+            <span class="n">className</span><span class="o">=</span><span class="s2">&quot;bi bi-download&quot;</span><span class="p">,</span> 
+            <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-download&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">}</span>
         <span class="p">),</span>
         <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;textDecoration&quot;</span><span class="p">:</span> <span class="s2">&quot;underline&quot;</span><span class="p">,</span> <span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">},</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;cursor&quot;</span><span class="p">:</span> <span class="s2">&quot;pointer&quot;</span><span class="p">},</span>
     <span class="p">)</span></div>
 
 
@@ -877,7 +884,7 @@
         <span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">CardHeader</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">])</span></div>
 
 
 
@@ -929,10 +936,90 @@
     <span class="k">return</span> <span class="n">toast</span></div>
 
 
+<div class="viewcode-block" id="create_filter_dropdown">
+<a class="viewcode-back" href="../../src.html#src.app.create_filter_dropdown">[docs]</a>
+<span class="k">def</span> <span class="nf">create_filter_dropdown</span><span class="p">(</span><span class="n">df</span><span class="p">:</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">concept</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">valuelist</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;update_filter_output updates the filter dropdown for the data</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_clicks: the clicks on the filter dropdown</span>
+<span class="sd">        data: a pd.DataFrame with the data without any fikter applied</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        data: a dictionary with the data filtered</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valuelist</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+
+                <span class="n">lst_value</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="o">+</span><span class="s2">&quot;_id&quot;</span><span class="p">])))</span>
+                    
+                <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">([</span>
+                                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                                    <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                                        <span class="n">valuelist</span><span class="p">,</span>
+                                        <span class="n">lst_value</span><span class="p">,</span>
+                                        <span class="n">multi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                        <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-dropdown&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">}),</span> <span class="n">width</span><span class="o">=</span><span class="mi">9</span><span class="p">),</span>
+                                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                                    <span class="n">dbc</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Ok&quot;</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-dropdown-btn&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;sm&quot;</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                                <span class="p">])</span>
+                        <span class="p">])</span>
+                            
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="update_output">
+<a class="viewcode-back" href="../../src.html#src.app.update_output">[docs]</a>
+<span class="nd">@callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;get_data&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">allow_duplicate</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-dropdown-btn&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">ALL</span><span class="p">},</span> <span class="s2">&quot;n_clicks&quot;</span><span class="p">),</span>
+    <span class="n">Input</span><span class="p">(</span><span class="s2">&quot;get_data_complete&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">State</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-dropdown&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">ALL</span><span class="p">},</span> <span class="s2">&quot;value&quot;</span><span class="p">),</span>
+    <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_output</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;create_filter_dropdown creates the filter dropdown for the data</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: pd.DataFrame containg the data</span>
+<span class="sd">        concept: the legendConcept as specified in the YAML file</span>
+<span class="sd">        chart_id: the chart ID</span>
+<span class="sd">        valuelist: the valuelist containing the unique values of the legendConcept in the pd.DataFrame</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        html.Div: a dcc.Dropdown and a dbc.Button containing the values to filter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_clicks</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+    
+    <span class="n">chart_id</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">triggered_id</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">chart_id</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">chart_id</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">states_list</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">states_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">states_list</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">][</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">chart_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">pos</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+    <span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;REF_AREA&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">pos</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_filtered</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">data</span></div>
+
 
 <div class="viewcode-block" id="create_offcanvas_table">
 <a class="viewcode-back" href="../../src.html#src.app.create_offcanvas_table">[docs]</a>
-<span class="k">def</span> <span class="nf">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">valuelist</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># Check if the data has a &quot;downloadYN&quot; flag set to &quot;Y&quot; for enabling downloads.</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;downloadYN&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
@@ -948,9 +1035,9 @@
                                     <span class="c1"># and source URL as toasts.</span>
                                     <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
                                         <span class="p">[</span>
-                                            <span class="n">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Unit&quot;</span><span class="p">],</span> <span class="s2">&quot;Unit&quot;</span><span class="p">),</span>
-                                            <span class="n">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="s2">&quot;Source URL&quot;</span><span class="p">),</span>
-                                            <span class="n">create_download</span><span class="p">(</span><span class="n">chart_id</span><span class="p">),</span>
+                                            <span class="n">create_toast</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Unit&quot;</span><span class="p">],</span> <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;Unit&quot;</span><span class="p">),</span>
+                                            <span class="n">create_toast</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span> <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;Source URL&quot;</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                                            <span class="n">create_download</span><span class="p">(</span><span class="n">chart_id</span><span class="p">)</span>
                                         <span class="p">],</span>
                                         <span class="n">align</span><span class="o">=</span><span class="s2">&quot;start&quot;</span><span class="p">,</span>
                                         <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
@@ -958,7 +1045,9 @@
                                     <span class="c1"># Create a column for displaying the table</span>
                                     <span class="c1"># associated with the chart.</span>
                                     <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
-                                        <span class="p">[</span><span class="n">create_table</span><span class="p">(</span><span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">)],</span>
+                                        <span class="p">[</span><span class="n">create_filter_dropdown</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">],</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">valuelist</span><span class="p">),</span>
+                                         <span class="n">html</span><span class="o">.</span><span class="n">Hr</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;my-2&quot;</span><span class="p">),</span>
+                                         <span class="n">create_table</span><span class="p">(</span><span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">)],</span>
                                         <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
                                         <span class="n">width</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
                                     <span class="p">),</span>
@@ -1014,7 +1103,7 @@
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="c1"># Handle exceptions and print the error message.</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dbc</span><span class="o">.</span><span class="n">CardHeader</span><span class="p">(</span><span class="n">chart_id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 
 
@@ -1080,7 +1169,7 @@
 
 <div class="viewcode-block" id="create_chart_item">
 <a class="viewcode-back" href="../../src.html#src.app.create_chart_item">[docs]</a>
-<span class="k">def</span> <span class="nf">create_chart_item</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">create_chart_item</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">valuelist</span><span class="p">:</span><span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;create_chart_item returns the HTML div for the info and table buttons</span>
 
 <span class="sd">    :param data: dict: the settings of the chart as specified in the YAML</span>
@@ -1095,19 +1184,17 @@
     <span class="c1"># Create a list group item with an info button for displaying metadata.</span>
     <span class="n">listgroup_item</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">ListGroupItem</span><span class="p">(</span>
         <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">create_info_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">)])],</span>
-        <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-item&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
-        <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">className</span><span class="o">=</span><span class="s2">&quot;border-0 text-nowrap list-group-item-action&quot;</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-item&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
+            <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">className</span><span class="o">=</span><span class="s2">&quot;border-0 text-nowrap list-group-item-action&quot;</span>
     <span class="p">)</span>
 
     <span class="c1"># Create a list group item with a table button for displaying chart-related tables.</span>
     <span class="n">listgroup_item_down</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">ListGroupItem</span><span class="p">(</span>
-        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">create_table_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">)],</span>
+        <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">create_table_button</span><span class="p">(</span><span class="n">chart_id</span><span class="p">)])],</span>
             <span class="nb">id</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list-item2&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">},</span>
             <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">className</span><span class="o">=</span><span class="s2">&quot;border-0 text-nowrap list-group-item-action&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="n">className</span><span class="o">=</span><span class="s2">&quot;border-0 text-nowrap list-group-item-action&quot;</span>
     <span class="p">)</span>
 
     <span class="c1"># Check if metadata link exists and metadata is available.</span>
@@ -1129,7 +1216,7 @@
                         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
                             <span class="n">children</span><span class="o">=</span><span class="p">[</span>
                                 <span class="n">listgroup_item_down</span><span class="p">,</span>
-                                <span class="n">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">),</span>
+                                <span class="n">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">valuelist</span><span class="p">),</span>
                             <span class="p">]</span>
                         <span class="p">)</span>
                     <span class="p">),</span>
@@ -1149,7 +1236,7 @@
                             <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
                                 <span class="p">[</span>
                                     <span class="n">listgroup_item_down</span><span class="p">,</span>
-                                    <span class="n">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">),</span>
+                                    <span class="n">create_offcanvas_table</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">valuelist</span><span class="p">),</span>
                                 <span class="p">]</span>
                             <span class="p">)</span>
                         <span class="p">]</span>
@@ -1166,26 +1253,31 @@
 
 <div class="viewcode-block" id="create_toast">
 <a class="viewcode-back" href="../../src.html#src.app.create_toast">[docs]</a>
-<span class="k">def</span> <span class="nf">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">create_toast</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;create_toast returns the dbc.Toast with the statistic metadata set in the YAML</span>
 
 <span class="sd">    :param data: the corresponding value of the chart as specified in the YAML</span>
 <span class="sd">    :param header: str: the corresponding key associated to each chart in the YAML file</span>
+<span class="sd">    :param href: bool: whether the text shall be encoded as link</span>
 <span class="sd">    :returns: dbc.Toast with the statistic metadata,</span>
 <span class="sd">              Unit and source (DATA) set in the YAML</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">toast</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">dbc</span><span class="o">.</span><span class="n">Toast</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mb-0&quot;</span><span class="p">)],</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">)])]</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">href</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">toast</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">dbc</span><span class="o">.</span><span class="n">Toast</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="n">A</span><span class="p">(</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)],</span> <span class="n">href</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span><span class="p">),</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mb-0&quot;</span><span class="p">)],</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">)])]</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">toast</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span><span class="n">dbc</span><span class="o">.</span><span class="n">Toast</span><span class="p">([</span><span class="n">html</span><span class="o">.</span><span class="n">P</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mb-0&quot;</span><span class="p">)],</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">)])]</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="n">toast</span></div>
 
 
 
 <div class="viewcode-block" id="get_static_metatada">
 <a class="viewcode-back" href="../../src.html#src.app.get_static_metatada">[docs]</a>
-<span class="k">def</span> <span class="nf">get_static_metatada</span><span class="p">(</span><span class="n">chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_static_metatada</span><span class="p">(</span><span class="n">chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">valuelist</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;get_static_metatada returns the HTML div for the info and table buttons</span>
 
 <span class="sd">    :param chart: the settings of the chart as specified in the YAML</span>
@@ -1261,7 +1353,7 @@
                                                 <span class="p">[</span>
                                                     <span class="n">subtitle</span><span class="p">,</span>
                                                     <span class="n">create_chart_item</span><span class="p">(</span>
-                                                        <span class="n">chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">,</span> <span class="n">df</span>
+                                                        <span class="n">chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">df_metadata</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">valuelist</span>
                                                     <span class="p">),</span>
                                                 <span class="p">],</span>
                                                 <span class="nb">id</span><span class="o">=</span><span class="n">chart_id</span><span class="p">,</span>
@@ -1342,11 +1434,33 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="download_single_data_chart">
+<a class="viewcode-back" href="../../src.html#src.app.download_single_data_chart">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">download_single_data_chart</span><span class="p">(</span><span class="n">chart_id</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">concept</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download data for a single chart</span>
+
+<span class="sd">    :param chart_id: the chart ID which corresponds to the row number and position in row</span>
+<span class="sd">    :param data: the DATA link specified in the YAML file</span>
+<span class="sd">    :param concept: the concept specified in the YAML file</span>
+<span class="sd">    :returns: list of couroutines with downloaded data as pd.DataFrame</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting data&quot;</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">SDMXData</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">get_data_async</span><span class="p">(</span>
+            <span class="n">yAxisConcept</span><span class="o">=</span><span class="n">concept</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There has been a problem ind downloading the data for </span><span class="si">{</span><span class="n">chart_id</span><span class="si">}</span><span class="s2">. Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">df</span></div>
+
 
 <div class="viewcode-block" id="download_single_chart">
 <a class="viewcode-back" href="../../src.html#src.app.download_single_chart">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">download_single_chart</span><span class="p">(</span><span class="n">data_chart</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download data for a single chart</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download data and metadata for a single chart</span>
 
 <span class="sd">    :param data_chart: the settings of the single chart</span>
 <span class="sd">    :param z: int: Row number</span>
@@ -1357,13 +1471,23 @@
     <span class="n">chart_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="si">}{</span><span class="n">pos</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="c1"># Data</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting data&quot;</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">SDMXData</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">get_data_async</span><span class="p">(</span>
-        <span class="n">yAxisConcept</span><span class="o">=</span><span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">]</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+        <span class="n">download_single_data_chart</span><span class="p">(</span><span class="n">chart_id</span><span class="p">,</span> 
+                                   <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">],</span>
+                                   <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;yAxisConcept&quot;</span><span class="p">])</span>
     <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span>
+        
+    <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Data download for chart&#39;</span><span class="p">,</span><span class="n">chart_id</span><span class="p">,</span><span class="s1">&#39;was cancelled due to a timeout&#39;</span><span class="p">)</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There has been a problem dowloading the data for chart </span><span class="si">{</span><span class="n">chart_id</span><span class="si">}</span><span class="s2">. Error:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting metadata&quot;</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">)</span>
-
     <span class="n">concept</span> <span class="o">=</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">]</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -1382,27 +1506,14 @@
             <span class="n">cl_url</span> <span class="o">=</span> <span class="n">get_url_cl</span><span class="p">(</span><span class="n">dsdLink</span><span class="p">,</span> <span class="n">cl_name</span><span class="p">)</span>
             <span class="n">cl_id_all</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_components_async</span><span class="p">(</span><span class="n">cl_url</span><span class="p">,</span> <span class="n">descendants</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">cl_id</span> <span class="o">=</span> <span class="n">cl_id_all</span><span class="p">[</span><span class="s2">&quot;Codelists&quot;</span><span class="p">][</span><span class="n">cl_name</span><span class="p">]</span>
-            <span class="n">cl_items</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">i</span><span class="p">:</span> <span class="n">get_cl_item_name</span><span class="p">(</span><span class="n">cl_id</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="p">]))</span>
-            <span class="p">}</span>
-            <span class="k">if</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
-                <span class="p">}</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
-                    <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
-                <span class="p">}</span>
+            <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="n">retreive_codes_from_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">concept</span><span class="p">,</span> <span class="n">cl_id</span><span class="p">)</span>
+            
         <span class="k">else</span><span class="p">:</span>
             <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Fallback to descendants but less performant</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">: dsdLink failed for </span><span class="si">{</span><span class="n">chart_id</span><span class="si">}</span><span class="s2">, use descendants.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid dsdLink for </span><span class="si">{</span><span class="n">chart_id</span><span class="si">}</span><span class="s2">. Falling back to dataflow with descendants. Error:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;metadataLink&quot;</span><span class="p">]:</span>
             <span class="c1"># Metadata</span>
             <span class="k">try</span><span class="p">:</span>
@@ -1419,26 +1530,15 @@
                     <span class="n">cl_id</span> <span class="o">=</span> <span class="n">SDMXMetadata</span><span class="p">(</span>
                         <span class="n">metadata_components</span><span class="p">,</span> <span class="n">concept</span>
                     <span class="p">)</span><span class="o">.</span><span class="n">get_codelist_name</span><span class="p">()</span>
-                    <span class="n">cl_items</span> <span class="o">=</span> <span class="p">{</span>
-                        <span class="n">i</span><span class="p">:</span> <span class="n">get_cl_item_name</span><span class="p">(</span><span class="n">cl_id</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="p">]))</span>
-                    <span class="p">}</span>
-                    <span class="k">if</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
-                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
-                        <span class="p">}</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
-                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
-                            <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
-                        <span class="p">}</span>
+                    
+                    <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="n">retreive_codes_from_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">concept</span><span class="p">,</span> <span class="n">cl_id</span><span class="p">)</span>
+
                 <span class="k">else</span><span class="p">:</span>
+                    
                     <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="kc">None</span>
+                    
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There has been an issue with the metadata. Error</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">metadata_dataflow</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]},</span>
                     <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1449,6 +1549,7 @@
                         <span class="p">)</span>
                     <span class="p">},</span>
                 <span class="p">}</span>
+                <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">metadata_dataflow</span> <span class="o">=</span> <span class="p">{</span>
@@ -1465,12 +1566,12 @@
         <span class="s2">&quot;chart_id&quot;</span><span class="p">:</span> <span class="n">chart_id</span><span class="p">,</span>
         <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="n">data_chart</span><span class="p">,</span>
         <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;valuelist&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="p">])))</span> <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
         <span class="s2">&quot;metadata_dataflow&quot;</span><span class="p">:</span> <span class="n">metadata_dataflow</span><span class="p">,</span>
         <span class="s2">&quot;metadata_codelist&quot;</span><span class="p">:</span> <span class="n">metadata_codelist</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done with&quot;</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span></div>
-
 
 
 <div class="viewcode-block" id="download_charts">
@@ -1492,7 +1593,7 @@
             <span class="n">cor</span> <span class="o">=</span> <span class="n">download_single_chart</span><span class="p">(</span><span class="n">data_chart</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
             <span class="n">all_cors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cor</span><span class="p">)</span>
 
-    <span class="n">all_charts</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">all_cors</span><span class="p">)</span>
+    <span class="n">all_charts</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">all_cors</span><span class="p">)</span>  
     <span class="n">all_charts</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">all_charts</span><span class="p">)</span>
     <span class="n">charts_per_r</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="n">all_charts</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">row_lengths</span><span class="p">]</span>
 
@@ -1504,6 +1605,7 @@
 <a class="viewcode-back" href="../../src.html#src.app.download_data">[docs]</a>
 <span class="nd">@callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;get_data&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;get_data_complete&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;footer&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner-id&quot;</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">),</span>
     <span class="n">Output</span><span class="p">(</span><span class="s2">&quot;spinner2&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span>
@@ -1535,7 +1637,7 @@
         <span class="n">charts_per_r</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">download_charts</span><span class="p">(</span><span class="n">chart_per_rows</span><span class="p">))</span>
         <span class="n">spinner</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">charts_per_r</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">spinner</span></div>
+        <span class="k">return</span> <span class="n">charts_per_r</span><span class="p">,</span> <span class="n">charts_per_r</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">spinner</span></div>
 
 
 
@@ -1580,6 +1682,7 @@
                     <span class="n">chart_id</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;chart_id&quot;</span><span class="p">]</span>
                     <span class="n">data_chart</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;settings&quot;</span><span class="p">]</span>
                     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+                    <span class="n">valuelist</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;valuelist&quot;</span><span class="p">]</span>
                     <span class="n">metadata_dataflow</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;metadata_dataflow&quot;</span><span class="p">]</span>
 
                     <span class="k">try</span><span class="p">:</span>
@@ -1593,19 +1696,26 @@
                     <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="n">data_per_row_pos</span><span class="p">[</span><span class="s2">&quot;metadata_codelist&quot;</span><span class="p">]</span>
 
                     <span class="k">if</span> <span class="n">metadata_codelist</span><span class="p">:</span>
-                        <span class="n">metadata_codelist_items_translated</span> <span class="o">=</span> <span class="p">{</span>
-                            <span class="n">i</span><span class="p">:</span> <span class="n">get_translation</span><span class="p">(</span><span class="n">metadata_codelist</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">lang</span><span class="p">)</span>
-                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">metadata_codelist</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                        <span class="p">}</span>
+                        
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">metadata_codelist_items_translated</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="n">i</span><span class="p">:</span> <span class="n">get_translation</span><span class="p">(</span><span class="n">metadata_codelist</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">lang</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">metadata_codelist</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                            <span class="p">}</span>     
+                            
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">metadata_codelist_items_translated</span> <span class="o">=</span> <span class="n">metadata_codelist</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not translate codes in codelist. Error:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
                         <span class="n">concept</span> <span class="o">=</span> <span class="n">data_chart</span><span class="p">[</span><span class="s2">&quot;legendConcept&quot;</span><span class="p">]</span>
                         <span class="n">df</span> <span class="o">=</span> <span class="n">translate_df</span><span class="p">(</span>
                             <span class="n">df</span><span class="p">,</span> <span class="n">concept</span><span class="p">,</span> <span class="n">metadata_codelist_items_translated</span>
                         <span class="p">)</span>
-
+                    
                     <span class="n">fig</span> <span class="o">=</span> <span class="n">draw_chart</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">data_chart</span><span class="p">)</span>
 
                     <span class="n">text</span> <span class="o">=</span> <span class="n">get_static_metatada</span><span class="p">(</span>
-                        <span class="n">data_chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">metadata_dataflow_translated</span><span class="p">,</span> <span class="n">df</span>
+                        <span class="n">data_chart</span><span class="p">,</span> <span class="n">chart_id</span><span class="p">,</span> <span class="n">metadata_dataflow_translated</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">valuelist</span>
                     <span class="p">)</span>
 
                     <span class="n">texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>

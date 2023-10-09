@@ -1,5 +1,4 @@
 """Module providing generic utilities"""
-
 import re
 import dash_bootstrap_components as dbc
 from dash import html
@@ -16,7 +15,8 @@ def snake_case(string: str) -> str:
 
     return "_".join(
         re.sub(
-            "([A-Z][a-z]+)", r" \1", re.sub("([A-Z]+)", r" \1", string.replace("-", " "))
+            "([A-Z][a-z]+)", r" \1", re.sub("([A-Z]+)", r" \1", string.replace("-", " ")
+                                            )
         ).split()
     ).lower()
 
@@ -35,17 +35,35 @@ def cleanhtml(raw_html):
     return cleantext
 
 
-def get_label(names, data):
+def get_label(names : list, data : list):
+    """get label returns the label for the value in a list of dictionaries
+
+    Args:
+        names (list): _description_
+        data (list): _description_
+
+    Returns:
+        list: a list with the matched pairs
+    """
     ret_list = []
     for name in names:
         for val in data:
             if val['value'] == name:
-                a = {"label": val["label"], "value": val["value"]}
-                ret_list.append(a)
+                result = {"label": val["label"], "value": val["value"]}
+                ret_list.append(result)
     return ret_list
 
 
 def error_box(error : str, e : str = None):
+    """error_box returns a html component with the error box
+
+    Args:
+        error (str): the error message
+        e (str, optional): the KeyError. Defaults to None.
+
+    Returns:
+        _type_: a html component with the error box
+    """
     if e:
         msg = f"{error}{e}"
     else:
@@ -115,5 +133,5 @@ def validate_yamlfile(file):
         try:
             valid_schema_generic.validate(element_generic)
             return None
-        except SchemaError as se:
-            return se
+        except SchemaError as error:
+            return error

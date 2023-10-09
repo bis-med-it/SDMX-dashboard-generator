@@ -74,7 +74,8 @@
 <h1>Documentation hosting<a class="headerlink" href="#documentation-hosting" title="Link to this heading"></a></h1>
 <p>To build the documentation, make sure sphinx and the required extensions are installed in the
 active python environment and run the following command from the root of the repository:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx</span><span class="o">-</span><span class="n">build</span> <span class="o">-</span><span class="n">b</span> <span class="n">html</span> <span class="n">docs_src</span> <span class="n">docs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx</span><span class="o">-</span><span class="n">apidoc</span> <span class="o">-</span><span class="n">o</span> <span class="n">docs_src</span> <span class="n">src</span><span class="o">/</span> 
+<span class="n">sphinx</span><span class="o">-</span><span class="n">build</span> <span class="o">-</span><span class="n">b</span> <span class="n">html</span> <span class="n">docs_src</span> <span class="n">docs</span>
 </pre></div>
 </div>
 <p>The resulting ‘docs’ folder of the main branch will be published through GitHub pages.</p>
