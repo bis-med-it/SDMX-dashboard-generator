@@ -4,7 +4,7 @@ To build the documentation, make sure sphinx and the required extensions are ins
 active python environment and run the following command from the root of the repository:
 
 ```
-sphinx-apidoc -o docs_src src/ 
+sphinx-apidoc -o docs_src src/
 sphinx-build -b html docs_src docs
 ```
 
