@@ -55,26 +55,38 @@ Main features of the application:
    git clone https://github.com/bis-med-it/SDMX-dashboard-generator.git
    ```
 
-2. Install dependencies
+2. (Recommended) Create virtual environnement
 
    ```sh
+   python.exe -m pip install --upgrade pip
+   pip install virtualenv
+   cd SDMX-dashboard-generator/
+   virtualenv venv --system-site-packages
+   .\venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. Install dependencies
+
+   ```sh
+   python.exe -m pip install --upgrade pip
    cd SDMX-dashboard-generator
    pip install -r requirements.txt
    ```
 
-   If you wish to contribute, you can install the optional requirements:
+   If you wish to contribute, you can install the optional development requirements:
 
    ```sh
-   pip install -r optional-requirements.txt
+   pip install -r requirements/dev_requirements.txt
    ```
 
-3. Run the app
+4. Run the app
 
    ```sh
    python3 app.py
    ```
 
-4. Open your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000) if you use Flask or [http://127.0.0.1:8050](http://127.0.0.1:8050)
+5. Open your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000) if you use Flask or [http://127.0.0.1:8050](http://127.0.0.1:8050)
 
 ## How to with examples
 

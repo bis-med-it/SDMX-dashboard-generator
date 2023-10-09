@@ -139,13 +139,24 @@
 </pre></div>
 </div>
 </li>
-<li><p>Install dependencies</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>SDMX-dashboard-generator
+<li><p>(Recommended) Create virtual environnement</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python.exe<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+pip<span class="w"> </span>install<span class="w"> </span>virtualenv
+<span class="nb">cd</span><span class="w"> </span>SDMX-dashboard-generator/
+virtualenv<span class="w"> </span>venv<span class="w"> </span>--system-site-packages
+.<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </pre></div>
 </div>
-<p>If you wish to contribute, you can install the optional requirements:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>optional-requirements.txt
+</li>
+<li><p>Install dependencies</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python.exe<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+<span class="nb">cd</span><span class="w"> </span>SDMX-dashboard-generator
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>If you wish to contribute, you can install the optional development requirements:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements/dev_requirements.txt
 </pre></div>
 </div>
 </li>

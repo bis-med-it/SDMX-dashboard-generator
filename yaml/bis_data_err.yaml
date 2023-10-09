@@ -1,0 +1,67 @@
+---
+DashID: bis_err
+Rows:
+-
+    Row: 0
+    chartType: TITLE
+    Title: "Policy rates and working population"
+    Subtitle: "Bank for International Settlements and International Labour Organization"
+-
+    Row: 0
+    chartType: FOOTER
+    Title: "2023 SDMX Global Conference Hackathon - Developed by the team from Bank for International Settlements"
+    Subtitle: "The views expressed are those of the authors and do not necessarily reflect those of the Bank for International Settlements. All errors are our own."
+-
+    Row: 1
+    chartType: VALUE
+    Title: Policy rate
+    Subtitle: United States
+    Unit: "%" 
+    UnitShow: "Yes"
+    UnitIcon: "bi bi-cash-coin h1"
+    unitLoc: SUFFIX
+    Decimals: 2
+    LabelsYN: "No"
+    legendConcept: REF_AREA
+    legendLoc: 
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    metadataLink:
+    DATA: "https://stats.bis.org/api/v1/data/WS_CBPOL_M/M.US/all?detail=full&lastNObservations=1qq"
+-
+    Row: 1
+    chartType: VALUE
+    Title: Policy rate
+    Subtitle: Euro area
+    Unit: "persons"
+    UnitShow: "No"
+    UnitIcon: "bi bi-currency-euro h1"
+    unitLoc: HIDE
+    Decimals: 2
+    LabelsYN: No
+    legendConcept: REF_AREA
+    legendLoc: 
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    metadataLink:
+    DATA: "https://stats.bis.org/api/v1/data/WS_CBPOL_M/M.XM/all?detail=full&lastNObservations=1qq"
+-
+    Row: 1
+    chartType: VALUE
+    Title: Policy rate
+    Subtitle: United Kingdom
+    Unit: "%"
+    UnitShow: "Yes"
+    UnitIcon: "bi bi-bank2 h1"
+    unitLoc: SUFFIX
+    Decimals: 2
+    LabelsYN: No
+    legendConcept: REF_AREA
+    legendLoc: 
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    metadataLink:
+    DATA: "https://stats.bis.org/api/v1/data/WS_CBPOL_M/M.GB/all?detail=full&lastNObservations=1"

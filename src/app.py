@@ -1,10 +1,10 @@
 """application"""
 import asyncio
+from asyncio.exceptions import TimeoutError
 import glob
 import os
 import platform
 from itertools import islice
-from re import sub
 
 import dash
 import dash_bootstrap_components as dbc
@@ -19,14 +19,18 @@ from src.draw import ChartGenerator
 from src.sdmx import (
     SDMXData,
     SDMXMetadata,
-    get_cl_item_name,
     get_components_async,
     get_translation,
     get_url_cl,
     translate_df,
+    retreive_codes_from_data
 )
-from src.utils import cleanhtml
-
+from src.utils import (snake_case,
+                       cleanhtml,
+                       get_label,
+                       error_box,
+                       validate_yamlfile
+)
 external_stylesheets = [
     dbc.themes.COSMO,
     dbc.icons.FONT_AWESOME,
@@ -128,6 +132,7 @@ app.layout = html.Div(
         dcc.Store(id="spinner"),
         dcc.Store(id="spinner2"),
         dcc.Store(id="get_data"),
+        dcc.Store(id="get_data_complete"),
         dcc.Store(id="footer"),
         dbc.Container(
             [
@@ -181,6 +186,7 @@ app.layout = html.Div(
                 dcc.Download(id="download_data"),
                 html.Div(id="charts_div"),
                 html.Div(id="footer_div"),
+                html.Div(id="yaml_file_invalid")
             ]
         ),
     ]
@@ -258,20 +264,6 @@ def toggle_modal(open_clicks: int, close_clicks: int, is_open: bool):
     return is_open
 
 
-def snake_case(string: str) -> str:
-    """snake_case returns snake cased string
-
-    :param string: str: input to be snake cased
-    :returns: the input string snake cased
-
-    """
-
-    return "_".join(
-        sub(
-            "([A-Z][a-z]+)", r" \1", sub("([A-Z]+)", r" \1", string.replace("-", " "))
-        ).split()
-    ).lower()
-
 
 def load_yamlfile(filename: str, folder: str = None) -> dict:
     """load_yamlfile returns the loaded settings from the YAML file
@@ -291,7 +283,7 @@ def load_yamlfile(filename: str, folder: str = None) -> dict:
 
         with open(fpath) as f:
             settings = yaml.safe_load(f)
-        return settings
+            return settings
 
     except yaml.YAMLError as exc:
         print(exc)
@@ -337,10 +329,10 @@ def load_yaml(href: str):
     except Exception as e:
         print(e)
 
-
 @callback(
     Output("settings", "data", allow_duplicate=True),
     Output("is_loaded", "data", allow_duplicate=True),
+    Output("yaml_file_invalid", "children", allow_duplicate=True), 
     [Input("yaml_file", "data")],
     prevent_initial_call=True,
 )
@@ -357,17 +349,21 @@ def load_content(yaml_file):
         if yaml_file is None:
             raise PreventUpdate
         data = load_yamlfile(yaml_file)
-        is_loaded = True
-        return data, is_loaded
+        validation = validate_yamlfile(data)
+        if validation:
+            return None, None, error_box(f"Invalid YAML file. Error:{validation.code}")
+        else:
+            is_loaded = True
+            return data, is_loaded, ""
 
-    except Exception as e:
-        print(e)
-        raise PreventUpdate from e
+    except:
+        raise PreventUpdate
 
 
 @callback(
     Output("settings", "data"),
     Output("is_loaded", "data"),
+    Output("yaml_file_invalid", "children"), 
     Input("upload-data", "filename"),
 )
 def update_output(uploaded_file):
@@ -382,10 +378,17 @@ def update_output(uploaded_file):
     if uploaded_file is None:
         raise PreventUpdate
 
-    data = load_yamlfile(uploaded_file, "yaml/")
-    is_loaded = True
-    return data, is_loaded
-
+    try:
+        data = load_yamlfile(uploaded_file, "yaml/")
+        validation = validate_yamlfile(data)
+        if validation:
+            return None, None, error_box(f"Invalid YAML file. Error:{validation.code}")
+        else:
+            is_loaded = True
+            return data, is_loaded, ""
+        
+    except:
+        raise PreventUpdate
 
 @callback(
     Output("url", "pathname"), Input("settings", "data"), prevent_initial_call=True
@@ -398,6 +401,9 @@ def get_dash_id(i):
 
     """
 
+    if i is None:
+        raise PreventUpdate
+    
     try:
         return snake_case(i["DashID"])
     except Exception as e:
@@ -527,6 +533,8 @@ def get_dashboard_title(data):
 
     """
 
+    if data is None:
+        raise PreventUpdate
     try:
         title = generate_title(data["Rows"], key="TITLE")
         spinner = ""
@@ -599,6 +607,7 @@ def get_icon_kpi(kpi, code, chart):
 
 
 def draw_chart(df, chart):
+    
     error_message = "Error in fetching the data, please check the YAML file: "
 
     if chart["xAxisConcept"] is None or chart["yAxisConcept"] is None:
@@ -607,6 +616,9 @@ def draw_chart(df, chart):
         chart_type = chart["chartType"]
 
         config = {"displayModeBar": False}
+        
+        if df.empty or not isinstance(df,pd.DataFrame):
+            return error_box("Data is empty. Please check the YAML file")
 
         if chart_type == "VALUE":
             try:
@@ -627,7 +639,7 @@ def draw_chart(df, chart):
                 )
 
             except Exception as e:
-                return dbc.Col(html.Div([html.P(str(error_message + str(e)))]))
+                return error_box("Something went wrong. Please check the YAML file: ", e)
 
         else:
             try:
@@ -688,8 +700,8 @@ def create_info_button(chart_id):
     return html.Span(
         html.I(className="bi bi-info-circle-fill", id=chart_id),
         n_clicks=0,
-        style={"textDecoration": "underline", "cursor": "pointer"},
-        id="open-offcanvas",
+        style={"cursor": "pointer"},
+        id="open-offcanvas"
     )
 
 
@@ -697,17 +709,18 @@ def create_table_button(chart_id):
     return html.Span(
         html.I(className="bi bi-table", id=chart_id),
         n_clicks=0,
-        style={"textDecoration": "underline", "cursor": "pointer"},
+        style={"cursor": "pointer"}
     )
 
 
 def create_download_button(chart_id):
     return html.Span(
         html.I(
-            className="bi bi-download", id={"type": "list-download", "index": chart_id}
+            className="bi bi-download", 
+            id={"type": "list-download", "index": chart_id}
         ),
         n_clicks=0,
-        style={"textDecoration": "underline", "cursor": "pointer"},
+        style={"cursor": "pointer"},
     )
 
 
@@ -740,7 +753,7 @@ def create_offcanvas(data, chart_id, df_metadata):
         )
     except Exception as e:
         print(e)
-        return dbc.CardHeader(data["Title"])
+        return html.Div(data["Title"])
 
 
 @callback(
@@ -785,8 +798,82 @@ def create_download(chart_id):
 
     return toast
 
+def create_filter_dropdown(df:pd.DataFrame, concept:str, chart_id:str, valuelist):
+    """update_filter_output updates the filter dropdown for the data
 
-def create_offcanvas_table(data, chart_id, df):
+    Args:
+        n_clicks: the clicks on the filter dropdown
+        data: a pd.DataFrame with the data without any fikter applied
+
+    Returns:
+        data: a dictionary with the data filtered
+    """
+    
+    try:
+        if len(valuelist) > 1:
+
+            try:
+
+                lst_value = list(set(list(df[concept+"_id"])))
+                    
+                return html.Div([
+                            dbc.Row([
+                                dbc.Col(
+                                    dcc.Dropdown(
+                                        valuelist,
+                                        lst_value,
+                                        multi=True,
+                                        id={"type": "list-dropdown", "index": chart_id}), width=9),
+                                dbc.Col(
+                                    dbc.Button("Ok", id = {"type": "list-dropdown-btn", "index": chart_id}, n_clicks=0, size="sm"), width=1)
+                                ])
+                        ])
+                            
+            except Exception:
+                return html.Div("")
+        else:
+            return html.Div("")
+        
+    except Exception:
+        return html.Div("")
+
+
+@callback(
+    Output("get_data", "data", allow_duplicate=True),
+    Input({"type": "list-dropdown-btn", "index": ALL}, "n_clicks"),
+    Input("get_data_complete", "data"),
+    State({"type": "list-dropdown", "index": ALL}, "value"),
+    prevent_initial_call=True,
+)
+def update_output(n_clicks, data, values):
+    """create_filter_dropdown creates the filter dropdown for the data
+
+    Args:
+        df: pd.DataFrame containg the data
+        concept: the legendConcept as specified in the YAML file
+        chart_id: the chart ID
+        valuelist: the valuelist containing the unique values of the legendConcept in the pd.DataFrame
+
+    Returns:
+        html.Div: a dcc.Dropdown and a dbc.Button containing the values to filter
+    """
+    
+    if sum(filter(None, n_clicks)) == 0:
+        raise PreventUpdate
+    
+    chart_id = ctx.triggered_id.index
+    row = int(chart_id[0])
+    pos = int(chart_id[1])
+    states_list = ctx.states_list[0]
+    val = [i["value"] for i in states_list if i["id"]["index"] == chart_id][0]
+    
+    df = pd.DataFrame(data[row][pos]["data"])
+    df_filtered = df.loc[df["REF_AREA"].isin(val)]
+    data[row][pos]["data"] = df_filtered.to_dict("records")
+    
+    return data
+
+def create_offcanvas_table(data, chart_id, df, valuelist):
     try:
         # Check if the data has a "downloadYN" flag set to "Y" for enabling downloads.
         if data["downloadYN"] == "Yes":
@@ -802,9 +889,9 @@ def create_offcanvas_table(data, chart_id, df):
                                     # and source URL as toasts.
                                     dbc.Col(
                                         [
-                                            create_toast(data["Unit"], "Unit"),
-                                            create_toast(data["DATA"], "Source URL"),
-                                            create_download(chart_id),
+                                            create_toast(data = data["Unit"], header = "Unit"),
+                                            create_toast(data = data["DATA"], header = "Source URL", href=True),
+                                            create_download(chart_id)
                                         ],
                                         align="start",
                                         width=3,
@@ -812,7 +899,9 @@ def create_offcanvas_table(data, chart_id, df):
                                     # Create a column for displaying the table
                                     # associated with the chart.
                                     dbc.Col(
-                                        [create_table(chart_id, df)],
+                                        [create_filter_dropdown(df, data["legendConcept"], chart_id, valuelist),
+                                         html.Hr(className="my-2"),
+                                         create_table(chart_id, df)],
                                         id=chart_id,
                                         width=9,
                                     ),
@@ -868,7 +957,7 @@ def create_offcanvas_table(data, chart_id, df):
     except Exception as e:
         # Handle exceptions and print the error message.
         print(e)
-        return dbc.CardHeader(chart_id)
+        return html.Div("")
 
 
 @callback(
@@ -925,7 +1014,7 @@ def create_table(chart_id: str, df: pd.DataFrame):
     )
 
 
-def create_chart_item(data: dict, chart_id: str, df_metadata: list, df: pd.DataFrame):
+def create_chart_item(data: dict, chart_id: str, df_metadata: list, df: pd.DataFrame, valuelist:list):
     """create_chart_item returns the HTML div for the info and table buttons
 
     :param data: dict: the settings of the chart as specified in the YAML
@@ -940,19 +1029,17 @@ def create_chart_item(data: dict, chart_id: str, df_metadata: list, df: pd.DataF
     # Create a list group item with an info button for displaying metadata.
     listgroup_item = dbc.ListGroupItem(
         [html.Div([create_info_button(chart_id)])],
-        id={"type": "list-item", "index": chart_id},
-        n_clicks=0,
-        className="border-0 text-nowrap list-group-item-action",
+            id={"type": "list-item", "index": chart_id},
+            n_clicks=0,
+            className="border-0 text-nowrap list-group-item-action"
     )
 
     # Create a list group item with a table button for displaying chart-related tables.
     listgroup_item_down = dbc.ListGroupItem(
-        html.Div(
-            [create_table_button(chart_id)],
+        [html.Div([create_table_button(chart_id)])],
             id={"type": "list-item2", "index": chart_id},
             n_clicks=0,
-            className="border-0 text-nowrap list-group-item-action",
-        )
+            className="border-0 text-nowrap list-group-item-action"
     )
 
     # Check if metadata link exists and metadata is available.
@@ -974,7 +1061,7 @@ def create_chart_item(data: dict, chart_id: str, df_metadata: list, df: pd.DataF
                         html.Div(
                             children=[
                                 listgroup_item_down,
-                                create_offcanvas_table(data, chart_id, df),
+                                create_offcanvas_table(data, chart_id, df, valuelist),
                             ]
                         )
                     ),
@@ -994,7 +1081,7 @@ def create_chart_item(data: dict, chart_id: str, df_metadata: list, df: pd.DataF
                             html.Div(
                                 [
                                     listgroup_item_down,
-                                    create_offcanvas_table(data, chart_id, df),
+                                    create_offcanvas_table(data, chart_id, df, valuelist),
                                 ]
                             )
                         ]
@@ -1008,23 +1095,28 @@ def create_chart_item(data: dict, chart_id: str, df_metadata: list, df: pd.DataF
     return html.Div([])
 
 
-def create_toast(data, header: str):
+def create_toast(data, header: str, href=False):
     """create_toast returns the dbc.Toast with the statistic metadata set in the YAML
 
     :param data: the corresponding value of the chart as specified in the YAML
     :param header: str: the corresponding key associated to each chart in the YAML file
+    :param href: bool: whether the text shall be encoded as link
     :returns: dbc.Toast with the statistic metadata,
               Unit and source (DATA) set in the YAML
 
     """
-
-    toast = dbc.Col(
-        [html.Div([dbc.Toast([html.P(str(data), className="mb-0")], header=header)])]
-    )
+    if href == True:
+        toast = dbc.Col(
+            [html.Div([dbc.Toast([html.P(html.A(children = [str(data)], href = str(data), target="_blank"), className="mb-0")], header=header)])]
+        )
+    else:
+        toast = dbc.Col(
+            [html.Div([dbc.Toast([html.P(str(data), className="mb-0")], header=header)])]
+        )
     return toast
 
 
-def get_static_metatada(chart, chart_id, df_metadata, df):
+def get_static_metatada(chart, chart_id, df_metadata, df, valuelist):
     """get_static_metatada returns the HTML div for the info and table buttons
 
     :param chart: the settings of the chart as specified in the YAML
@@ -1100,7 +1192,7 @@ def get_static_metatada(chart, chart_id, df_metadata, df):
                                                 [
                                                     subtitle,
                                                     create_chart_item(
-                                                        chart, chart_id, df_metadata, df
+                                                        chart, chart_id, df_metadata, df, valuelist
                                                     ),
                                                 ],
                                                 id=chart_id,
@@ -1177,9 +1269,28 @@ def get_rows(data: dict, max_charts_per_row: int = 3):
     except Exception as e:
         print(e)
 
+async def download_single_data_chart(chart_id,data,concept):
+    """Download data for a single chart
+
+    :param chart_id: the chart ID which corresponds to the row number and position in row
+    :param data: the DATA link specified in the YAML file
+    :param concept: the concept specified in the YAML file
+    :returns: list of couroutines with downloaded data as pd.DataFrame
+
+    """
+    print("Getting data", chart_id)
+    try:
+        df = await SDMXData(data=data).get_data_async(
+            yAxisConcept=concept
+        )
+    except Exception as e:
+        print(f"There has been a problem ind downloading the data for {chart_id}. Error: {e}")
+        df = pd.DataFrame
+    finally:
+        return df
 
 async def download_single_chart(data_chart, row: int, pos: int):
-    """Download data for a single chart
+    """Download data and metadata for a single chart
 
     :param data_chart: the settings of the single chart
     :param z: int: Row number
@@ -1190,13 +1301,23 @@ async def download_single_chart(data_chart, row: int, pos: int):
     chart_id = f"{row}{pos}"
 
     # Data
-    print("Getting data", chart_id)
-    df = await SDMXData(data=data_chart["DATA"]).get_data_async(
-        yAxisConcept=data_chart["yAxisConcept"]
+    task = asyncio.create_task(
+        download_single_data_chart(chart_id, 
+                                   data_chart["DATA"],
+                                   data_chart["yAxisConcept"])
     )
+    try:
+        df = await asyncio.wait_for(task, timeout = 30)
+        
+    except TimeoutError:
+        df = pd.DataFrame()
+        print(f'Data download for chart',chart_id,'was cancelled due to a timeout')
+        
+    except Exception as e:
+        df = pd.DataFrame()
+        print(f"There has been a problem dowloading the data for chart {chart_id}. Error:{e}")
 
     print("Getting metadata", chart_id)
-
     concept = data_chart["legendConcept"]
 
     try:
@@ -1215,27 +1336,14 @@ async def download_single_chart(data_chart, row: int, pos: int):
             cl_url = get_url_cl(dsdLink, cl_name)
             cl_id_all = await get_components_async(cl_url, descendants=False)
             cl_id = cl_id_all["Codelists"][cl_name]
-            cl_items = {
-                i: get_cl_item_name(cl_id.items, i) for i in list(set(df[concept]))
-            }
-            if cl_id.description is None:
-                metadata_codelist = {
-                    "name": cl_id.name,
-                    "description": "",
-                    "items": cl_items,
-                }
-            else:
-                metadata_codelist = {
-                    "name": cl_id.name,
-                    "description": cl_id.description,
-                    "items": cl_items,
-                }
+            metadata_codelist = retreive_codes_from_data(df, concept, cl_id)
+            
         else:
             metadata_codelist = None
 
     # Fallback to descendants but less performant
     except Exception as e:
-        print(f"{e}: dsdLink failed for {chart_id}, use descendants.")
+        print(f"Invalid dsdLink for {chart_id}. Falling back to dataflow with descendants. Error:{e}")
         if data_chart["metadataLink"]:
             # Metadata
             try:
@@ -1252,26 +1360,15 @@ async def download_single_chart(data_chart, row: int, pos: int):
                     cl_id = SDMXMetadata(
                         metadata_components, concept
                     ).get_codelist_name()
-                    cl_items = {
-                        i: get_cl_item_name(cl_id.items, i)
-                        for i in list(set(df[concept]))
-                    }
-                    if cl_id.description is None:
-                        metadata_codelist = {
-                            "name": cl_id.name,
-                            "description": "",
-                            "items": cl_items,
-                        }
-                    else:
-                        metadata_codelist = {
-                            "name": cl_id.name,
-                            "description": cl_id.description,
-                            "items": cl_items,
-                        }
+                    
+                    metadata_codelist = retreive_codes_from_data(df, concept, cl_id)
+
                 else:
+                    
                     metadata_codelist = None
+                    
             except Exception as e:
-                print(e)
+                print(f"There has been an issue with the metadata. Error{e}")
                 metadata_dataflow = {
                     "name": {"en": data_chart["Title"]},
                     "description": {
@@ -1282,6 +1379,7 @@ async def download_single_chart(data_chart, row: int, pos: int):
                         )
                     },
                 }
+                metadata_codelist = None
 
         else:
             metadata_dataflow = {
@@ -1298,12 +1396,12 @@ async def download_single_chart(data_chart, row: int, pos: int):
         "chart_id": chart_id,
         "settings": data_chart,
         "data": df.to_dict("records") if df is not None else None,
+        "valuelist": list(set(list(df[concept]))) if df is not None else None,
         "metadata_dataflow": metadata_dataflow,
         "metadata_codelist": metadata_codelist,
     }
     print("Done with", chart_id)
     return result
-
 
 async def download_charts(chart_per_rows):
     """Download chart data asyncronously
@@ -1322,7 +1420,7 @@ async def download_charts(chart_per_rows):
             cor = download_single_chart(data_chart, row, pos)
             all_cors.append(cor)
 
-    all_charts = await asyncio.gather(*all_cors)
+    all_charts = await asyncio.gather(*all_cors)  
     all_charts = iter(all_charts)
     charts_per_r = [list(islice(all_charts, i)) for i in row_lengths]
 
@@ -1331,6 +1429,7 @@ async def download_charts(chart_per_rows):
 
 @callback(
     Output("get_data", "data"),
+    Output("get_data_complete", "data"),
     Output("footer", "data"),
     Output("spinner-id", "children"),
     Output("spinner2", "data"),
@@ -1362,7 +1461,7 @@ def download_data(settings, value):
         charts_per_r = asyncio.run(download_charts(chart_per_rows))
         spinner = ""
 
-        return charts_per_r, footer, value, spinner
+        return charts_per_r, charts_per_r, footer, value, spinner
 
 
 @callback(
@@ -1404,6 +1503,7 @@ def add_graphs(data, footer, lang, value):
                     chart_id = data_per_row_pos["chart_id"]
                     data_chart = data_per_row_pos["settings"]
                     df = pd.DataFrame(data_per_row_pos["data"])
+                    valuelist = data_per_row_pos["valuelist"]
                     metadata_dataflow = data_per_row_pos["metadata_dataflow"]
 
                     try:
@@ -1417,19 +1517,26 @@ def add_graphs(data, footer, lang, value):
                     metadata_codelist = data_per_row_pos["metadata_codelist"]
 
                     if metadata_codelist:
-                        metadata_codelist_items_translated = {
-                            i: get_translation(metadata_codelist["items"][i], lang)
-                            for i in list(metadata_codelist["items"].keys())
-                        }
+                        
+                        try:
+                            metadata_codelist_items_translated = {
+                                i: get_translation(metadata_codelist["items"][i], lang)
+                                for i in list(metadata_codelist["items"].keys())
+                            }     
+                            
+                        except Exception as e:
+                            metadata_codelist_items_translated = metadata_codelist
+                            print(f"Could not translate codes in codelist. Error:{e}")
+
                         concept = data_chart["legendConcept"]
                         df = translate_df(
                             df, concept, metadata_codelist_items_translated
                         )
-
+                    
                     fig = draw_chart(df, data_chart)
 
                     text = get_static_metatada(
-                        data_chart, chart_id, metadata_dataflow_translated, df
+                        data_chart, chart_id, metadata_dataflow_translated, df, valuelist
                     )
 
                     texts.append(text)
