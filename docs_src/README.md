@@ -8,4 +8,10 @@ sphinx-apidoc -o docs_src src/
 sphinx-build -b html docs_src docs
 ```
 
+For a clean build, please run from the root of the repository:
+
+```
+sphinx-build -E docs_src docs
+```
+
 The resulting 'docs' folder of the main branch will be published through GitHub pages.

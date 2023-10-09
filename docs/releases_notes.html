@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Documentation hosting &mdash; SDMX Dashboard Generator 1.0 documentation</title>
+  <title>Release Notes &mdash; SDMX Dashboard Generator 1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +18,9 @@
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Technical specifications" href="modules.html" />
+    <link rel="prev" title="Walkthrough" href="walkthrough.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,19 +42,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">General</span></p>
-<ul>
+              <p class="caption" role="heading"><span class="caption-text">General:</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Walkthrough</a></li>
-<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release notes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">[1.1.0] - 2023-10-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">[1.0.0] - 2023-09-28</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Technical specifications</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Help</span></p>
+<p class="caption" role="heading"><span class="caption-text">Help:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 </ul>
 
         </div>
@@ -69,9 +74,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Documentation hosting</li>
+      <li class="breadcrumb-item active">Release Notes</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/releases_notes.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -79,25 +84,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="documentation-hosting">
-<h1>Documentation hosting<a class="headerlink" href="#documentation-hosting" title="Link to this heading"></a></h1>
-<p>To build the documentation, make sure sphinx and the required extensions are installed in the
-active python environment and run the following command from the root of the repository:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx</span><span class="o">-</span><span class="n">apidoc</span> <span class="o">-</span><span class="n">o</span> <span class="n">docs_src</span> <span class="n">src</span><span class="o">/</span>
-<span class="n">sphinx</span><span class="o">-</span><span class="n">build</span> <span class="o">-</span><span class="n">b</span> <span class="n">html</span> <span class="n">docs_src</span> <span class="n">docs</span>
-</pre></div>
-</div>
-<p>For a clean build, please run from the root of the repository:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx</span><span class="o">-</span><span class="n">build</span> <span class="o">-</span><span class="n">E</span> <span class="n">docs_src</span> <span class="n">docs</span>
-</pre></div>
-</div>
-<p>The resulting ‘docs’ folder of the main branch will be published through GitHub pages.</p>
+  <section id="release-notes">
+<h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading"></a></h1>
+<p>This page contains an overview of changes for each release.
+Each release is tagged in GitHub and allows for easy download for the different versions.
+This project adheres to <a class="reference external" href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a> standards.</p>
+<section id="id1">
+<h2>[1.1.0] - 2023-10-09<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Feature: Added support for filter feature to dynamically interact with the data</p></li>
+<li><p>Feature: Added for YAML validation</p></li>
+<li><p>Feature: Added for error box for chart</p></li>
+<li><p>Doc: Fixed documentation with wrong GitHub repo</p></li>
+<li><p>Fix: Prevent crash upon SSL connection error</p></li>
+<li><p>Fix: Added timeout for downloading the data</p></li>
+<li><p>Fix: Fixed metadata code list not assigned when no code is returned from API</p></li>
+<li><p>Misc: Added YAML files with errors to testing purposes</p></li>
+<li><p>Misc: Enhanced logging and handling exceptions</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>[1.0.0] - 2023-09-28<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Initial version compliant with requirements defined by the <a class="reference external" href="https://www.sdmx2023.org/hackathon">SDMX 2023 Hackathon</a>.</p></li>
+</ul>
+</section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="walkthrough.html" class="btn btn-neutral float-left" title="Walkthrough" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="Technical specifications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

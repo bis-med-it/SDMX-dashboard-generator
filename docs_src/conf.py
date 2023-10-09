@@ -13,9 +13,9 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath("../../Envs/sdmx_dg/site-packages/"))
-
+numpydoc_show_class_members = False
 
 # -- Project information -----------------------------------------------------
 
@@ -38,7 +38,6 @@ release = "1.0"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.viewcode",
-    # "sphinx.ext.napoleon", # Apparently better not to have both this and autodoc
     "myst_parser"
 ]
 

@@ -47,55 +47,6 @@ Main features of the application:
       * include commercial data.
 </details>
 
-## Installation
-
-1. Clone the repo
-
-   ```sh
-   git clone https://github.com/bis-med-it/SDMX-dashboard-generator.git
-   ```
-
-2. (Recommended) Create virtual environnement
-
-   ```sh
-   python.exe -m pip install --upgrade pip
-   pip install virtualenv
-   cd SDMX-dashboard-generator/
-   virtualenv venv --system-site-packages
-   .\venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. Install dependencies
-
-   ```sh
-   python.exe -m pip install --upgrade pip
-   cd SDMX-dashboard-generator
-   pip install -r requirements.txt
-   ```
-
-   If you wish to contribute, you can install the optional development requirements:
-
-   ```sh
-   pip install -r requirements/dev_requirements.txt
-   ```
-
-4. Run the app
-
-   ```sh
-   python3 app.py
-   ```
-
-5. Open your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000) if you use Flask or [http://127.0.0.1:8050](http://127.0.0.1:8050)
-
-## How to with examples
-
-The application comes with examples stored in the `/yaml` folder which can be used in two ways:
-- by uploading one `.yaml` file in the interface via drag and drop or
-- by typing the `DashID` of the dashboard in the URL (i.e. [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat) for the `eurostat_sample.yaml` file which contains `DashID: eurostat`).
-
-The application will scan the existing content in the `yaml` subfolder of the project and load the `.yaml` file containing the requested `DashID`. If none is found, the app will raise a `PreventUpdate`.
-
 ## High-level architecture
 The application is built around four main components:
 
@@ -116,7 +67,7 @@ The application is built around four main components:
 >> SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. This file follows the specifications indicated by the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf).
 
 >> Example of `.yaml` structure:<br>
->> ![This is an alt text.](/docs/icons/yaml_sample.png "This is a yaml sample.")
+>> ![This is an alt text.](../docs/icons/yaml_sample.png "This is a yaml sample.")
 
 >  ### DashID
 >> Any string composed of numbers, letters, and underscores (_) used to identify the dashboard. This ID will be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the DashID is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat).
@@ -200,13 +151,3 @@ The application is built around four main components:
 Each function, with the exception of the one returning the KPI, makes use of `decorator` elements for enriching the chart with style elements (e.g. legendlocation).
 
 </details>
-
-
- 
-
-## Contributing
-
-Any contribution is  **greatly appreciated**!
-
-For uniform and clean code, please consider integrating [flake8](https://flake8.pycqa.org/en/latest/) and [black](https://black.readthedocs.io/en/stable/index.html) as part of your workflow.
-A configuration for the former is already provided, and you can find a [good introduction here](https://medium.com/@huzaifazahoor654/improving-code-quality-with-flake8-and-black-a-guide-for-python-developers-c374168d5884).

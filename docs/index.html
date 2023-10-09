@@ -41,10 +41,19 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Technical specifications</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 </ul>
 
         </div>
@@ -73,105 +82,35 @@
              
   <section id="welcome-to-sdmx-dashboard-generator-s-documentation">
 <h1>Welcome to SDMX Dashboard Generator’s documentation!<a class="headerlink" href="#welcome-to-sdmx-dashboard-generator-s-documentation" title="Link to this heading"></a></h1>
-<p>SDMX Dashboard generator is an open-source <a class="reference external" href="https://dash.plotly.com">Dash</a> application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. It supports the version 2.1 of the standard. It leverages the open-source library <a class="reference external" href="https://github.com/Meaningful-Data/sdmxthon">SDMXthon</a> to retrieve and parse data and metadata in SDMX. A dashboard is composed of several visualizations as defined by the specifications provided in a <cite>.yaml</cite> file.</p>
+<p>SDMX Dashboard generator is an open-source <a class="reference external" href="https://dash.plotly.com">Dash</a> application that generates dynamic dashboards by
+pulling data and metadata from SDMX Rest API. It supports the version 2.1 of the standard. It leverages the open-source
+library <a class="reference external" href="https://github.com/Meaningful-Data/sdmxthon">SDMXthon</a> to retrieve and parse data and metadata in SDMX.
+A dashboard is composed of several visualizations as defined by the specifications provided in a <cite>.yaml</cite> file.</p>
 <p>This library has been developed for the <a class="reference external" href="https://www.sdmx2023.org/hackathon">SDMX Hackathon Global Conference 2023</a>.</p>
+<a class="reference internal image-reference" href="_images/light.png"><img alt="_images/light.png" class="align-center" src="_images/light.png" style="width: 669.0px; height: 475.0px;" /></a>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">General</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Walkthrough</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#features">Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#how-to-with-examples">How to with examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#high-level-architecture">High-level architecture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#contributing">Contributing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Technical specifications</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-src.app">App</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.add_graphs"><code class="docutils literal notranslate"><span class="pre">add_graphs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_chart_item"><code class="docutils literal notranslate"><span class="pre">create_chart_item()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_download"><code class="docutils literal notranslate"><span class="pre">create_download()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_download_button"><code class="docutils literal notranslate"><span class="pre">create_download_button()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_filter_dropdown"><code class="docutils literal notranslate"><span class="pre">create_filter_dropdown()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_info_button"><code class="docutils literal notranslate"><span class="pre">create_info_button()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_offcanvas"><code class="docutils literal notranslate"><span class="pre">create_offcanvas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_offcanvas_table"><code class="docutils literal notranslate"><span class="pre">create_offcanvas_table()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_table"><code class="docutils literal notranslate"><span class="pre">create_table()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_table_button"><code class="docutils literal notranslate"><span class="pre">create_table_button()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.create_toast"><code class="docutils literal notranslate"><span class="pre">create_toast()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.download_charts"><code class="docutils literal notranslate"><span class="pre">download_charts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.download_data"><code class="docutils literal notranslate"><span class="pre">download_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.download_single_chart"><code class="docutils literal notranslate"><span class="pre">download_single_chart()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.download_single_data_chart"><code class="docutils literal notranslate"><span class="pre">download_single_data_chart()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.download_table"><code class="docutils literal notranslate"><span class="pre">download_table()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.draw_chart"><code class="docutils literal notranslate"><span class="pre">draw_chart()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.generate_footer"><code class="docutils literal notranslate"><span class="pre">generate_footer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.generate_title"><code class="docutils literal notranslate"><span class="pre">generate_title()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_dash_id"><code class="docutils literal notranslate"><span class="pre">get_dash_id()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_dashboard_title"><code class="docutils literal notranslate"><span class="pre">get_dashboard_title()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_dataflow_metadata"><code class="docutils literal notranslate"><span class="pre">get_dataflow_metadata()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_icon_kpi"><code class="docutils literal notranslate"><span class="pre">get_icon_kpi()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_language"><code class="docutils literal notranslate"><span class="pre">get_language()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_rows"><code class="docutils literal notranslate"><span class="pre">get_rows()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_static_metatada"><code class="docutils literal notranslate"><span class="pre">get_static_metatada()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_text_kpi"><code class="docutils literal notranslate"><span class="pre">get_text_kpi()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.get_title_footer"><code class="docutils literal notranslate"><span class="pre">get_title_footer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.load_content"><code class="docutils literal notranslate"><span class="pre">load_content()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.load_yaml"><code class="docutils literal notranslate"><span class="pre">load_yaml()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.load_yamlfile"><code class="docutils literal notranslate"><span class="pre">load_yamlfile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.open_metadata_offcanvas"><code class="docutils literal notranslate"><span class="pre">open_metadata_offcanvas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.open_table_offcanvas"><code class="docutils literal notranslate"><span class="pre">open_table_offcanvas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.toggle_collapse"><code class="docutils literal notranslate"><span class="pre">toggle_collapse()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.toggle_modal"><code class="docutils literal notranslate"><span class="pre">toggle_modal()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.app.update_output"><code class="docutils literal notranslate"><span class="pre">update_output()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release notes</a></li>
 </ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-src.draw">Charts</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.draw.ChartGenerator"><code class="docutils literal notranslate"><span class="pre">ChartGenerator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.draw.ChartGenerator.bar_chart"><code class="docutils literal notranslate"><span class="pre">ChartGenerator.bar_chart()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.draw.ChartGenerator.calculate_kpi"><code class="docutils literal notranslate"><span class="pre">ChartGenerator.calculate_kpi()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.draw.ChartGenerator.pie_chart"><code class="docutils literal notranslate"><span class="pre">ChartGenerator.pie_chart()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.draw.ChartGenerator.time_series_chart"><code class="docutils literal notranslate"><span class="pre">ChartGenerator.time_series_chart()</span></code></a></li>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Technical specifications</a></li>
 </ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.draw.chart_style_decorator"><code class="docutils literal notranslate"><span class="pre">chart_style_decorator()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-src.sdmx">SDMX helpers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.SDMXData"><code class="docutils literal notranslate"><span class="pre">SDMXData</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.sdmx.SDMXData.get_data"><code class="docutils literal notranslate"><span class="pre">SDMXData.get_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.sdmx.SDMXData.get_data_async"><code class="docutils literal notranslate"><span class="pre">SDMXData.get_data_async()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.SDMXMetadata"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.sdmx.SDMXMetadata.dataflow_metadata"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.dataflow_metadata()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.sdmx.SDMXMetadata.datastructure_metadata"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.datastructure_metadata()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.sdmx.SDMXMetadata.get_cl"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.get_cl()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.sdmx.SDMXMetadata.get_codelist_name"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.get_codelist_name()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.sdmx.SDMXMetadata.get_codelists"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.get_codelists()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="modules.html#src.sdmx.SDMXMetadata.parse_message"><code class="docutils literal notranslate"><span class="pre">SDMXMetadata.parse_message()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.get_cl_item_name"><code class="docutils literal notranslate"><span class="pre">get_cl_item_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.get_components"><code class="docutils literal notranslate"><span class="pre">get_components()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.get_components_async"><code class="docutils literal notranslate"><span class="pre">get_components_async()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.get_translation"><code class="docutils literal notranslate"><span class="pre">get_translation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.get_url_cl"><code class="docutils literal notranslate"><span class="pre">get_url_cl()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.retreive_codes_from_data"><code class="docutils literal notranslate"><span class="pre">retreive_codes_from_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.sdmx.translate_df"><code class="docutils literal notranslate"><span class="pre">translate_df()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-src.utils">Utils</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.utils.cleanhtml"><code class="docutils literal notranslate"><span class="pre">cleanhtml()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.utils.error_box"><code class="docutils literal notranslate"><span class="pre">error_box()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.utils.get_label"><code class="docutils literal notranslate"><span class="pre">get_label()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.utils.snake_case"><code class="docutils literal notranslate"><span class="pre">snake_case()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="modules.html#src.utils.validate_yamlfile"><code class="docutils literal notranslate"><span class="pre">validate_yamlfile()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 </ul>
 </div>
 </section>
