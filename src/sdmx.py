@@ -381,7 +381,8 @@ def get_cl_item_name(items, item):
             return cl_item_name
 
         except Exception as e:
-            print(e)
+            print(f"The code {item} could not be found in the codelist. Error:{e}")
+            return {'en': {'locale': 'English', 'content': item}}
 
 
 def get_translation(content, locale: str = "en"):
@@ -401,7 +402,7 @@ def get_translation(content, locale: str = "en"):
             name = content["".join(locale)]["content"]
 
         except Exception as e:
-            print(e)
+            print(f"Get translation raised Exception: ",e)
             try:
                 name = content["en"]["content"]
             except Exception as e:
@@ -414,7 +415,7 @@ def get_translation(content, locale: str = "en"):
         return name
 
     except Exception as e:
-        print(e)
+        print(f"Get translation raised Exception: ",e)
 
 
 def translate_df(df, concept, items_translated):
@@ -440,3 +441,31 @@ def translate_df(df, concept, items_translated):
             print(e)
 
     return df
+
+
+def retreive_codes_from_data(df, concept, cl_id):
+    try:
+        codes_df = list(set(df[concept]))
+        cl_items = {
+            i: get_cl_item_name(cl_id.items, i) for i in codes_df
+        }
+        if cl_id.description is None:
+            metadata_codelist = {
+                "name": cl_id.name,
+                "description": "",
+                "items": cl_items,
+            }
+        else:
+            metadata_codelist = {
+                "name": cl_id.name,
+                "description": cl_id.description,
+                "items": cl_items,
+            }
+    except Exception as e:
+        print(f"Could not retreive codes in data. Error{e}")
+        metadata_codelist = {"name": cl_id.name,
+                             "description": cl_id.description,
+                             "items": "",
+                             }
+    finally:
+        return metadata_codelist

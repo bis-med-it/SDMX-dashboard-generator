@@ -27,9 +27,9 @@ Rows:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
-    dataLink: 
+    dsdLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/datastructure/ESTAT/TEICP000/1.0"
     metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEICP000/1.0"
-    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEICP000/M.CP00.I15.EA20?endPeriod=2023&lastNObservations=1"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEICP000/M.CP00.I15.DE?endPeriod=2023&lastNObservations=1"
 -
     Row: 1
     chartType: VALUE
@@ -46,9 +46,9 @@ Rows:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
-    dataLink: 
+    dsdLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/datastructure/ESTAT/TEILM010/1.0?detail=full"
     metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEILM010/1.0?detail=full"
-    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEILM010/M.SA.TOTAL.T.THS_PER.EA20?endPeriod=2023&lastNObservations=1"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEILM010/M.SA.TOTAL.T.THS_PER.FR?endPeriod=2023&lastNObservations=1"
 -
     Row: 1
     chartType: VALUE

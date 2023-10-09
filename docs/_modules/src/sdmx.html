@@ -494,7 +494,8 @@
             <span class="k">return</span> <span class="n">cl_item_name</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The code </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> could not be found in the codelist. Error:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;en&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;locale&#39;</span><span class="p">:</span> <span class="s1">&#39;English&#39;</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">}}</span></div>
 
 
 
@@ -517,7 +518,7 @@
             <span class="n">name</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">locale</span><span class="p">)][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Get translation raised Exception: &quot;</span><span class="p">,</span><span class="n">e</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;en&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -530,7 +531,7 @@
         <span class="k">return</span> <span class="n">name</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Get translation raised Exception: &quot;</span><span class="p">,</span><span class="n">e</span><span class="p">)</span></div>
 
 
 
@@ -559,6 +560,37 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="retreive_codes_from_data">
+<a class="viewcode-back" href="../../src.html#src.sdmx.retreive_codes_from_data">[docs]</a>
+<span class="k">def</span> <span class="nf">retreive_codes_from_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">concept</span><span class="p">,</span> <span class="n">cl_id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">codes_df</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">concept</span><span class="p">]))</span>
+        <span class="n">cl_items</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">i</span><span class="p">:</span> <span class="n">get_cl_item_name</span><span class="p">(</span><span class="n">cl_id</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">codes_df</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">cl_items</span><span class="p">,</span>
+            <span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not retreive codes in data. Error</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">metadata_codelist</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                             <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">cl_id</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                             <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                             <span class="p">}</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">metadata_codelist</span></div>
 
 </pre></div>
 
