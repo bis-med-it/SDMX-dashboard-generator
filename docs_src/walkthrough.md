@@ -6,46 +6,124 @@ SDMX Dashboard generator is an open-source [Dash](https://dash.plotly.com) appli
 
 This library has been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
 
-## Features
+## Main features 
 
-Main features of the application:
+<div style="display: flex">
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/sdmx.png" height="100"/>
+  <details open><summary>SDMX integration</summary>
 
-<details open>
-  <summary>Integration with specification file</summary>
+  Reading of settings file (`.yaml`) for data and metadata retrieval
+
+  </details></div>
   
-  - **Automatic reading of settings:** the system offers automatic reading of settings from both default and enhanced `.yaml` files, simplifying configuration.
-  - **User-independent access:** users can access the system through an URL or via drag and drop functionality, ensuring a seamless experience.
-</details>
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/bars.png" height="100"/>
+  <details open><summary>Interactive graphs</summary>
+  Plotly for dynamic visualization (KPIs, line charts, pie charts and bar graphs)
+  </details></div>
 
-<details open>
-  <summary>Integration with SDMX REST API connectivity</summary>
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/python.png" height="100"/>
+  <details open><summary>Open source code</summary>
+
+  Reliance on open-source libraries
+  </details></div>
+
+</div>
+
+
+
+<div style="display: flex">
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/pen.png" height="100"/>
+  <details open><summary>Flexible design</summary>
+
+  - Position and size of the elements displayed automatically adjusted
+  - Bootstrap components to modify themes, icons, and incorporate HTML5 elements
+  </details></div>
   
-  - **Cross-sources support:** the system supports cross-sources data retrieval with parallelized processes, facilitating efficient data integration.
-  - **Multi-lingual metadata:** it seamlessly integrates multi-lingual metadata, enhancing the comprehensibility of data from various sources.
-</details>
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/cpu.png" height="100"/>
+  <details open><summary>Optimized performance</summary>
 
-<details open>
-  <summary>Application design</summary>
+  - SDMX hierarchy (data structure, dataflow and data)
+  - Cross-sources asynchronously processed
+  </details></div>
 
-  - **Dynamic data visualization:** the application is supported by Plotly and it provides dynamic and interactive data visualization capabilities, including KPIs, line charts, pie charts and bar graphs.
-  - **Automatic dashboard adjustments:** visualizations are automatically adjusted within the dashboard, allowing users to customize their position and size as needed.
-  - **Automatic metadata:** the application generates automatic metadata, such as informative tooltips, titles, and units, enhancing data interpretation.
-  - **Table format access:** users can access data in a tabular format and easily export it for further analysis.
-  - **Customizability:** the application's components and style are highly customizable using Bootstrap, allowing users to modify themes, icons, and incorporate HTML5 elements to tailor the interface to their needs.
-</details>
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/filter.png" height="100"/>
+  <details open><summary>Dynamic filtering</summary>
 
-<details open>
-  <summary>Further enhancements</summary>
+  Data accessible with table format supported by dynamic filters
 
-  - **Robustness of the appplication:** define proper Exception classes and more rigorous Exception handling.
-  - **New features:** <br> 
-      * enhancement of `.yaml` file or removal by integrating settings in a new tab of the app
-      * enhancement interactivity (e.g. filtering data, search, parameter simulation..)
-      * enhancement chart types (e.g. mix charts per graph, map, dual-axis, flows, network, outlier..)
-      * only show languages available depending on the returned metadata
-      * multiple pages application
-      * include commercial data.
-</details>
+  </details></div>
+
+</div>
+
+
+
+<div style="display: flex">
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/valid.png" height="100"/>
+  <details open><summary>Settings validation</summary>
+
+  Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
+  </details></div>
+  
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/search.png" height="100"/>
+  <details open><summary>Searchable documentation</summary>
+
+  Sphinx documentation automatically updated to support the exploration of the material
+  </details></div>
+
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/language.png" height="100"/>
+  <details open><summary>Multilingual support</summary>
+
+  Multi-lingual metadata to access titles, labels and info buttons in the desired language, when supported by SDMX
+  </details></div>
+
+</div>
+
+
+
+
+
+<div style="display: flex">
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/download.png" height="100"/>
+  <details open><summary>Data download</summary>
+
+  Data accessible with table format supported by download export (CSV)
+  </details></div>
+  
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/team.png" height="100"/>
+  <details open><summary>Collaboration</summary>
+
+  - User-independent access within the same company and across countries
+  - Worldwide contribution (feedback and pull requests via Github) are welcome
+
+  </details></div>
+
+  <div style="flex: 1; text-align: center;">
+  <img src="../docs/_images/work-in-progress.png" height="100"/>
+  <details open><summary>Future enhancements</summary>
+
+  - multiple pages application
+  - settings in a new tab
+  - interactivity (search, simulation..)
+  - chart types (mix, map, dual-axis, flows, network, outlier..)
+  - commercial data.
+  </details></div>
+
+</div>
+
+
+
+
 
 ## High-level architecture
 The application is built around four main components:
@@ -67,7 +145,7 @@ The application is built around four main components:
 >> SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. This file follows the specifications indicated by the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf).
 
 >> Example of `.yaml` structure:<br>
->> ![This is an alt text.](../docs/icons/yaml_sample.png "This is a yaml sample.")
+>> ![This is an alt text.](../docs/_images_/yaml_sample.png "This is a yaml sample.")
 
 >  ### DashID
 >> Any string composed of numbers, letters, and underscores (_) used to identify the dashboard. This ID will be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the DashID is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat).
