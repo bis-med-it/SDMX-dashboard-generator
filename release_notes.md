@@ -1,7 +1,7 @@
-# Release Notes
+# Release notes
 
-This page contains an overview of changes for each release. 
-Each release is tagged in GitHub and allows for easy download for the different versions. 
+This page contains an overview of changes for each release.
+Each release is tagged in GitHub and allows for easy download for the different versions.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standards.
 
 ## [1.1.0] - 2023-10-09
@@ -19,3 +19,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [1.0.0] - 2023-09-28
 
 - Initial version compliant with requirements defined by the [SDMX 2023 Hackathon](https://www.sdmx2023.org/hackathon).
+
+[1.1.0]: https://github.com/bis-med-it/SDMX-dashboard-generator/compare/1.0.0...1.1.0
+[1.0.0]: https://github.com/bis-med-it/SDMX-dashboard-generator/releases/tag/1.0.0
