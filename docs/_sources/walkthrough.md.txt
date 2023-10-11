@@ -11,7 +11,7 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 <div style="display: flex;">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/sdmx.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/sdmx.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;";><summary>SDMX integration</summary>
 
   Reading of settings file (`.yaml`) for data and metadata retrieval
@@ -19,13 +19,13 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/bars.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/bars.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Interactive graphs</summary>
   Plotly for dynamic visualization (KPIs, line charts, pie charts and bar graphs)
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/python.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/python.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Open source code</summary>
 
   Reliance on open-source libraries
@@ -37,7 +37,7 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 <div style="display: flex">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/pen.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/pen.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Flexible design</summary>
 
   - Position and size of the elements displayed automatically adjusted
@@ -45,7 +45,7 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/cpu.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/cpu.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Optimized performance</summary>
 
   - SDMX hierarchy (data structure, dataflow and data)
@@ -53,7 +53,7 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/filter.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/filter.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Dynamic filtering</summary>
 
   Data accessible with table format supported by dynamic filters
@@ -66,21 +66,21 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 <div style="display: flex;">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/valid.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/valid.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Settings validation</summary>
 
   Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/search.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/search.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Searchable documentation</summary>
 
   Sphinx documentation automatically updated to support the exploration of the material
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/language.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/language.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Multilingual support</summary>
 
   Multi-lingual metadata to access titles, labels and info buttons in the desired language, when supported by SDMX
@@ -94,14 +94,14 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 <div style="display: flex">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/download.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/download.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Data download</summary>
 
   Data accessible with table format supported by download export (CSV)
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/team.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/team.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Collaboration</summary>
 
   - User-independent access within the same company and across countries
@@ -110,7 +110,7 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../docs/_images/work-in-progress.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="_images/work-in-progress.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Future enhancements</summary>
 
   - multiple pages application
@@ -146,7 +146,7 @@ The application is built around four main components:
 >> SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. This file follows the specifications indicated by the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf).
 
 >> Example of `.yaml` structure:<br>
->> ![This is an alt text.](../docs/_images/yaml_sample.png "This is a yaml sample.")
+>> ![This is an alt text.](_images/yaml_sample.png "This is a yaml sample.")
 
 >  ### DashID
 >> Any string composed of numbers, letters, and underscores (_) used to identify the dashboard. This ID will be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the DashID is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat).
