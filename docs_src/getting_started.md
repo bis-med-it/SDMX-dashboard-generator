@@ -1,6 +1,6 @@
 # Getting started
 
-This page contains useful tips to install and run the app. 
+This page contains useful tips to install and run the app.
 Make sure that your environment is correctly set up to execute Python code and that your `pip` and `Python` are up-to-date.
 The app has been successfully tested with Python versions equal or higher to 3.9.13.
 
@@ -54,10 +54,10 @@ or if you use `virtualenvwrapper`
 
 5. Open your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000) if you use Flask or [http://127.0.0.1:8050](http://127.0.0.1:8050)
 
-
 ## How to with examples
 
 The application comes with examples stored in the `/yaml` folder which can be used in two ways:
+
 - by uploading one `.yaml` file in the interface via drag and drop or
 - by typing the `DashID` of the dashboard in the URL (i.e. [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat) for the `eurostat_sample.yaml` file which contains `DashID: eurostat`).
 
