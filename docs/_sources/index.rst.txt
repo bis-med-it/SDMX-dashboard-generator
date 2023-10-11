@@ -20,6 +20,7 @@ This library has been developed for the `SDMX Hackathon Global Conference 2023 <
    :caption: General
 
    walkthrough
+   getting_started
    release_notes
 
 .. toctree::
