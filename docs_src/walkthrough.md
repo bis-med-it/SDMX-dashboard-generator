@@ -2,50 +2,49 @@
 
 ## Introduction
 
-SDMX Dashboard generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. It supports the version 2.1 of the standard. It leverages the open-source library [SDMXthon](https://github.com/Meaningful-Data/sdmxthon) to retrieve and parse data and metadata in SDMX. A dashboard is composed of several visualizations as defined by the specifications provided in a `.yaml` file stored in the `/yaml` folder.
+SDMX Dashboard generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. 
 
-This library has been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
+It been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
 
 ## Main features 
 
-
 <div style="display: flex;">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/sdmx.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="../images/sdmx.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;";><summary>SDMX integration</summary>
 
-  Reading of settings file (`.yaml`) for data and metadata retrieval
+  - Version 2.1 supported
+  - Reading of settings file (`.yaml`) for data and metadata retrieval
 
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/bars.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="../images/bars.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Interactive graphs</summary>
-  Plotly for dynamic visualization (KPIs, line charts, pie charts and bar graphs)
+  Plotly for dynamic visualization (KPIs, line/pie/bar charts)
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/python.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="../images/python.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Open source code</summary>
 
-  Reliance on open-source libraries
+  - Apache 2.0 compatibility 
+  - Reliance on open-source libraries such as [SDMXthon](https://github.com/Meaningful-Data/sdmxthon) to retrieve and parse data and metadata
   </details></div>
 
 </div>
 
-
-
 <div style="display: flex">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/pen.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="../images/pen.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Flexible design</summary>
 
-  - Position and size of the elements displayed automatically adjusted
+  - Position and size automatically adjusted
   - Bootstrap components to modify themes, icons, and incorporate HTML5 elements
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/cpu.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="../images/cpu.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Optimized performance</summary>
 
   - SDMX hierarchy (data structure, dataflow and data)
@@ -53,55 +52,53 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/filter.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Dynamic filtering</summary>
+  <img src="../images/download.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Dynamic data filtering and download</summary>
 
-  Data accessible with table format supported by dynamic filters
+  Data accessible with table format supported by dynamic filters and download export (CSV)
 
   </details></div>
 
 </div>
 
-
-
 <div style="display: flex;">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/valid.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Settings validation</summary>
+  <img src="../images/language.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Multilingual support</summary>
 
-  Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
+  Multi-lingual metadata to access titles, labels and info buttons in the desired language, when supported by SDMX
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/search.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="../images/search.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Searchable documentation</summary>
 
   Sphinx documentation automatically updated to support the exploration of the material
   </details></div>
 
+  
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/language.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Multilingual support</summary>
+  <img src="../images/valid.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Settings validation</summary>
 
-  Multi-lingual metadata to access titles, labels and info buttons in the desired language, when supported by SDMX
+  - Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
+  - Software engineering components (i.e. unit tests using pytest, coverage reporting using coverage, continuous integration using tox, automated license monitoring using pip-licenses, code linting using pyling and flake8)
   </details></div>
 
 </div>
 
-
-
-
-
 <div style="display: flex">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/download.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Data download</summary>
+  <img src="../images/security.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Security components</summary>
 
-  Data accessible with table format supported by download export (CSV)
+  - Security testing using bandit
+  - Software composition analysis using GitHub Dependabot
+  - Secret scanning using Github Advanced Security
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/team.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="../images/team.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Collaboration</summary>
 
   - User-independent access within the same company and across countries
@@ -110,21 +107,17 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="_images/work-in-progress.png" style="max-height: 60px; margin: 10px;"/>
+  <img src="../images/work-in-progress.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Future enhancements</summary>
 
   - multiple pages application
   - settings in a new tab
   - interactivity (search, simulation..)
   - chart types (mix, map, dual-axis, flows, network, outlier..)
-  - commercial data.
+  - commercial data
   </details></div>
 
 </div>
-
-
-
-
 
 ## High-level architecture
 The application is built around four main components:
@@ -134,7 +127,6 @@ The application is built around four main components:
 
   - The Statistical Data and Metadata Exchange (SDMX) is a standard to facilitate the exchange of statistical data and metadata using modern information technology. This application leverages the standard to retrieve data and metadata in a consistent and user-friendly way. It leverages two classes, `SDMXData` and `SDMXMetadata`, which are built on top of the open-source package [SDMXThon](https://github.com/Meaningful-Data/sdmxthon). The data retrieval functions return a Pandas DataFrame. 
   - As far as the metadata are concerned, a more advanced flow has been implemented in order to enrich the dashboard with as many as information as available and requested. In short, when the metadata url has been provided (`dataflow`), the application retrieves all related information, including the codes associated to the codelist flagged as legend concept in the settings. This feature is key to provide also multilingual support (e.g. chart legend items). Since the parsing of large metadata files could be resource-intensive, the user is also given the option to specify the DSD url (`datastructure`) which is lighter.
-
 
 </details>
 
@@ -146,7 +138,7 @@ The application is built around four main components:
 >> SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. This file follows the specifications indicated by the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf).
 
 >> Example of `.yaml` structure:<br>
->> ![This is an alt text.](_images/yaml_sample.png "This is a yaml sample.")
+>> ![This is an alt text.](../images/yaml_sample.png "This is a yaml sample.")
 
 >  ### DashID
 >> Any string composed of numbers, letters, and underscores (_) used to identify the dashboard. This ID will be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the DashID is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat).
@@ -201,7 +193,6 @@ The application is built around four main components:
 
 </details>
 
-
 <details open>
   <summary>The Dash application</summary>
 
@@ -212,7 +203,6 @@ The application is built around four main components:
 - organises the content across the dashboard by displaying charts following the guideliens provided in the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf) (e.g. a maximum of three charts per row is allowed).
 
 </details>
-
 
 <details open>
   <summary>The ChartGenerator</summary>
