@@ -8,24 +8,25 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 ## Main features 
 
-<div style="display: flex">
-  <div  class="shadow" style="flex: 1; text-align: center;">
-  <img src="../docs/_images/sdmx.png" height="30"/>
-  <details open><summary>SDMX integration</summary>
+
+<div style="display: flex;">
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/sdmx.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;";><summary>SDMX integration</summary>
 
   Reading of settings file (`.yaml`) for data and metadata retrieval
 
   </details></div>
   
-  <div  class="shadow" style="flex: 1; text-align: center;">
-  <img src="../docs/_images/bars.png" height="30"/>
-  <details open><summary>Interactive graphs</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/bars.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Interactive graphs</summary>
   Plotly for dynamic visualization (KPIs, line charts, pie charts and bar graphs)
   </details></div>
 
-  <div  class="shadow" style="flex: 1; text-align: center;">
-  <img src="../docs/_images/python.png" height="30"/>
-  <details open><summary>Open source code</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/python.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Open source code</summary>
 
   Reliance on open-source libraries
   </details></div>
@@ -35,25 +36,25 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 
 <div style="display: flex">
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/pen.png" height="50"/>
-  <details open><summary>Flexible design</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/pen.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Flexible design</summary>
 
   - Position and size of the elements displayed automatically adjusted
   - Bootstrap components to modify themes, icons, and incorporate HTML5 elements
   </details></div>
   
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/cpu.png" height="50"/>
-  <details open><summary>Optimized performance</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/cpu.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Optimized performance</summary>
 
   - SDMX hierarchy (data structure, dataflow and data)
   - Cross-sources asynchronously processed
   </details></div>
 
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/filter.png" height="50"/>
-  <details open><summary>Dynamic filtering</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/filter.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Dynamic filtering</summary>
 
   Data accessible with table format supported by dynamic filters
 
@@ -63,24 +64,24 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 
 
-<div style="display: flex">
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/valid.png" height="50"/>
-  <details open><summary>Settings validation</summary>
+<div style="display: flex;">
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/valid.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Settings validation</summary>
 
   Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
   </details></div>
   
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/search.png" height="50"/>
-  <details open><summary>Searchable documentation</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/search.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Searchable documentation</summary>
 
   Sphinx documentation automatically updated to support the exploration of the material
   </details></div>
 
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/language.png" height="50"/>
-  <details open><summary>Multilingual support</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/language.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Multilingual support</summary>
 
   Multi-lingual metadata to access titles, labels and info buttons in the desired language, when supported by SDMX
   </details></div>
@@ -92,25 +93,25 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 
 <div style="display: flex">
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/download.png" height="50"/>
-  <details open><summary>Data download</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/download.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Data download</summary>
 
   Data accessible with table format supported by download export (CSV)
   </details></div>
   
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/team.png" height="50"/>
-  <details open><summary>Collaboration</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/team.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Collaboration</summary>
 
   - User-independent access within the same company and across countries
   - Worldwide contribution (feedback and pull requests via Github) are welcome
 
   </details></div>
 
-  <div style="flex: 1; text-align: center;">
-  <img src="../docs/_images/work-in-progress.png" height="50"/>
-  <details open><summary>Future enhancements</summary>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="../docs/_images/work-in-progress.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary>Future enhancements</summary>
 
   - multiple pages application
   - settings in a new tab
