@@ -119,7 +119,6 @@ It been developed for the [SDMX Hackathon Global Conference 2023](https://www.sd
 
 </div>
 
-
 ## High-level architecture
 The application is built around four main components:
 
@@ -139,7 +138,7 @@ The application is built around four main components:
 >> SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. This file follows the specifications indicated by the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf).
 
 >> Example of `.yaml` structure:<br>
->> ![This is an alt text.](../docs/_images/yaml_sample.png "This is a yaml sample.")
+>> ![This is an alt text.](../images/yaml_sample.png "This is a yaml sample.")
 
 >  ### DashID
 >> Any string composed of numbers, letters, and underscores (_) used to identify the dashboard. This ID will be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the DashID is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat).
