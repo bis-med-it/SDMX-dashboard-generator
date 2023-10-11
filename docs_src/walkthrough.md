@@ -10,7 +10,7 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
 
 <div style="display: flex">
   <div  class="shadow" style="flex: 1; text-align: center;">
-  <img src="../docs/_images/sdmx.png" height="50"/>
+  <img src="../docs/_images/sdmx.png" height="30"/>
   <details open><summary>SDMX integration</summary>
 
   Reading of settings file (`.yaml`) for data and metadata retrieval
@@ -18,13 +18,13 @@ This library has been developed for the [SDMX Hackathon Global Conference 2023](
   </details></div>
   
   <div  class="shadow" style="flex: 1; text-align: center;">
-  <img src="../docs/_images/bars.png" height="50"/>
+  <img src="../docs/_images/bars.png" height="30"/>
   <details open><summary>Interactive graphs</summary>
   Plotly for dynamic visualization (KPIs, line charts, pie charts and bar graphs)
   </details></div>
 
   <div  class="shadow" style="flex: 1; text-align: center;">
-  <img src="../docs/_images/python.png" height="50"/>
+  <img src="../docs/_images/python.png" height="30"/>
   <details open><summary>Open source code</summary>
 
   Reliance on open-source libraries
