@@ -50,3 +50,4 @@ l10n/
 codequality_reports
 .coverage
 docs_src/_build
+docs/
