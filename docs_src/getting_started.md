@@ -22,7 +22,7 @@ The app has been successfully tested with Python versions equal or higher to 3.9
    .\venv\Scripts\activate
    ```
 
-or if you use `virtualenvwrapper`
+   or if you use `virtualenvwrapper`
 
    ```sh
    python.exe -m pip install --upgrade pip

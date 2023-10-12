@@ -825,7 +825,7 @@ def create_filter_dropdown(df:pd.DataFrame, concept:str, chart_id:str, valuelist
                                         multi=True,
                                         id={"type": "list-dropdown", "index": chart_id}), width=9),
                                 dbc.Col(
-                                    dbc.Button("Ok", id = {"type": "list-dropdown-btn", "index": chart_id}, n_clicks=0, size="sm"), width=1)
+                                    dbc.Button("OK", id = {"type": "list-dropdown-btn", "index": chart_id}, n_clicks=0, size="sm"), width=1)
                                 ])
                         ])
                             
@@ -867,8 +867,9 @@ def update_output(n_clicks, data, values):
     states_list = ctx.states_list[0]
     val = [i["value"] for i in states_list if i["id"]["index"] == chart_id][0]
     
+    legendConcept = data[row][pos]["settings"]["legendConcept"]
     df = pd.DataFrame(data[row][pos]["data"])
-    df_filtered = df.loc[df["REF_AREA"].isin(val)]
+    df_filtered = df.loc[df[legendConcept].isin(val)]
     data[row][pos]["data"] = df_filtered.to_dict("records")
     
     return data

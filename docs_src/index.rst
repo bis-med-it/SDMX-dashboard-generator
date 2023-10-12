@@ -8,7 +8,7 @@ A dashboard is composed of several visualizations as defined by the specificatio
 
 This library has been developed for the `SDMX Hackathon Global Conference 2023 <https://www.sdmx2023.org/hackathon>`_.
 
-.. image:: ../images/light.png
+.. image:: _static/light.png
    :width: 1338px
    :height: 950px
    :scale: 50 %

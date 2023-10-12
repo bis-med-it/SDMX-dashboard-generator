@@ -2,58 +2,68 @@
 
 ## Introduction
 
-SDMX Dashboard generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. 
+SDMX Dashboard Generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API.
+It has been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
 
-It been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
-
-## Main features 
+## Main features
 
 <div style="display: flex;">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/sdmx.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;";><summary>SDMX integration</summary>
+  <img src="_static/sdmx.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;";><summary style="margin: 10px;text-align: center;">SDMX integration</summary>
 
-  - Version 2.1 supported
-  - Reading of settings file (`.yaml`) for data and metadata retrieval
+  Version 2.1 supported
+
+  Reading of settings file (`.yaml`) for data and metadata retrieval
 
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/bars.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Interactive graphs</summary>
-  Plotly for dynamic visualization (KPIs, line/pie/bar charts)
+  <img src="_static/bars.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Interactive graphs</summary>
+  
+  Plotly for interactive visualization
+
+  Multiple charts supported: KPIs, line, pie and bar charts
+
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/python.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Open source code</summary>
+  <img src="_static/python.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Open source code</summary>
 
-  - Apache 2.0 compatibility 
-  - Reliance on open-source libraries such as [SDMXthon](https://github.com/Meaningful-Data/sdmxthon) to retrieve and parse data and metadata
+  Apache 2.0 licence
+
+  Open-source libraries
+
   </details></div>
 
 </div>
 
 <div style="display: flex">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/pen.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Flexible design</summary>
+  <img src="_static/pen.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Flexible design</summary>
 
-  - Position and size automatically adjusted
-  - Bootstrap components to modify themes, icons, and incorporate HTML5 elements
+  Position and size automatically adjusted
+
+  Bootstrap components to modify themes, icons and incorporate HTML5 elements
+
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/cpu.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Optimized performance</summary>
+  <img src="_static/cpu.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Optimized performance</summary>
 
-  - SDMX hierarchy (data structure, dataflow and data)
-  - Cross-sources asynchronously processed
+  Data and metadata asynchronous retrieval
+
+  Caching methods for better user navigation
+
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/download.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Dynamic data filtering and download</summary>
+  <img src="_static/download.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Dynamic data filtering and download</summary>
 
   Data accessible with table format supported by dynamic filters and download export (CSV)
 
@@ -63,160 +73,182 @@ It been developed for the [SDMX Hackathon Global Conference 2023](https://www.sd
 
 <div style="display: flex;">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/language.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Multilingual support</summary>
+  <img src="_static/language.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Multilingual support</summary>
 
   Multi-lingual metadata to access titles, labels and info buttons in the desired language, when supported by SDMX
+
+  Automatic titles and subtitles in multiple languages, when specified by the user
+
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/search.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Searchable documentation</summary>
+  <img src="_static/search.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Searchable documentation</summary>
 
   Sphinx documentation automatically updated to support the exploration of the material
+
+  Documentation deployment via GitHub Actions
+
   </details></div>
 
-  
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/valid.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Settings validation</summary>
+  <img src="_static/valid.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Settings validation</summary>
 
-  - Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
-  - Software engineering components (i.e. unit tests using pytest, coverage reporting using coverage, continuous integration using tox, automated license monitoring using pip-licenses, code linting using pyling and flake8)
+  Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
+
+  Software engineering components (i.e. unit tests using pytest, coverage reporting, continuous integration using tox, automated license monitoring, code linting using pyling and flake8)
+
   </details></div>
 
 </div>
 
 <div style="display: flex">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/security.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Security components</summary>
+  <img src="_static/security.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Security components</summary>
 
-  - Security testing using bandit
-  - Software composition analysis using GitHub Dependabot
-  - Secret scanning using Github Advanced Security
+  Security testing using bandit
+
+  Software composition analysis using GitHub Dependabot
+
+  Secret scanning using Github Advanced Security
+
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/team.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Collaboration</summary>
+  <img src="_static/team.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Collaboration</summary>
 
-  - User-independent access within the same company and across countries
-  - Worldwide contribution (feedback and pull requests via Github) are welcome
+  User-independent access within the same company and across countries
+
+  Worldwide contribution (feedback and pull requests via Github) are welcome
 
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
-  <img src="../images/work-in-progress.png" style="max-height: 60px; margin: 10px;"/>
-  <details close style="margin: 10px;"><summary>Future enhancements</summary>
+  <img src="_static/work-in-progress.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px;"><summary style="margin: 10px;text-align: center;">Future enhancements</summary>
 
-  - multiple pages application
-  - settings in a new tab
-  - interactivity (search, simulation..)
-  - chart types (mix, map, dual-axis, flows, network, outlier..)
-  - commercial data
+  Settings in a new tab or dropdown menu
+
+  Interactivity (search, simulation)
+
+  Add support for other chart types (mix, map, dual-axis, flows, network, outlier)
+
   </details></div>
 
 </div>
 
 ## High-level architecture
-The application is built around four main components:
 
-<details open>
-  <summary>SDMX data and metadata</summary>
+<div style="display: flex;">
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="_static/dashboard.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px; text-align: left";><summary style="margin: 10px;text-align: center;">The Dash application</summary>
 
-  - The Statistical Data and Metadata Exchange (SDMX) is a standard to facilitate the exchange of statistical data and metadata using modern information technology. This application leverages the standard to retrieve data and metadata in a consistent and user-friendly way. It leverages two classes, `SDMXData` and `SDMXMetadata`, which are built on top of the open-source package [SDMXThon](https://github.com/Meaningful-Data/sdmxthon). The data retrieval functions return a Pandas DataFrame. 
-  - As far as the metadata are concerned, a more advanced flow has been implemented in order to enrich the dashboard with as many as information as available and requested. In short, when the metadata url has been provided (`dataflow`), the application retrieves all related information, including the codes associated to the codelist flagged as legend concept in the settings. This feature is key to provide also multilingual support (e.g. chart legend items). Since the parsing of large metadata files could be resource-intensive, the user is also given the option to specify the DSD url (`datastructure`) which is lighter.
+  source code contained in the file `app.py`
 
-</details>
+  can run both on locally or shared across the domain
 
-<details open>
-  <summary>The specification file</strong></summary>
+  follows the guidelines provided in the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf) (e.g. a maximum of three charts per row is allowed)
 
-> ### Configuration
+  </details></div>
+  
+</div>
 
->> SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. This file follows the specifications indicated by the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf).
+<div style="display: flex">
 
->> Example of `.yaml` structure:<br>
->> ![This is an alt text.](../images/yaml_sample.png "This is a yaml sample.")
+  <div style="flex: 1; text-align: right;">
+  <img src="_static/left-arrow.png" style="max-height: 60px;"/>
+  </div>
+  
+  <div style="flex: 1; text-align: center;">
+  <img src="_static/down-arrow.png" style="max-height: 60px;"/>
+  </div>
 
->  ### DashID
->> Any string composed of numbers, letters, and underscores (_) used to identify the dashboard. This ID will be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the DashID is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat).
+  <div style="flex: 1; text-align: left;">
+  <img src="_static/right-arrow.png" style="max-height: 60px;"/>
+  </div>
 
->  ### Row
->> An integer value 0…3 that indicates the row where the visual is to be located. Unlimited number of rows is allowed. Up to three charts can share the same row and they are to be distributed left-right in the order they appear in the specification file. A node with Row=0 and chartType=TITLE allows to define Title and Subtitle for the dashboard. Row=0 and chartType=FOOTER to specify up to two lines in Title and Sub-title nodes for the bottom of the dashboard.
+</div>
 
->  ### Title
->> A string to describe the chart. If no title is specified, the dashboard will automatically show the name of the requested dataflow. The latter supports translation.
+<div style="display: flex">
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="_static/sdmx.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px; text-align: left";><summary style="margin: 10px;text-align: center;">SDMX</summary>
 
->  ### Subtitle
->> A string to complement the description in the title. If `auto` is provided, the subtitle will be generated by taking the code name from `legendConcept`. If more than one code name is available, then it will take the first one and append to it `...`. If the subtitle node is empty, no subtitle will be shown.
+  Leveraging two classes, `SDMXData` and `SDMXMetadata`, built on top of [SDMXThon](https://github.com/Meaningful-Data/sdmxthon)
 
->  ### Unit
->> A string to describe the unit which can be show in the VALUE chart type next to the observation value if `UnitShow` is set to `Yes`.
+  Metadata (e.g. codelist for the legend or multilingual support) retrieval through a metadata url (`dataflow`)
 
->  ### UnitIcon
->> A boostrap icon to be show on top of the VALUE chart. Full list available at: [https://icons.getbootstrap.com/](https://icons.getbootstrap.com).
+  When supported by SDMX, the metadata is retrieved through DSD url (`datastructure`) to increase the speed performance
 
->  ### Decimals
->> Defines the number of decimals to display the observation value.
+  </details></div>
+  
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="_static/configuration.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px; text-align: left";><summary style="margin: 10px;text-align: center;">The specification file</summary>
 
->  ### chartType:
->> It can be KPI (i.e. VALUE) or charts (i.e. PIE, LINE and BAR).
+The SDMX Dashboard Generator requires a `.yaml` file contained in `/yaml` folder with the settings for the dashboard.
 
->  ### legendConcept
->> Indicates the dimension that defines multiple series to be displayed in the visualization (e.g. sectors of the pie chart, each of the lines in a lines chart or each cluster in a bar chart).
+Example of `.yaml` structure:
 
->  ### legendLoc
->> Legend location which can be TOP, BOTTOM, LEFT, RIGHT or HIDE for no legend. This is not applicable for VALUE.
+![Yaml sample](_static/yaml_sample.png "This is a yaml sample.")
 
->  ### LabelsYN
->>  Possible values are "Yes"/"No" and indicates whether the description of each category is to be displayed on the chart. This is not applicable for VALUE.
+- `DashID`: dashboard identifier using any string composed of numbers, letters, and underscores (_), which can be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the `DashID` is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat)
 
->  ### xAxisConcept
->> Indicates the concept to be allocated to the “x” axis (e.g. TIME_PERIOD for LINES).
+- `Row`: row position of the visual indicated as an integer value 0…3. Up to three charts can share the same row and they are distributed left-right in the order they appear in the specification file. Title, subtitle and footnotes are identified with `Row=0` and `chartType=TITLE` and `chartType=FOOTER` respectively
 
->  ### yAxisConcept
->> Indicates the concept to be allocated to the “y” axis (e.g. OBS_VALUE).
+- `Title`: title description of the chart. If no title is specified, the dashboard shows automatically the name of the requested dataflow, supported by multilingual translation
 
->  ### downloadYN
->> Possible values are "Yes"/"No" and indicates whether the download of the data behind the chart is allowed and by clicking on it the link opens in an off-canvas to download the table with the data.
+- `Subtitle`: a string to complement the title description of the chart. If `auto` is provided, the subtitle takes the code name from `legendConcept`. If more than one code name is available, then it will take the first one and append to it `...`. If the subtitle node is empty, no subtitle will be shown
 
->  ### dsdLink
->> An URL of an application or file containing related the datastructure data.
+- `Unit`: a string to describe the unit which can be show in the chart if `UnitShow` is set to `Yes`
 
->  ### metadataLink
->> An URL of an application or file containing reference metadata. If present, an 'i' icon is displayed below the title, and by clicking on it the link opens in an off-canvas.
+- `UnitIcon`: a bootstrap icon to be show on top of the KPI. Full list available at: [https://icons.getbootstrap.com/](https://icons.getbootstrap.com)
 
->  ### DATA
->> An URL of an application or file containing data.
+- `Decimals`: the number of decimals to display
 
-</details>
+- `chartType`: it can be KPI (i.e. VALUE) or charts (i.e. PIE, LINE and BAR)
 
-<details open>
-  <summary>The Dash application</summary>
+- `legendConcept`: indicates the dimension that defines multiple series to be displayed in the visualization (e.g. sectors of the pie chart, each of the lines in a lines chart or each cluster in a bar chart)
 
-   The application source code is contained in the file `app.py`, which:
-- is entirely based on Dash, a Python open-source framework to create web applications in a flexible and scalable way;
-- can run both on locally or shared across the domain;
-- reads a `.yaml` file stored in the `/yaml` folder which contains the specifications of the dashboard;
-- organises the content across the dashboard by displaying charts following the guideliens provided in the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf) (e.g. a maximum of three charts per row is allowed).
+- `legendloc`: indicates the legend location which can be TOP, BOTTOM, LEFT, RIGHT or HIDE for no legend. Not applicable to the KPI
 
-</details>
+- `LabelsYN`: indicates ("Yes"/"No") whether the description of each category is to be displayed on the chart. Not applicable to the KPI
 
-<details open>
-  <summary>The ChartGenerator</summary>
+- `xAxisConcept`: indicates the concept to be allocated on the x-axis (e.g. TIME_PERIOD for LINES)
 
-   The ChartGenerator source code is contained in the file `src/draw.py`, which consists in a python class allowing the user to select a function for the desired chart type, corresponding to the `chartType` from the `.yaml` file:
+- `yAxisConcept`: indicates the concept to be allocated to the y-axis (e.g. OBS_VALUE)
 
-- `chartType: VALUE`: returns a KPI based on the provided DataFrame; A single value corresponding to an observation value at a given point in time displayed in the visual placeholder with Decimals number of decimal positions. It may include a Title and a Subtitle. The Unit may appear located at UnitLoc. The queries specified in DATA must return a single value. Should it return more than one value, the first one will be used.
+- `downloadYN`: indicates ("Yes"/"No") whether the download of the data behind the chart
 
-- `chartType: PIE`: returns a pie chart composed by the values returned by the query(ies) specified in DATA which sum represents the full circle (360°). Each value will define a sector of x°, proportional to the fraction of the total it represents. If a single query is specified in DATA, it must return multiple observations for the dimension in legendConcept, which labels will appear in the legend. All the other dimensions are assigned a constant value in the filters.
+- `dsdLink`: an URL of an application or file containing related the datastructure data
 
-- `chartType: LINES`: returns a lines chart including one or multiple series, either time series or cross-sectional. For time series representation (the usual case), xAxisConcept is TIME_PERIOD, but any other dimension can be specified in case of cross-sectional series. yAxisConcept should normally be OBS_VALUE. The query or queries specified in DATA may return one or multiple series. If a single query is used, it must return multiple observations for the dimension in xAxisConcept (usually TIME_PERIOD) and, eventually, for a second dimension specified in legendConcept that define multiple series, one for each of its returned values. All the other dimensions must be assigned a constant value in the filters. When DATA includes multiple queries, each one will return one series (one line) and all of them must have the dimension specified in legendConcept open to multiple values.
+- `metadataLink`: an URL of an application or file containing reference metadata (e.g. used in the info button)
 
-- `chartType: BARS`: returns a vertical bars chart including one or multiple series (clustered bars), either time series or cross-sectional. xAxisConcept can be any dimension which values will identify each bar. yAxisConcept (the height of the bar) should normally be OBS_VALUE. The query or queries specified in DATA may return one or multiple series. If a single query is used, it must return multiple observations for the dimension in xAxisConcept and, eventually, for a second dimension specified in legendConcept that define multiple series, one for each of its returned values. This concept definesthe “clusters” of bars. All the other dimensions must be assigned a constant value in the filters. When DATA includes multiple queries, each one will return one series (one cluster) and all of them must have the dimension specified in legendConcept open to multiple values.
+- `DATA`: an URL of an application or file containing data
 
-Each function, with the exception of the one returning the KPI, makes use of `decorator` elements for enriching the chart with style elements (e.g. legendlocation).
+  </details></div>
 
-</details>
+  <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
+  <img src="_static/chart.png" style="max-height: 60px; margin: 10px;"/>
+  <details close style="margin: 10px; text-align: left";><summary style="margin: 10px;text-align: center;">The ChartGenerator</summary>
+
+  The ChartGenerator is a class contained in the file `src/draw.py`, allowing the user to select the `chartType` from the `.yaml` file:
+
+  - `chartType:VALUE` returns a Key Performance Indicator (KPI), a value corresponding to an observation value at a given point in time displayed in the visual placeholder
+
+  - `chartType:PIE` returns a pie chart composed by the values returned by the query(ies) specified in DATA which sum represents the full circle (360°). Each value defines a sector of x°, proportional to the fraction of the total it represents
+
+  - `chartType:LINES` returns a lines chart including one or multiple series, either time series or cross-sectional
+
+  - `chartType:BARS` returns a vertical bars chart including one or multiple series (clustered bars), either time series or cross-sectional
+
+  Each function, with the exception of the one returning the KPI, makes use of `decorator` elements for enriching the chart with style elements (e.g. legendlocation).
+
+  </details></div>
+
+</div>
