@@ -3,8 +3,7 @@
 ## Introduction
 
 SDMX Dashboard generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. 
-
-It been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
+It has been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
 
 ## Main features 
 
