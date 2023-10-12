@@ -195,7 +195,7 @@ The SDMX Dashboard Generator requires a `.yaml` file contained in `/yaml` folder
 
 Example of `.yaml` structure:
 
-![This is an alt text.](/images/yaml_sample.png "This is a yaml sample.")
+![This is an alt text.](../images/yaml_sample.png "This is a yaml sample.")
 
 - `DashID`: dashboard identifier using any string composed of numbers, letters, and underscores (_), which can be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the `DashID` is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat)
 
