@@ -2,7 +2,7 @@
 
 ## Introduction
 
-SDMX Dashboard generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. 
+SDMX Dashboard Generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API. 
 It has been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
 
 ## Main features 
@@ -14,21 +14,22 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
 
   - Version 2.1 supported
   - Reading of settings file (`.yaml`) for data and metadata retrieval
-
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
   <img src="../images/bars.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Interactive graphs</summary>
-  Plotly for dynamic visualization (KPIs, line/pie/bar charts)
+  
+  - Plotly for interactive visualization 
+  - Multiple charts supported: KPIs, line, pie and bar charts
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
   <img src="../images/python.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Open source code</summary>
 
-  - Apache 2.0 compatibility 
-  - Reliance on open-source libraries such as [SDMXthon](https://github.com/Meaningful-Data/sdmxthon) to retrieve and parse data and metadata
+  - Apache 2.0 licence
+  - Open-source libraries
   </details></div>
 
 </div>
@@ -39,15 +40,15 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
   <details close style="margin: 10px;"><summary>Flexible design</summary>
 
   - Position and size automatically adjusted
-  - Bootstrap components to modify themes, icons, and incorporate HTML5 elements
+  - Bootstrap components to modify themes, icons and incorporate HTML5 elements
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
   <img src="../images/cpu.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Optimized performance</summary>
 
-  - SDMX hierarchy (data structure, dataflow and data)
-  - Cross-sources asynchronously processed
+  - Data and metadata asynchronous retrieval
+  - Caching methods for better user navigation
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
@@ -65,14 +66,16 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
   <img src="../images/language.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Multilingual support</summary>
 
-  Multi-lingual metadata to access titles, labels and info buttons in the desired language, when supported by SDMX
+  - Multi-lingual metadata to access titles, labels and info buttons in the desired language, when supported by SDMX
+  - Automatic titles and subtitles in multiple languages, when specified by the user
   </details></div>
   
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
   <img src="../images/search.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Searchable documentation</summary>
 
-  Sphinx documentation automatically updated to support the exploration of the material
+  - Sphinx documentation automatically updated to support the exploration of the material
+  - Documentation deployment via GitHub Actions
   </details></div>
 
   
@@ -81,7 +84,7 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
   <details close style="margin: 10px;"><summary>Settings validation</summary>
 
   - Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
-  - Software engineering components (i.e. unit tests using pytest, coverage reporting using coverage, continuous integration using tox, automated license monitoring using pip-licenses, code linting using pyling and flake8)
+  - Software engineering components (i.e. unit tests using pytest, coverage reporting, continuous integration using tox, automated license monitoring, code linting using pyling and flake8)
   </details></div>
 
 </div>
@@ -102,18 +105,15 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
 
   - User-independent access within the same company and across countries
   - Worldwide contribution (feedback and pull requests via Github) are welcome
-
   </details></div>
 
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
   <img src="../images/work-in-progress.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px;"><summary>Future enhancements</summary>
 
-  - multiple pages application
-  - settings in a new tab
-  - interactivity (search, simulation..)
-  - chart types (mix, map, dual-axis, flows, network, outlier..)
-  - commercial data
+  - Settings in a new tab or dropdown menu
+  - Interactivity (search, simulation)
+  - Add support for other chart types (mix, map, dual-axis, flows, network, outlier)
   </details></div>
 
 </div>
@@ -156,7 +156,7 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
   <img src="../images/sdmx.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px; text-align: left";><summary style="margin: 10px;text-align: center;">SDMX</summary>
 
-   - Leveraging two classes, `SDMXData` and `SDMXMetadata`, built on top of [SDMXThon](https://github.com/Meaningful-Data/sdmxthon)
+  - Leveraging two classes, `SDMXData` and `SDMXMetadata`, built on top of [SDMXThon](https://github.com/Meaningful-Data/sdmxthon)
   - Metadata (e.g. codelist for the legend or multilingual support) retrieval through a metadata url (`dataflow`)
   - When supported by SDMX, the metadata is retrieved through DSD url (`datastructure`) to increase the speed performance
 
