@@ -8,8 +8,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Feature: Added support for filter feature to dynamically interact with the data
 - Feature: Added for YAML validation
-- Feature: Added for error box for chart
-- Doc: Fixed documentation with wrong GitHub repo
+- Feature: Added error box for chart
+- Doc: Enhanced documentation with new features and icons
+- Fix: Correct documentation with wrong GitHub repo
 - Fix: Prevent crash upon SSL connection error
 - Fix: Added timeout for downloading the data
 - Fix: Fixed metadata code list not assigned when no code is returned from API
