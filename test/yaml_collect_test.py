@@ -25,7 +25,7 @@ def test_load_yaml_eurostat_sample():
     """
     fpath = "yaml/eurostat_sample.yaml"
     settings = load_yamlfile(fpath)
-    charts_per_r, footer, value, spinner = download_data(settings, 2)
+    charts_per_r, charts_per_r, footer, value, spinner = download_data(settings, 2)
     _assert_charts_not_empty(charts_per_r)
 
 
@@ -36,5 +36,5 @@ def test_load_yaml_ilo_sample():
     """
     fpath = "yaml/ilo_sample.yaml"
     settings = load_yamlfile(fpath)
-    charts_per_r, footer, value, spinner = download_data(settings, 2)
+    charts_per_r, charts_per_r, footer, value, spinner = download_data(settings, 2)
     _assert_charts_not_empty(charts_per_r)
