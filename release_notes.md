@@ -21,5 +21,5 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Initial version compliant with requirements defined by the [SDMX 2023 Hackathon](https://www.sdmx2023.org/hackathon).
 
-[1.1.0]: https://github.com/bis-med-it/SDMX-dashboard-generator/compare/1.0.0...1.1.0
+[1.1.0]: https://github.com/bis-med-it/SDMX-dashboard-generator/releases/tag/1.1.0
 [1.0.0]: https://github.com/bis-med-it/SDMX-dashboard-generator/releases/tag/1.0.0
