@@ -58,7 +58,9 @@ The app has been successfully tested with Python versions equal or higher to 3.9
 
 The application comes with examples stored in the `/yaml` folder which can be used in two ways:
 
-- by uploading one `.yaml` file in the interface via drag and drop or
-- by typing the `DashID` of the dashboard in the URL (i.e. [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat) for the `eurostat_sample.yaml` file which contains `DashID: eurostat`).
+- by uploading one `.yaml` file in the interface via drag and drop or<br/>
+<img src="_static/draganddrop.gif" style="margin: 20px;"/>
+- by typing the `DashID` of the dashboard in the URL (i.e. [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat) for the `eurostat_sample.yaml` file which contains `DashID: eurostat`)<br/>
+<img src="_static/url.gif" style="margin: 20px;"/>
 
 The application will scan the existing content in the `yaml` subfolder of the project and load the `.yaml` file containing the requested `DashID`. If none is found, the app will raise a `PreventUpdate`.
