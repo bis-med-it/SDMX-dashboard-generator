@@ -1,0 +1,32 @@
+---
+DashID: exampleuy
+Rows:
+-
+    Row: 0
+    chartType: TITLE
+    Title: "SIMEL Uruguay"
+    Subtitle: "Example of a dashboard script with data from Uruguay LMIS"
+-
+    Row: 0
+    chartType: FOOTER
+    Title: "SIMEL Uruguay"
+    Subtitle: "Example of a dashboard script with data from Uruguay LMIS"
+-
+    Row: 1
+    chartType: VALUE
+    Title:
+    Subtitle: "auto"
+    Unit: "%" 
+    UnitShow: "Yes"
+    UnitIcon: "bi bi-basket3-fill h1"
+    unitLoc: SUFFIX
+    Decimals: 1
+    LabelsYN: "No"
+    legendConcept: INDICADOR
+    legendLoc: 
+    xAxisConcept: TIME_PERIOD
+    yAxisConcept: OBS_VALUE
+    downloadYN: "Yes"
+    dsdLink: "https://sdmx-mtss.simel.mtss.gub.uy/rest/datastructure/UY110/DSD_EDAD_SEXO/1.0"
+    metadataLink: "https://sdmx-mtss.simel.mtss.gub.uy/rest/dataflow/UY110/DF_TCSD_SEXO_EDAD/1.0"
+    DATA: "https://sdmx-mtss.simel.mtss.gub.uy/rest/data/UY110,DF_TCSD_SEXO_EDAD,1.0/.A.._T.POB_T?startPeriod=2020&endPeriod=2022&lastNObservations=1"
