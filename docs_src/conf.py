@@ -56,6 +56,7 @@ autodoc_mock_imports = [
     "aiohttp",
     "schema",
     "sdmxthon",
+    "furl",
 ]
 
 # -- Options for HTML output -------------------------------------------------
