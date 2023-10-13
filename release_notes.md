@@ -4,7 +4,7 @@ This page contains an overview of changes for each release.
 Each release is tagged in GitHub and allows for easy download for the different versions.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standards.
 
-## [1.1.0] - 2023-10-12
+## [1.1.0] - 2023-10-13
 
 - Feature: Added support for filter feature to dynamically interact with the data
 - Feature: Added for YAML validation
