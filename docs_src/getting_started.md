@@ -101,7 +101,7 @@ Example of `.yaml` structure:
 
 - `downloadYN`: indicates ("Yes"/"No") whether the download of the data behind the chart
 
-- `dsdLink`: an URL of an application or file containing related the datastructure data
+- `dsdLink`: an URL of an application or file containing related the datastructure data (mandatory if `metadataLink` is provided)
 
 - `metadataLink`: an URL of an application or file containing reference metadata (e.g. used in the info button)
 
