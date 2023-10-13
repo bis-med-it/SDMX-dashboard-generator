@@ -98,7 +98,7 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
 
   Text messages are displayed when exceptions are encountered, to guide with the right configuration of the settings
 
-  Software engineering components (i.e. unit tests using pytest, coverage reporting, continuous integration using tox, automated license monitoring, code linting using pyling and flake8)
+  Software engineering components (i.e. unit tests using pytest, coverage reporting, continuous integration using tox, automated license monitoring, code linting using pylint and flake8)
 
   </details></div>
 
