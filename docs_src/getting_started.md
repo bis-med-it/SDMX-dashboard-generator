@@ -69,7 +69,7 @@ The application will scan the existing content in the `yaml` subfolder of the pr
 
 ### Example of YAML file settings
 
-Example of `.yaml` structure:
+Example of `.yaml` structure (the elements need to follow the indicated order to pass the validation test):
 
 ![Yaml sample](_static/yaml_sample.png "This is a yaml sample.")
 
@@ -101,8 +101,8 @@ Example of `.yaml` structure:
 
 - `downloadYN`: indicates ("Yes"/"No") whether the download of the data behind the chart
 
-- `dsdLink`: an URL of an application or file containing related the datastructure data (mandatory if `metadataLink` is provided)
+- `dsdLink`: an URL of an application or file containing related the datastructure data 
 
-- `metadataLink`: an URL of an application or file containing reference metadata (e.g. used in the info button)
+- `metadataLink`: an URL of an application or file containing reference metadata (e.g. used in the info button). This is field is mandatory if `dsdLink` is provided.
 
 - `DATA`: an URL of an application or file containing data
