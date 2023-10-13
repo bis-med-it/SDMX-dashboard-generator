@@ -191,7 +191,7 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
   <img src="_static/configuration.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px; text-align: left";><summary style="margin: 10px;text-align: center;">The specification file</summary>
 
-The SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. Please see [this example](/getting_started#how-to-with-examples) for more details.
+The SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. Please see <a href="/getting_started#how-to-with-examples">this example</a> for more details.
 
   </details></div>
 
