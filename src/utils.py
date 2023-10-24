@@ -15,8 +15,9 @@ def snake_case(string: str) -> str:
 
     return "_".join(
         re.sub(
-            "([A-Z][a-z]+)", r" \1", re.sub("([A-Z]+)", r" \1", string.replace("-", " ")
-                                            )
+            "([A-Z][a-z]+)",
+            r" \1",
+            re.sub("([A-Z]+)", r" \1", string.replace("-", " ")),
         ).split()
     ).lower()
 
@@ -35,7 +36,7 @@ def cleanhtml(raw_html):
     return cleantext
 
 
-def get_label(names : list, data : list):
+def get_label(names: list, data: list):
     """get label returns the label for the value in a list of dictionaries
 
     Args:
@@ -48,13 +49,13 @@ def get_label(names : list, data : list):
     ret_list = []
     for name in names:
         for val in data:
-            if val['value'] == name:
+            if val["value"] == name:
                 result = {"label": val["label"], "value": val["value"]}
                 ret_list.append(result)
     return ret_list
 
 
-def error_box(error : str, e : str = None):
+def error_box(error: str, e: str = None):
     """error_box returns a html component with the error box
 
     Args:
@@ -69,34 +70,38 @@ def error_box(error : str, e : str = None):
     else:
         msg = error
     return dbc.Col(
-        html.Div([
-            html.P(html.I(className="bi bi-emoji-frown h1")),
-            html.Br(),
-            html.P(str(msg))],
-            style={"textAlign": "center"}))
+        html.Div(
+            [
+                html.P(html.I(className="bi bi-emoji-frown h1")),
+                html.Br(),
+                html.P(str(msg)),
+            ],
+            style={"textAlign": "center"},
+        )
+    )
 
 
 valid_schema_title_footer = Schema(
     {
-        'Row': And(int),
-        'chartType': And(str),
-        'Title': And(str),
-        Optional('Subtitle'): And(str),
+        "Row": And(int),
+        "chartType": And(str),
+        "Title": And(str),
+        Optional("Subtitle"): And(str),
     }
 )
 
 valid_schema_generic = Schema(
     {
-        'Row': And(int),
-        'chartType': And(str),
-        'Title': And(Or(str, None)),
-        'Unit': And(Or(str, None)),
-        'legendConcept': And(Or(str, None)),
-        'xAxisConcept': And(Or(str)),
-        'yAxisConcept': And(Or(str)),
+        "Row": And(int),
+        "chartType": And(str),
+        "Title": And(Or(str, None)),
+        "Unit": And(Or(str, None)),
+        "legendConcept": And(Or(str, None)),
+        "xAxisConcept": And(Or(str)),
+        "yAxisConcept": And(Or(str)),
         "metadataLink": And(Or(str, None)),
         "DATA": And(Or(str, None)),
-        Optional('Subtitle'): And(Or(str, None)),
+        Optional("Subtitle"): And(Or(str, None)),
         Optional("UnitShow"): And(Or(str, None)),
         Optional("UnitIcon"): And(Or(str, None)),
         Optional("unitLoc"): And(Or(str, None)),
@@ -104,8 +109,8 @@ valid_schema_generic = Schema(
         Optional("LabelsYN"): And(Or(str, bool, None)),
         Optional("downloadYN"): And(Or(str, bool, None)),
         Optional("legendLoc"): And(Or(str, None)),
-        Optional('dataLink'): And(Or(str, None)),
-        Optional('dsdLink'): And(Or(str, None))
+        Optional("dataLink"): And(Or(str, None)),
+        Optional("dsdLink"): And(Or(str, None)),
     }
 )
 

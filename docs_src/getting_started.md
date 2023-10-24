@@ -101,7 +101,7 @@ Example of `.yaml` structure (the elements need to follow the indicated order to
 
 - `downloadYN`: indicates ("Yes"/"No") whether the download of the data behind the chart
 
-- `dsdLink`: an URL of an application or file containing related the datastructure data 
+- `dsdLink`: an URL of an application or file containing related the datastructure data
 
 - `metadataLink`: an URL of an application or file containing reference metadata (e.g. used in the info button). This is field is mandatory if `dsdLink` is provided.
 
