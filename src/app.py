@@ -342,7 +342,7 @@ def load_yaml(href: str):
     prevent_initial_call=True,
 )
 def load_content(yaml_file):
-    """load_content returns a dictionary with the settings from the YAML file
+    """Load a dictionary with the settings from the YAML file
     and a boolean on whether the settings are loaded
 
     :param yaml_file: the relative path of the YAML file
@@ -371,7 +371,7 @@ def load_content(yaml_file):
     Output("url", "pathname"), Input("settings", "data"), prevent_initial_call=True
 )
 def get_dash_id(i):
-    """get_dash_id returns the snake cased DashID from the YAML file settings
+    """Apply snake case to the DashID from the YAML file settings
 
     :param i: a dictionary with settings from the YAML file
     :returns: a string with the snaked cased DashId
@@ -404,7 +404,7 @@ def get_title_footer(data):
 
 
 def generate_title(data, key: str):
-    """generate_title returns the title from the YAML file
+    """Generate the title from the YAML file
 
     :param data: a dictionary with settings from the YAML file
     :param key: str: the key (TITLE) from settings from the YAML file
@@ -446,7 +446,7 @@ def generate_title(data, key: str):
 
 
 def generate_footer(data, key: str):
-    """generate_footer returns the footer from the YAML file
+    """Generate the footer from the YAML file
 
     :param data: a dictionary with settings from the YAML file
     :param key: str: the key (FOOTER) from settings from the YAML file
@@ -497,7 +497,7 @@ def generate_footer(data, key: str):
     prevent_initial_call=True,
 )
 def get_dashboard_title(data):
-    """get_dashboard_title returns the title to the dashboard and controls
+    """Return the title to the dashboard and control
     the behaviour of the loading spinner
 
     :param data: a dictionary with settings from the YAML file
@@ -518,7 +518,7 @@ def get_dashboard_title(data):
 
 
 def get_text_kpi(kpi, code, chart):
-    """Build text to show for kpi
+    """Build the text for KPI card
 
     :param kpi: the ChartGenerator kpi object
     :param code: the code of the element used as subtitle in the KPI card
@@ -558,7 +558,7 @@ def get_text_kpi(kpi, code, chart):
 
 
 def get_icon_kpi(kpi, code, chart):
-    """Build icon for kpi if available
+    """Build the icon for KPI card
 
     :param kpi: The ChartGenerator kpi object
     :param code: the code of the element used as subtitle in the KPI card
@@ -597,7 +597,7 @@ def get_icon_kpi(kpi, code, chart):
 
 
 def draw_chart(df, chart):
-    """Draw the chart
+    """Generate the chart element
 
     :param df: the pandas.DataFrame containing data
     :param chart: the chart settings loaded from the yaml file
