@@ -690,7 +690,7 @@ def draw_chart(df, chart):
 )
 def open_metadata_offcanvas(click):
     """Open metadata offcanvas on click if closed"""
-    open_offcanvas = True if click else False
+    open_offcanvas = bool(click)
     return open_offcanvas
 
 
@@ -793,7 +793,7 @@ def create_offcanvas(data, chart_id, df_metadata):
 )
 def open_table_offcanvas(click):
     """Open table offcanvas on click if closed"""
-    open_offcanvas = True if click else False
+    open_offcanvas = bool(click)
     return open_offcanvas
 
 
@@ -898,7 +898,7 @@ def create_filter_dropdown(df: pd.DataFrame, concept: str, chart_id: str, valuel
     State({"type": "list-dropdown", "index": ALL}, "value"),
     prevent_initial_call=True,
 )
-def update_output(n_clicks, data, values):
+def update_output(n_clicks, data):
     """create_filter_dropdown creates the filter dropdown for the data
 
     Args:

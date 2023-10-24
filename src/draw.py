@@ -116,7 +116,7 @@ class ChartGenerator:
     # Apply the decorator to a function that generates a Plotly figure
     @chart_style_decorator
     def time_series_chart(
-        self, df, xAxisConcept, yAxisConcept, color=None, legend=None, group_by=None
+        self, df, xAxisConcept, yAxisConcept, color=None, group_by=None
     ):
         """Create a time series chart.
 
