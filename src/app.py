@@ -37,6 +37,8 @@ external_stylesheets = [
     dbc.icons.BOOTSTRAP,
 ]
 
+doc_link = "https://urban-memory-73nlz2m.pages.github.io"
+
 app = Dash(
     __name__,
     external_stylesheets=external_stylesheets,
@@ -112,7 +114,7 @@ app.layout = html.Div(
                                         "The full documentation is available at ",
                                         html.A(
                                             ["GitHub Pages"],
-                                            href="https://urban-memory-73nlz2m.pages.github.io",
+                                            href=doc_link,
                                             target="_blank",
                                         ),
                                     ]
@@ -208,7 +210,7 @@ app.layout = html.Div(
     ],
 )
 def get_language(*args):
-    """get_language returns the language code as returned by the callback
+    """ Get the language code as returned by the callback
 
     :param *args: the language code clicked in the dropdown
     :returns: string with the language code requested which is cached
@@ -232,7 +234,7 @@ def get_language(*args):
     prevent_initial_call=True,
 )
 def toggle_collapse(n: int, is_open: bool, is_loaded: bool):
-    """toggle_collapse returns a boolean that contols the behaviour of the toggle menu
+    """Control the behaviour of the toggle menu
     of the settings
 
     :param n: int: the cumulative number of clicks since the start of the session
@@ -255,7 +257,7 @@ def toggle_collapse(n: int, is_open: bool, is_loaded: bool):
     [State("modal", "is_open")],
 )
 def toggle_modal(open_clicks: int, close_clicks: int, is_open: bool):
-    """toggle_collapse returns a boolean that contol the behaviour of the modal (Info)
+    """Control the behaviour of the modal (Info)
 
     :param open_clicks: int: the cumulative number of clicks to open the modal
     :param close_clicks: int: the cumulative number of clicks to close the modal
@@ -270,7 +272,7 @@ def toggle_modal(open_clicks: int, close_clicks: int, is_open: bool):
 
 
 def load_yamlfile(filename: str, folder: str = None) -> dict:
-    """load_yamlfile returns the loaded settings from the YAML file
+    """Load the settings from the YAML file
 
     :param filename: str: the YAML file
     :param folder: str, optional: the YAML file folder location
@@ -301,7 +303,7 @@ def load_yamlfile(filename: str, folder: str = None) -> dict:
     Output("yaml_file", "data"), [Input("url", "href")], prevent_initial_call=True
 )
 def load_yaml(href: str):
-    """load_yaml returns the location of the YAML file whose dashID matches
+    """Get the location of the YAML file whose dashID matches
     the string provided in the href of the URL
 
     :param href: str: the dashID
@@ -388,7 +390,7 @@ def get_dash_id(i):
 
 
 def get_title_footer(data):
-    """get_title_footer returns a dictionary with entries with Row == 0
+    """Get a dictionary with entries with Row == 0
     specified in the YAML file
 
     :param data: a dictionary with settings from the YAML file
@@ -762,7 +764,7 @@ def get_dataflow_metadata(data, meta):
 
 
 def create_offcanvas(data, chart_id, df_metadata):
-    """Create metadata (info) offcanvas
+    """Create an off-canvas user interface component for displaying dataflow metadata
 
     :param data: the chart datastructure
     :param chart_id: reference chart
@@ -792,7 +794,11 @@ def create_offcanvas(data, chart_id, df_metadata):
     prevent_initial_call=True,
 )
 def open_table_offcanvas(click):
-    """Open table offcanvas on click if closed"""
+    """Open table offcanvas on click
+
+    :param click: a boolean that controls the behabiour of the off-canvas
+    :returns: the offcanvas element shown on button click
+    """
     open_offcanvas = bool(click)
     return open_offcanvas
 
@@ -1457,7 +1463,7 @@ async def download_single_chart(data_chart, row: int, pos: int):
     # Fallback to descendants but less performant
     except Exception as e:
         print(
-            f"Invalid dsdLink for {chart_id}. Falling back to dataflow with descendants. Error:{e}"
+            f"Invalid dsdLink for {chart_id}. Falling back to default. Error:{e}"
         )
         if data_chart["metadataLink"]:
             # Metadata
