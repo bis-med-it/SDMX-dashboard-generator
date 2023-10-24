@@ -368,39 +368,6 @@ def load_content(yaml_file):
 
 
 @callback(
-    Output("settings", "data"),
-    Output("is_loaded", "data"),
-    Output("yaml_file_invalid", "children"),
-    Input("upload-data", "filename"),
-)
-def update_output(uploaded_file):
-    """update_output returns a dictionary with the settings from the YAML file selected
-    from the settings and a boolean on whether the settings are loaded
-
-    :param uploaded_file: the path of the YAML file
-    :returns: a dictionary with the settings and a boolean when the loading is completed
-
-    """
-
-    if uploaded_file is None:
-        raise PreventUpdate
-
-    try:
-        data = load_yamlfile(uploaded_file, "yaml/")
-        validation = validate_yamlfile(data)
-        if validation:
-            out = None, None, error_box(f"Invalid YAML file. Error:{validation.code}")
-        else:
-            is_loaded = True
-            out = data, is_loaded, ""
-        return out
-
-    except Exception as e:
-        print(e)
-        raise PreventUpdate from e
-
-
-@callback(
     Output("url", "pathname"), Input("settings", "data"), prevent_initial_call=True
 )
 def get_dash_id(i):
@@ -410,7 +377,6 @@ def get_dash_id(i):
     :returns: a string with the snaked cased DashId
 
     """
-
     if i is None:
         raise PreventUpdate
 
@@ -430,7 +396,6 @@ def get_title_footer(data):
               with Row == 0 in the YAML file
 
     """
-
     try:
         dash_title_footer = [d for d in data if d["Row"] == 0]
         return dash_title_footer
@@ -446,7 +411,6 @@ def generate_title(data, key: str):
     :returns: a html.Span with the title of the dashboard as specified in the YAML file
 
     """
-
     try:
         dash_title_footer = get_title_footer(data)
         element1 = "".join(
@@ -489,7 +453,6 @@ def generate_footer(data, key: str):
     :returns: a html.Span with the footer of the dashboard as specified in the YAML file
 
     """
-
     try:
         dash_title_footer = get_title_footer(data)
         element1 = "".join(
@@ -542,7 +505,6 @@ def get_dashboard_title(data):
               that controls the behaviour of the loading spinner
 
     """
-
     if data is None:
         raise PreventUpdate
     try:
@@ -556,6 +518,14 @@ def get_dashboard_title(data):
 
 
 def get_text_kpi(kpi, code, chart):
+    """Build text to show for kpi
+
+    :param kpi: the ChartGenerator kpi object
+    :param code: the code of the element
+    :param chart: the chart settings
+    :returns: the html element with the kpi text
+
+    """
     try:
         unit_show = chart["UnitShow"]
 
@@ -588,6 +558,14 @@ def get_text_kpi(kpi, code, chart):
 
 
 def get_icon_kpi(kpi, code, chart):
+    """Build icon for kpi if available
+
+    :param kpi: The ChartGenerator kpi object
+    :param code: the code of the element
+    :param chart: The chart settings
+    :returns: The html element containing the kpi icon
+
+    """
     try:
         unit_icon = chart["UnitIcon"]
 
@@ -619,6 +597,14 @@ def get_icon_kpi(kpi, code, chart):
 
 
 def draw_chart(df, chart):
+    """Draw the chart
+
+    :param df: the pandas.DataFrame containing data
+    :param chart: the chart settings loaded from the yaml file
+    :raises ValueError: in case x or y axis is not specified.
+    :returns: the html element containing the graph
+
+    """
     error_message = "Error in fetching the data, please check the YAML file: "
 
     if chart["xAxisConcept"] is None or chart["yAxisConcept"] is None:
@@ -703,11 +689,18 @@ def draw_chart(df, chart):
     prevent_initial_call=True,
 )
 def open_metadata_offcanvas(click):
+    """Open metadata offcanvas on click if closed"""
     open_offcanvas = True if click else False
     return open_offcanvas
 
 
 def create_info_button(chart_id):
+    """Create chart info button
+
+    :param chart_id: reference chart
+    :returns: html element with the info button
+
+    """
     return html.Span(
         html.I(className="bi bi-info-circle-fill", id=chart_id),
         n_clicks=0,
@@ -717,6 +710,12 @@ def create_info_button(chart_id):
 
 
 def create_table_button(chart_id):
+    """Create chart table button
+
+    :param chart_id: reference chart
+    :returns: html element with the table button
+
+    """
     return html.Span(
         html.I(className="bi bi-table", id=chart_id),
         n_clicks=0,
@@ -725,6 +724,12 @@ def create_table_button(chart_id):
 
 
 def create_download_button(chart_id):
+    """Create chart download button
+
+    :param chart_id: reference chart
+    :returns: html element with the download button
+
+    """
     return html.Span(
         html.I(
             className="bi bi-download", id={"type": "list-download", "index": chart_id}
@@ -735,6 +740,13 @@ def create_download_button(chart_id):
 
 
 def get_dataflow_metadata(data, meta):
+    """Create metadata element and fall back on data title
+
+    :param data: the chart data structure
+    :param meta: the metadata
+    :returns: html element with metadata or title
+
+    """
     if meta:
         if meta[1]:
             return html.Div(
@@ -750,6 +762,14 @@ def get_dataflow_metadata(data, meta):
 
 
 def create_offcanvas(data, chart_id, df_metadata):
+    """Create metadata (info) offcanvas
+
+    :param data: the chart datastructure
+    :param chart_id: reference chart
+    :param df_metadata: metadata for the chart
+    :returns: the offcanvas element shown on info button click
+
+    """
     try:
         return html.Div(
             [
@@ -772,11 +792,18 @@ def create_offcanvas(data, chart_id, df_metadata):
     prevent_initial_call=True,
 )
 def open_table_offcanvas(click):
+    """Open table offcanvas on click if closed"""
     open_offcanvas = True if click else False
     return open_offcanvas
 
 
 def create_download(chart_id):
+    """Create the download section of the offcanvas
+
+    :param chart_id: reference chart
+    :returns: dashboard component with download section
+
+    """
     listgroup_item_down = dbc.ListGroupItem(
         [
             html.P(
@@ -818,8 +845,8 @@ def create_filter_dropdown(df: pd.DataFrame, concept: str, chart_id: str, valuel
 
     Returns:
         data: a dictionary with the data filtered
-    """
 
+    """
     try:
         if len(valuelist) > 1:
             try:
@@ -882,8 +909,8 @@ def update_output(n_clicks, data, values):
 
     Returns:
         html.Div: a dcc.Dropdown and a dbc.Button containing the values to filter
-    """
 
+    """
     if sum(filter(None, n_clicks)) == 0:
         raise PreventUpdate
 
@@ -902,6 +929,16 @@ def update_output(n_clicks, data, values):
 
 
 def create_offcanvas_table(data, chart_id, df, valuelist):
+    """Create the table offcanvas element of the dashboard.
+    The structure depends on whether the data can be downloaded or not.
+
+    :param data: the chart data structure
+    :param chart_id: reference chart
+    :param df: the chart data
+    :param valuelist: values for filtering
+    :returns: the offcanvas element shown when the table button is clicked
+
+    """
     try:
         # Check if the data has a "downloadYN" flag set to "Y" for enabling downloads.
         if data["downloadYN"] == "Yes":
