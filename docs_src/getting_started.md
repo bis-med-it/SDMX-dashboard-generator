@@ -73,7 +73,7 @@ Example of `.yaml` structure (the elements need to follow the indicated order to
 
 ![Yaml sample](_static/yaml_sample.png "This is a yaml sample.")
 
-- `DashID`: dashboard identifier using any string composed of numbers, letters, and underscores (_), which can be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the `DashID` is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat)
+- `DashID`: dashboard identifier using any string composed of numbers, letters, and underscores, which can be used to compose the URL to display the dashboard. For example, if the base URL of the application is `http://127.0.0.1:5000` and the `DashID` is `eurostat`, the dashboard might be displayed at [http://127.0.0.1:5000/eurostat](http://127.0.0.1:5000/eurostat)
 
 - `Row`: row position of the visual indicated as an integer value 0…3. Up to three charts can share the same row and they are distributed left-right in the order they appear in the specification file. Title, subtitle and footnotes are identified with `Row=0` and `chartType=TITLE` and `chartType=FOOTER` respectively
 
@@ -81,11 +81,11 @@ Example of `.yaml` structure (the elements need to follow the indicated order to
 
 - `Subtitle`: a string to complement the title description of the chart. If `auto` is provided, the subtitle takes the code name from `legendConcept`. If more than one code name is available, then it will take the first one and append to it `...`. If the subtitle node is empty, no subtitle will be shown
 
-- `Unit`: a string to describe the unit which can be show in the chart if `UnitShow` is set to `Yes`
+- `Unit`: a string to describe the unit which can be shown in the chart if `UnitShow` is set to `Yes`
 
-- `UnitIcon`: a bootstrap icon to be show on top of the KPI. Full list available at: [https://icons.getbootstrap.com/](https://icons.getbootstrap.com)
+- `UnitIcon`: a bootstrap icon to be shown on top of the KPI. Full list available at: [https://icons.getbootstrap.com/](https://icons.getbootstrap.com)
 
-- `Decimals`: the number of decimals to display
+- `Decimals`: the number of decimals
 
 - `chartType`: it can be KPI (i.e. VALUE) or charts (i.e. PIE, LINE and BAR)
 
@@ -103,6 +103,6 @@ Example of `.yaml` structure (the elements need to follow the indicated order to
 
 - `dsdLink`: an URL of an application or file containing related the datastructure data
 
-- `metadataLink`: an URL of an application or file containing reference metadata (e.g. used in the info button). This is field is mandatory if `dsdLink` is provided.
+- `metadataLink`: an URL of an application or file containing reference metadata (e.g. used in the info button). This is field is mandatory if `dsdLink` is provided
 
-- `DATA`: an URL of an application or file containing data
+- `DATA`: an URL of an application or file containing data.
