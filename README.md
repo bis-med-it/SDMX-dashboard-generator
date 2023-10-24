@@ -22,11 +22,13 @@
 
 ## About The Project
 
-The objective of hackathon challenge is to develop an open-source responsive web application which effectively reads a specification file and retrieves data from SDMX APIs to create a dynamic dashboard. The web application will provide dashboard designers with a user-friendly interface to create customizable dashboards, effortlessly integrating data from SDMX APIs and offering rich visualization options. The project aims to empower dashboard designers to explore, analyse, and present data from SDMX sources in a visually appealing and intuitive manner.
-
-The SDMX dashboard generator will provide a valuable solution for data analysts, researchers, policymakers, and organizations seeking to harness the power of SDMX data through customizable dashboards. By simplifying the process of integrating SDMX data and specification files, dashboard generator will empower users to gain actionable insights and make informed decisions based on authoritative and up-to-date data. The open-source nature of the dashboard generator will foster collaboration, customization, and community contributions, driving continuous improvement and innovation.
-
-Source: <a href="https://www.sdmx2023.org/hackathon">SDMX 2023 Hackathon</a>
+The SDMX Dashboard Generator (SDMX-DG) is an open-source [Dash](https://dash.plotly.com) application that 
+generates dynamic dashboards by pulling data and metadata from SDMX Rest API. It supports the version 2.1 
+of the standard. It leverages the open-source library SDMXthon to retrieve and parse data and metadata in SDMX. 
+Data and metadata are supported by asynchronous retrieval. A dashboard is composed of several visualizations 
+as defined by the specifications provided in a .yaml file. The specifications are interpreted by a ChartGenerator 
+class containing instructions to define the Plotly charts. It has been developed for the 
+[SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
 
 ## Documentation
 
