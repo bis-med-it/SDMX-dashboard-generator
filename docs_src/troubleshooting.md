@@ -1,7 +1,6 @@
 # Troubleshooting
 
-This page contains information on common issues users encounter when using
-the app and how to avoid/fix them.
+This page contains information on common issues users encounter when using the SDMX-DG application and how to avoid/fix them.
 
 ## Use virtual environments
 
