@@ -521,7 +521,7 @@ def get_text_kpi(kpi, code, chart):
     """Build text to show for kpi
 
     :param kpi: the ChartGenerator kpi object
-    :param code: the code of the element
+    :param code: the code of the element used as subtitle in the KPI card
     :param chart: the chart settings
     :returns: the html element with the kpi text
 
@@ -561,7 +561,7 @@ def get_icon_kpi(kpi, code, chart):
     """Build icon for kpi if available
 
     :param kpi: The ChartGenerator kpi object
-    :param code: the code of the element
+    :param code: the code of the element used as subtitle in the KPI card
     :param chart: The chart settings
     :returns: The html element containing the kpi icon
 
