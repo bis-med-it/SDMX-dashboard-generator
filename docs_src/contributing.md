@@ -1,34 +1,41 @@
 ## Contributing
 
-The SDMX Dashboard Generator (SDMX-DG) application has been originally developed by Cristina Stefana Leonte, Pietro Patelli, Stephan Probst and Olivier Sirello (Bank for International Settlements). 
+The SDMX Dashboard Generator (SDMX-DG) application has been originally developed by Cristina Stefana Leonte, Pietro Patelli, Stephan Probst and Olivier Sirello (Bank for International Settlements).
 
 We encourage and invite everyone to contribute, as we firmly believe that the strength of our collaborative efforts is amplified by the unique perspectives and talents that each person brings to the table. We foster an inclusive environment where every member is recognized, respected, and empowered to contribute to our collective success.
 
 ## How Can I Contribute?
 
-### Reporting Bugs
+### Reporting Bugs Using Github's [Issues](https://github.com/bis-med-it/SDMX-dashboard-generator/issues)
 
-This section guides you through submitting a bug report. Following these guidelines helps maintainers and the community understand your report.
+We use GitHub issues to track bugs.
 
-#### Before Submitting A Bug Report
+If you spot a problem with the application, [search if an issue already exists](https://github.com/bis-med-it/SDMX-dashboard-generator/issues). If a related issue doesn't exist, you can [open a new issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new) and submit a bug report.
 
-To be added
+#### What to Include in a (Good) Bug Report?
 
-#### How Do I Submit A (Good) Bug Report?
-
-To be added
+- A quick summary and/or background
+- Steps to reproduce
+  - Be specific!
+  - Give sample code if you can.
+- What you expected would happen
+- What actually happens
+- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
 
 ### Suggesting Enhancements
 
-This section guides you through submitting an enhancement suggestion, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion.
+Suggestions for new features and improvements are most welcome. Please [open an issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new) and label it **enhancement**.
 
-#### Before Submitting An Enhancement Suggestion
+- All ideas are welcome!
+- Please be courteous and patient.
+- Remember to include sufficient details and context.
+- If you have multiple suggestions please submit them separately so we can track them.
+- Screenshots are always helpful
 
-To be added
+### Solve An Issue
 
-#### How Do I Submit A (Good) Enhancement Suggestion?
-
-To be added
+Scan through our [existing issues](https://github.com/bis-med-it/SDMX-dashboard-generator/issues) to find one that interests you. You can narrow down the search using `labels` as filters.
+If you find an issue to work on, you are welcome to open a PR with a fix.
 
 ### Pull Requests
 
