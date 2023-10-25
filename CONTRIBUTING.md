@@ -1,4 +1,4 @@
-## Contributing
+# Contributing
 
 We appreciate your interest in contributing. To ensure a smooth and productive collaboration, please read and follow these guidelines.
 
