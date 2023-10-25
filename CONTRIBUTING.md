@@ -33,8 +33,8 @@ Please note that the SDMX Dashboard Generator has a [License](LICENCE.pdf). By p
     git push origin feature/your-feature-name
     ```
 
-6. Open a Pull Request (PR) on the original repository's main branch with a clear title and description.
-
+6. Open a Pull Request (PR) on the original repository's main branch following the this [Pull Request template](/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md).
+   
 ## Review Process
 
 All pull requests will be reviewed by project maintainers. Constructive feedback and collaboration are welcome. Once your PR is approved, it will be merged into the project.
