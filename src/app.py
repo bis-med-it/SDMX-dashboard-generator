@@ -37,7 +37,7 @@ external_stylesheets = [
     dbc.icons.BOOTSTRAP,
 ]
 
-doc_link = "https://urban-memory-73nlz2m.pages.github.io"
+DOC_LINK = "https://urban-memory-73nlz2m.pages.github.io"
 
 app = Dash(
     __name__,
@@ -114,7 +114,7 @@ app.layout = html.Div(
                                         "The full documentation is available at ",
                                         html.A(
                                             ["GitHub Pages"],
-                                            href=doc_link,
+                                            href=DOC_LINK,
                                             target="_blank",
                                         ),
                                     ]
