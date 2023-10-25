@@ -1,6 +1,6 @@
 # Walkthrough
 
-## Main features
+## Main Features
 
 <div style="display: flex;">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
@@ -136,7 +136,7 @@
 
 </div>
 
-## High-level architecture
+## High-Level Architecture
 
 <div style="display: flex;">
   <div style="flex: 1; text-align: center; margin: 10px; background-color: rgba(200, 200, 200, 0.15);">
