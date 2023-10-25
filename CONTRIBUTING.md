@@ -12,11 +12,11 @@ Please note that the SDMX Dashboard Generator has a [License](LICENCE.pdf). By p
 
 You can use GitHub issues to track bugs and requests.
 
-If you spot a problem with the application, [search if an issue already exists](https://github.com/bis-med-it/SDMX-dashboard-generator/issues). If a related issue doesn't exist, you can [open a new issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new) and submit a bug report.
+If you spot a problem with the application, [search if an issue already exists](https://github.com/bis-med-it/SDMX-dashboard-generator/issues). If a related issue doesn't exist, you can [open a new issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new/choose) and submit a bug report.
 
 ### Suggesting Enhancements
 
-Suggestions for new features and improvements are most welcome. Please [open an issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new) and label it **enhancement**.
+Suggestions for new features and improvements are most welcome. Please [open an issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new/choose) and label it **enhancement**.
 
 - All ideas are welcome!
 - Remember to include sufficient details and context.
