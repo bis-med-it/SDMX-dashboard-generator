@@ -10,7 +10,7 @@
 
 ## Checklist
 
-- [ ] I have reviewed the [Contributing Guidelines](./CONTRIBUTING.md) for this project.
+- [ ] I have reviewed the [Contributing Guidelines](CONTRIBUTING.md) for this project.
 - [ ] I have checked for duplicate pull requests.
 - [ ] The code follows the project's coding standards as specified in the documentation.
 - [ ] I have added tests that prove my fix is effective or that my feature works.
