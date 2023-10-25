@@ -904,7 +904,7 @@ def create_filter_dropdown(df: pd.DataFrame, concept: str, chart_id: str, valuel
     State({"type": "list-dropdown", "index": ALL}, "value"),
     prevent_initial_call=True,
 )
-def update_output(n_clicks, data):
+def update_output(n_clicks, data, values):
     """create_filter_dropdown creates the filter dropdown for the data
 
     Args:
