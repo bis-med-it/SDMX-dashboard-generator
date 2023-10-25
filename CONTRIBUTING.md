@@ -33,7 +33,7 @@ Please note that the SDMX Dashboard Generator has a [License](LICENCE.pdf). By p
     git push origin feature/your-feature-name
     ```
 
-6. Open a Pull Request (PR) on the original repository's main branch following the this [Pull Request template](/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md).
+6. Open a Pull Request (PR) on the original repository's main branch following this [Pull Request template](/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md).
    
 ## Review Process
 
