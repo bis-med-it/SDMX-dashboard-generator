@@ -1,4 +1,4 @@
-# Getting started
+# Getting Started
 
 This page contains useful tips to install and run the app.
 Make sure that your environment is correctly set up to execute Python code and that your `pip` and `Python` are up-to-date.
@@ -54,9 +54,9 @@ The app has been successfully tested with Python versions equal or higher to 3.9
 
 5. Open your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000) if you use Flask or [http://127.0.0.1:8050](http://127.0.0.1:8050)
 
-## How to with examples
+## How To With Examples
 
-### Upload the YAML file
+### Upload The Yaml File
 
 The application comes with examples stored in the `/yaml` folder which can be used in two ways:
 
@@ -67,7 +67,7 @@ The application comes with examples stored in the `/yaml` folder which can be us
 
 The application will scan the existing content in the `yaml` subfolder of the project and load the `.yaml` file containing the requested `DashID`. If none is found, the app will raise a `PreventUpdate`.
 
-### Example of YAML file settings
+### Example Of Yaml File Settings
 
 Example of `.yaml` structure (the elements need to follow the indicated order to pass the validation test):
 

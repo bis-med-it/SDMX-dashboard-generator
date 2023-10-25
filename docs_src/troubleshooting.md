@@ -2,7 +2,7 @@
 
 This page contains information on common issues users encounter when using the SDMX-DG application and how to avoid/fix them.
 
-## Use virtual environments
+## Use Virtual Environments
 
 Working in the global Python environment as opposed to project-specific virtual environments may cause a lot of problems.
 We recommend to use [virtual environments](https://docs.python.org/3/library/venv.html>) for running this Python project with the correct package versions.
