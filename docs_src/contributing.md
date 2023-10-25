@@ -1,53 +1,68 @@
 ## Contributing
 
-The SDMX Dashboard Generator (SDMX-DG) application has been originally developed by Cristina Stefana Leonte, Pietro Patelli, Stephan Probst and Olivier Sirello (Bank for International Settlements).
+Welcome to the SDMX Dashboard Generator repository! We appreciate your interest in contributing. To ensure a smooth and productive collaboration, please read and follow these guidelines.
 
-We encourage and invite everyone to contribute, as we firmly believe that the strength of our collaborative efforts is amplified by the unique perspectives and talents that each person brings to the table. We foster an inclusive environment where every member is recognized, respected, and empowered to contribute to our collective success.
+## Licensing
 
-## How Can I Contribute?
+Please note that the SDMX Dashboard Generator has a [License](LICENCE.pdf). By participating in this project, you acknowledge to comply with it.
 
-### Reporting Bugs Using Github's [Issues](https://github.com/bis-med-it/SDMX-dashboard-generator/issues)
+## How to contribute
 
-We use GitHub issues to track bugs.
+### Reporting bugs
+
+You can use GitHub issues to track bugs and requests.
 
 If you spot a problem with the application, [search if an issue already exists](https://github.com/bis-med-it/SDMX-dashboard-generator/issues). If a related issue doesn't exist, you can [open a new issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new) and submit a bug report.
 
-#### What to Include in a (Good) Bug Report?
-
-- A quick summary and/or background
-- Steps to reproduce
-  - Be specific!
-  - Give sample code if you can.
-- What you expected would happen
-- What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
-
-### Suggesting Enhancements
+### Suggesting enhancements
 
 Suggestions for new features and improvements are most welcome. Please [open an issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new) and label it **enhancement**.
 
 - All ideas are welcome!
-- Please be courteous and patient.
 - Remember to include sufficient details and context.
 - If you have multiple suggestions please submit them separately so we can track them.
 - Screenshots are always helpful
 
-### Solve An Issue
+### Solve an issue
 
 Scan through our [existing issues](https://github.com/bis-med-it/SDMX-dashboard-generator/issues) to find one that interests you. You can narrow down the search using `labels` as filters.
 If you find an issue to work on, you are welcome to open a PR with a fix.
 
 ### Pull Requests
 
-The process described here has several goals:
+The process described has several goals:
 
-- Maintain the SDMX-DG's quality
+- Maintain the quality of the code and the application
 - Fix problems that are important to users
-- Engage the community in working toward the best possible SDMX-DG
 - Enable a sustainable system for SDMX-DG maintainers to review contributions
 
-Please follow these steps to have your contribution considered by the maintainers:
+Here are the steps we recommend in order to open a Pull Request:
 
-1. Follow all instructions in [the template](PULL_REQUEST_TEMPLATE.md)
-2. Follow the [styleguides](#styleguides) integrating [flake8](https://flake8.pycqa.org/en/latest/) and [black](https://black.readthedocs.io/en/stable/index.html). A configuration for the former is already provided, and you can find a [good introduction here](https://medium.com/@huzaifazahoor654/improving-code-quality-with-flake8-and-black-a-guide-for-python-developers-c374168d5884).
-3. After you submit your pull request, verify that all [status checks](https://help.github.com/articles/about-status-checks/) are passing <details><summary>What if the status checks are failing?</summary>If a status check is failing, and you believe that the failure is unrelated to your change, please leave a comment on the pull request explaining why you believe the failure is unrelated. A maintainer will re-run the status check for you. If we conclude that the failure was a false positive, then we will open an issue to track that problem with our status check suite.</details>
+1. Fork the repository to your GitHub account.
+
+2. Clone the forked repository to your local machine:
+
+   ```bash
+   git clone https://github.com/your-username/sdmx-dashboard-generator.git
+   ```
+3. Create a new branch for your work:
+
+    ```
+    git checkout -b feature/your-feature-name
+    ```
+
+4. Make your changes, and commit them with clear and concise messages.
+
+    ```
+    git commit -m "Add your commit message here"
+    ```
+
+5. Push your changes to your fork on GitHub.
+
+    ```
+    git push origin feature/your-feature-name
+    ```
+
+6. Open a Pull Request (PR) on the original repository's main branch following this [Pull Request template](../.github/PULL_REQUEST_TEMPLATE/pull_request_template.md).
+
+Please make sure you follow our style guides integrating [flake8](https://flake8.pycqa.org/en/latest/) and [black](https://black.readthedocs.io/en/stable/index.html). A configuration for the former is already provided, and you can find a [good introduction here](https://medium.com/@huzaifazahoor654/improving-code-quality-with-flake8-and-black-a-guide-for-python-developers-c374168d5884).
