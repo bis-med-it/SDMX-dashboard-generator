@@ -35,6 +35,7 @@ This library has been developed for the `SDMX Hackathon Global Conference 2023 <
 
    troubleshooting
    contributing
+   code_of_conduct
 
 Indices and tables
 ==================
