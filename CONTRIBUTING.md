@@ -6,15 +6,15 @@ We appreciate your interest in contributing. To ensure a smooth and productive c
 
 Please note that the SDMX Dashboard Generator has a [License](LICENCE.pdf). By participating in this project, you acknowledge to comply with it.
 
-## How to contribute
+## How To Contribute
 
-### Reporting bugs
+### Reporting Bugs
 
 You can use GitHub issues to track bugs and requests.
 
 If you spot a problem with the application, [search if an issue already exists](https://github.com/bis-med-it/SDMX-dashboard-generator/issues). If a related issue doesn't exist, you can [open a new issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new) and submit a bug report.
 
-### Suggesting enhancements
+### Suggesting Enhancements
 
 Suggestions for new features and improvements are most welcome. Please [open an issue](https://github.com/bis-med-it/SDMX-dashboard-generator/issues/new) and label it **enhancement**.
 
@@ -23,7 +23,7 @@ Suggestions for new features and improvements are most welcome. Please [open an 
 - If you have multiple suggestions please submit them separately so we can track them.
 - Screenshots are always helpful
 
-### Solve an issue
+### Solve An Issue
 
 Scan through our [existing issues](https://github.com/bis-med-it/SDMX-dashboard-generator/issues) to find one that interests you. You can narrow down the search using `labels` as filters.
 If you find an issue to work on, you are welcome to open a PR with a fix.
