@@ -1,10 +1,5 @@
 # Walkthrough
 
-## Introduction
-
-SDMX Dashboard Generator is an open-source [Dash](https://dash.plotly.com) application that generates dynamic dashboards by pulling data and metadata from SDMX Rest API.
-It has been developed for the [SDMX Hackathon Global Conference 2023](https://www.sdmx2023.org/hackathon).
-
 ## Main features
 
 <div style="display: flex;">
@@ -148,11 +143,11 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
   <img src="_static/dashboard.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px; text-align: left";><summary style="margin: 10px;text-align: center;">The Dash application</summary>
 
-  source code contained in the file `app.py`
+  Source code contained in the file `app.py`
 
-  can run both on locally or shared across the domain
+  Can run both on locally or shared across the domain
 
-  follows the guidelines provided in the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf) (e.g. a maximum of three charts per row is allowed)
+  Follows the guidelines provided in the [SDMX Hackathon Global Conference 2023 Terms of Reference](https://sdmx.org/wp-content/uploads/SDMX-Hackathon-2023-ToRrev.pdf) (e.g. a maximum of three charts per row is allowed)
 
   </details></div>
   
@@ -181,9 +176,9 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
 
   Leveraging two classes, `SDMXData` and `SDMXMetadata`, built on top of [SDMXThon](https://github.com/Meaningful-Data/sdmxthon)
 
-  Metadata (e.g. codelist for the legend or multilingual support) retrieval through a metadata url (`dataflow`)
-
-  When supported by SDMX, the metadata is retrieved through DSD url (`datastructure`) to increase the speed performance
+  When supported, metadata retrieval through DSD url (`datastructure`) to increase the speed performance
+  
+  Default retrieval through a metadata url (`dataflow`)
 
   </details></div>
   
@@ -191,7 +186,7 @@ It has been developed for the [SDMX Hackathon Global Conference 2023](https://ww
   <img src="_static/configuration.png" style="max-height: 60px; margin: 10px;"/>
   <details close style="margin: 10px; text-align: left";><summary style="margin: 10px;text-align: center;">The specification file</summary>
 
-The SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. Please see <a href="/getting_started#how-to-with-examples">this example</a> for more details.
+The SDMX Dashboard Generator requires a `.yaml` file with the settings for the dashboard. Please check <a href="/getting_started#how-to-with-examples">this example</a>
 
   </details></div>
 
@@ -209,7 +204,7 @@ The SDMX Dashboard Generator requires a `.yaml` file with the settings for the d
 
   - `chartType:BARS` returns a vertical bars chart including one or multiple series (clustered bars), either time series or cross-sectional
 
-  Each function, with the exception of the one returning the KPI, makes use of `decorator` elements for enriching the chart with style elements (e.g. legendlocation).
+  Each function, with the exception of the one returning the KPI, makes use of `decorator` elements for enriching the chart with style elements.
 
   </details></div>
 
