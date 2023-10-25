@@ -4,7 +4,7 @@ We appreciate your interest in contributing. To ensure a smooth and productive c
 
 ## Licensing
 
-Please note that the SDMX Dashboard Generator has a [License](LICENCE.pdf). By participating in this project, you acknowledge to comply with it.
+Please note that the SDMX Dashboard Generator has a [License](LICENCE.pdf). By participating in this project, you acknowledge and accept to comply with it.
 
 ## How To Contribute
 
