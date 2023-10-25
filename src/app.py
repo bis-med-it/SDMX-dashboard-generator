@@ -37,7 +37,7 @@ external_stylesheets = [
     dbc.icons.BOOTSTRAP,
 ]
 
-doc_link = "https://urban-memory-73nlz2m.pages.github.io"
+DOC_LINK = "https://urban-memory-73nlz2m.pages.github.io"
 
 app = Dash(
     __name__,
@@ -114,7 +114,7 @@ app.layout = html.Div(
                                         "The full documentation is available at ",
                                         html.A(
                                             ["GitHub Pages"],
-                                            href=doc_link,
+                                            href=DOC_LINK,
                                             target="_blank",
                                         ),
                                     ]
@@ -904,7 +904,7 @@ def create_filter_dropdown(df: pd.DataFrame, concept: str, chart_id: str, valuel
     State({"type": "list-dropdown", "index": ALL}, "value"),
     prevent_initial_call=True,
 )
-def update_output(n_clicks, data):
+def update_output(n_clicks, data, values):
     """create_filter_dropdown creates the filter dropdown for the data
 
     Args:
