@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve the SDMX Generator Dashboard
+about: Create a report to help us improve the SDMX Dashboard Generator
 title: "[Bug issue]"
 labels: bug
 assignees: ''
