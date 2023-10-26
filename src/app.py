@@ -37,7 +37,7 @@ external_stylesheets = [
     dbc.icons.BOOTSTRAP,
 ]
 
-DOC_LINK = "https://urban-memory-73nlz2m.pages.github.io"
+DOC_LINK = "https://bis-med-it.github.io/SDMX-dashboard-generator"
 
 app = Dash(
     __name__,
