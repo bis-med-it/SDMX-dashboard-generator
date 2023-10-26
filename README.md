@@ -14,7 +14,7 @@ The SDMX Dashboard Generator (SDMX-DG) is an open-source [Dash](https://dash.plo
 
 ## Documentation
 
-The documentation for this app is available at [GitHub Pages](https://urban-memory-73nlz2m.pages.github.io/index.html).
+The documentation for this app is available at [GitHub Pages](https://bis-med-it.github.io/SDMX-dashboard-generator/).
 
 ## License
 
