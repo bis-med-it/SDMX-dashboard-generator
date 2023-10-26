@@ -4,7 +4,7 @@ We appreciate your interest in contributing. To ensure a smooth and productive c
 
 ## Licensing
 
-Please note that the SDMX Dashboard Generator has a [License](LICENCE.pdf). By participating in this project, you acknowledge and accept to comply with it.
+Please note that the SDMX Dashboard Generator has a [License](https://github.com/bis-med-it/SDMX-dashboard-generator/blob/main/LICENCE.pdf). By participating in this project, you acknowledge and accept to comply with it.
 
 ## How To Contribute
 
@@ -29,7 +29,7 @@ If you find an issue to work on, you are welcome to open a PR with a fix.
 
 ### Pull Requests
 
-We cordially invite you to use our [pull request template](/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md).
+We cordially invite you to use our [pull request template](https://github.com/bis-med-it/SDMX-dashboard-generator/blob/main/.github/PULL_REQUEST_TEMPLATE/pull_request_template.md).
 
 You may open a pull request to:
 
