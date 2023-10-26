@@ -1,4 +1,4 @@
-# Release notes
+# Release Notes
 
 This page contains an overview of changes for each release.
 Each release is tagged in GitHub and allows for easy download for the different versions.
