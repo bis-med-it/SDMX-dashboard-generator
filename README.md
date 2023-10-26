@@ -22,4 +22,4 @@ The source code in this repository is licensed under Apache-2.0. See [LICENSE.pd
 
 ## Acknowledgments
 
-This app has been developed by Cristina Leonte, Pietro Patelli, Stephan Probst and Olivier Sirello (Bank for International Settlements).
+This app has been developed by Cristina Leonte, Pietro Patelli, Stephan Probst and Olivier Sirello (Bank for International Settlements). The views expressed are those of the authors and do not necessarily reflect those of the Bank for International Settlements. All errors are our own.
