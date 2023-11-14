@@ -4,6 +4,8 @@ import glob
 import os
 import platform
 from itertools import islice
+import base64
+import io
 
 import dash
 import dash_bootstrap_components as dbc
@@ -293,6 +295,42 @@ def load_yamlfile(filename: str, folder: str = None) -> dict:
 
     except yaml.YAMLError as exc:
         print(exc)
+
+    except Exception as e:
+        print(e)
+        raise PreventUpdate from e
+
+
+@callback(
+    Output("settings", "data"),
+    Output("is_loaded", "data"),
+    Output("yaml_file_invalid", "children"),
+    Input("upload-data", "contents"),
+    State("upload-data", "filename"),
+)
+def load_content_uploaded(uploaded_file, filename):
+    """update_output returns a dictionary with the settings from the uploaded
+    YAML file and a boolean on whether the settings are loaded
+    :param uploaded_file: the path of the YAML file
+    :returns: a dictionary with the settings and a boolean when the loading is completed
+    """
+
+    if uploaded_file is None:
+        raise PreventUpdate
+    elif ".yaml" not in filename:
+        raise PreventUpdate
+
+    try:
+        content_type, content_string = uploaded_file.split(",")
+        decoded = base64.b64decode(content_string)
+        data = yaml.safe_load(io.BytesIO(decoded))
+        validation = validate_yamlfile(data)
+        if validation:
+            out = None, None, error_box(f"Invalid YAML file. Error:{validation.code}")
+        else:
+            is_loaded = True
+            out = data, is_loaded, ""
+        return out
 
     except Exception as e:
         print(e)
