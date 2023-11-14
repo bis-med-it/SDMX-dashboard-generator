@@ -1,11 +1,11 @@
 """application"""
 import asyncio
+import base64
 import glob
+import io
 import os
 import platform
 from itertools import islice
-import base64
-import io
 
 import dash
 import dash_bootstrap_components as dbc
@@ -23,15 +23,10 @@ from src.sdmx import (
     get_components_async,
     get_translation,
     get_url_cl,
-    translate_df,
     retreive_codes_from_data,
+    translate_df,
 )
-from src.utils import (
-    snake_case,
-    cleanhtml,
-    error_box,
-    validate_yamlfile,
-)
+from src.utils import cleanhtml, error_box, snake_case, validate_yamlfile
 
 external_stylesheets = [
     dbc.themes.COSMO,
@@ -212,7 +207,7 @@ app.layout = html.Div(
     ],
 )
 def get_language(*args):
-    """ Get the language code as returned by the callback
+    """Get the language code as returned by the callback
 
     :param *args: the language code clicked in the dropdown
     :returns: string with the language code requested which is cached
@@ -1500,9 +1495,7 @@ async def download_single_chart(data_chart, row: int, pos: int):
 
     # Fallback to descendants but less performant
     except Exception as e:
-        print(
-            f"Invalid dsdLink for {chart_id}. Falling back to default. Error:{e}"
-        )
+        print(f"Invalid dsdLink for {chart_id}. Falling back to default. Error:{e}")
         if data_chart["metadataLink"]:
             # Metadata
             try:
