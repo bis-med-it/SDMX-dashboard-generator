@@ -1,6 +1,8 @@
 """application"""
 import asyncio
+import base64
 import glob
+import io
 import os
 import platform
 from itertools import islice
@@ -21,15 +23,10 @@ from src.sdmx import (
     get_components_async,
     get_translation,
     get_url_cl,
-    translate_df,
     retreive_codes_from_data,
+    translate_df,
 )
-from src.utils import (
-    snake_case,
-    cleanhtml,
-    error_box,
-    validate_yamlfile,
-)
+from src.utils import cleanhtml, error_box, snake_case, validate_yamlfile
 
 external_stylesheets = [
     dbc.themes.COSMO,
@@ -210,7 +207,7 @@ app.layout = html.Div(
     ],
 )
 def get_language(*args):
-    """ Get the language code as returned by the callback
+    """Get the language code as returned by the callback
 
     :param *args: the language code clicked in the dropdown
     :returns: string with the language code requested which is cached
@@ -293,6 +290,42 @@ def load_yamlfile(filename: str, folder: str = None) -> dict:
 
     except yaml.YAMLError as exc:
         print(exc)
+
+    except Exception as e:
+        print(e)
+        raise PreventUpdate from e
+
+
+@callback(
+    Output("settings", "data"),
+    Output("is_loaded", "data"),
+    Output("yaml_file_invalid", "children"),
+    Input("upload-data", "contents"),
+    State("upload-data", "filename"),
+)
+def load_content_uploaded(uploaded_file, filename):
+    """update_output returns a dictionary with the settings from the uploaded
+    YAML file and a boolean on whether the settings are loaded
+    :param uploaded_file: the path of the YAML file
+    :returns: a dictionary with the settings and a boolean when the loading is completed
+    """
+
+    if uploaded_file is None:
+        raise PreventUpdate
+    elif ".yaml" not in filename:
+        raise PreventUpdate
+
+    try:
+        content_type, content_string = uploaded_file.split(",")
+        decoded = base64.b64decode(content_string)
+        data = yaml.safe_load(io.BytesIO(decoded))
+        validation = validate_yamlfile(data)
+        if validation:
+            out = None, None, error_box(f"Invalid YAML file. Error:{validation.code}")
+        else:
+            is_loaded = True
+            out = data, is_loaded, ""
+        return out
 
     except Exception as e:
         print(e)
@@ -1462,9 +1495,7 @@ async def download_single_chart(data_chart, row: int, pos: int):
 
     # Fallback to descendants but less performant
     except Exception as e:
-        print(
-            f"Invalid dsdLink for {chart_id}. Falling back to default. Error:{e}"
-        )
+        print(f"Invalid dsdLink for {chart_id}. Falling back to default. Error:{e}")
         if data_chart["metadataLink"]:
             # Metadata
             try:
