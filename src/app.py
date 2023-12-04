@@ -1543,11 +1543,18 @@ async def download_single_chart(data_chart, row: int, pos: int):
             }
             metadata_codelist = None
 
+    try:
+        valuelist_obj = list(set(list(df[concept]))) if df is not None else None
+
+    except Exception as valuelist_err:
+        print(f"There has been an issue with the metadata. Error{valuelist_err}")
+        valuelist_obj = None
+
     result = {
         "chart_id": chart_id,
         "settings": data_chart,
         "data": df.to_dict("records") if df is not None else None,
-        "valuelist": list(set(list(df[concept]))) if df is not None else None,
+        "valuelist": valuelist_obj,
         "metadata_dataflow": metadata_dataflow,
         "metadata_codelist": metadata_codelist,
     }
