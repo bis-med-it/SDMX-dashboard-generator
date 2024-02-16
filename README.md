@@ -26,9 +26,9 @@ This app has been developed by Cristina Leonte, Pietro Patelli, Stephan Probst a
 ## Infographics
 
 <p align="center">
-  <img src="images/sdmx-dg-pic1.png" alt="How it works" style="height:50%;">
+  <img src="images/sdmx-dg-pic1.png" alt="How it works" width="350">
 </p>
 
 <p align="center">
-  <img src="images/sdmx-dg-pic2.png" alt="What is does" style="height:30%;">
+  <img src="images/sdmx-dg-pic2.png" alt="What is does" width="350">
 </p>
