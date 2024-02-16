@@ -14,8 +14,7 @@ The SDMX Dashboard Generator (SDMX-DG) is an open-source [Dash](https://dash.plo
 
 ## Documentation
 
-The documentation for this app is available at [GitHub Pages](https://bis-med-it.github.io/SDMX-dashboard-generator/).
-
+A quick introduction to the SDMX Dashboard Generator is available at [sdmx.io](https://www.sdmx.io/tools/sdmx-dg/). The full documentation for this app is available at [GitHub Pages](https://bis-med-it.github.io/SDMX-dashboard-generator/).
 ## License
 
 The source code in this repository is licensed under Apache-2.0. See [LICENSE.pdf](LICENCE.pdf) for more information.
@@ -23,3 +22,13 @@ The source code in this repository is licensed under Apache-2.0. See [LICENSE.pd
 ## Acknowledgments
 
 This app has been developed by Cristina Leonte, Pietro Patelli, Stephan Probst and Olivier Sirello (Bank for International Settlements). The views expressed are those of the authors and do not necessarily reflect those of the Bank for International Settlements. All errors are our own.
+
+## Infographics
+
+<p align="center">
+  <img src="images/sdmx-dg-pic1.png" alt="How it works" style="height:50%;">
+</p>
+
+<p align="center">
+  <img src="images/sdmx-dg-pic2.png" alt="What is does" style="height:30%;">
+</p>
