@@ -56,6 +56,10 @@ The app has been successfully tested with Python versions equal or higher to 3.9
 
 ## How To With Examples
 
+### Use The Sample Yaml Files
+
+To start with, you may use the sample Yaml files stored in the `/yaml` folder. For example, just navigate to the ILO dashboard by navigating [http://127.0.0.1:5000/ilo](http://127.0.0.1:5000/ilo) or [http://127.0.0.1:8050/ilo](http://127.0.0.1:8050/ilo) if you use Flask. You can also test the BIS dashboard by adding `/bis` to your Dash url.
+
 ### Upload The Yaml File
 
 The application comes with examples stored in the `/yaml` folder which can be used in two ways:
