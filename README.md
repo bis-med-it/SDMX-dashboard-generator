@@ -12,7 +12,7 @@
   <a href="https://github.com/SNStatComp/awesome-official-statistics-software">
     <img src="https://awesome.re/mentioned-badge.svg" alt="Mentioned in Awesome">
   </a>
-<br/>
+</p>
 
 ## About the SDMX Dashboard Generator
 
@@ -36,5 +36,5 @@ This app has been developed by Cristina Leonte, Pietro Patelli, Stephan Probst a
 </p>
 
 <p align="center">
-  <img src="images/sdmx-dg-pic2.png" alt="What is does" width="350">
+  <img src="images/sdmx-dg-pic2.png" alt="What it does" width="350">
 </p>
