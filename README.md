@@ -1,12 +1,18 @@
 <a name="readme-top"></a>
 <br />
 <div align="center">
-<img src="images/favicon.png" alt="Logo" width="100" height="80">
+  <img src="images/favicon.png" alt="Logo" width="100" height="80">
 </div>
 <br/>
 <p align="center">
-  <img src="images/coverage.svg" alt="Coverage"> <img src="images/pylint.svg" alt="Coverage"> <img src="images/apache20.svg" alt="Apache 2.0"> <img src="images/active.svg" alt="Active repo">
-</p>
+  <img src="images/coverage.svg" alt="Coverage">
+  <img src="images/pylint.svg" alt="pylint">
+  <img src="images/apache20.svg" alt="Apache 2.0">
+  <img src="images/active.svg" alt="Active repo">
+  <a href="https://github.com/SNStatComp/awesome-official-statistics-software">
+    <img src="https://awesome.re/mentioned-badge.svg" alt="Mentioned in Awesome">
+  </a>
+<br/>
 
 ## About the SDMX Dashboard Generator
 
