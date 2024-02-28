@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We are committed to maintaining the security of our software. However, our resources are limited to providing security patches only for the latest combination of minor and major versions of our software.
+We are committed to maintaining the security of our software. However, our resources are limited to providing security patches only for the latest combination of minor and major versions of our software, without any warranty or support guarantees. Please refer to the provided license for more information.
 
 ## Reporting a Vulnerability
 
