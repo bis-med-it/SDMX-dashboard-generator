@@ -35,6 +35,7 @@ class containing instructions to define the Plotly charts. It has been developed
 
    troubleshooting
    contributing
+   code_of_conduct
 
 Indices and tables
 ==================
