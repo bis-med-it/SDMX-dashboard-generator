@@ -101,7 +101,7 @@ Rows:
     downloadYN: "Yes"
     dataLink: 
     metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEIIS550/1.0?detail=full"
-    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEIIS550/M.PSQM.F_CC1.I2015_SCA.BE+FR+ES+DE"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEIIS550/M.PSQM.F_CC1.I21_SCA.BE+FR+ES+DE"
 -
     Row: 3
     chartType: LINE
