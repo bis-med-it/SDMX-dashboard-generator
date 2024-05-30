@@ -4,7 +4,7 @@ We appreciate your interest in contributing. To ensure a smooth and productive c
 
 ## Licensing
 
-Please note that the SDMX Dashboard Generator has a [License](https://github.com/bis-med-it/SDMX-dashboard-generator/blob/main/LICENCE.pdf). By participating in this project, you acknowledge and accept to comply with it.
+Please note that the SDMX Dashboard Generator has a [License](https://github.com/bis-med-it/SDMX-dashboard-generator/blob/main/LICENCE). By participating in this project, you acknowledge and accept to comply with it.
 
 ## How To Contribute
 
