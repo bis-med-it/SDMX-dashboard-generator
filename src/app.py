@@ -357,12 +357,16 @@ def load_yaml(href: str):
         dash_id_url = str(f.path)
         dash_id_url_s = "".join(dash_id_url.split("/", 1))
 
+        if dash_id_url != "/":
+            yaml_location = ''.join([d["location"] for d in yaml_files if d['dash_id'] == dash_id_url_s])
+
         if dash_id_url == "/":
             raise PreventUpdate
 
         yaml_location = "".join(
             [d["location"] for d in yaml_files if d["dash_id"] == dash_id_url_s]
         )
+
         return yaml_location
 
     except Exception as e:

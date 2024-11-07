@@ -16,19 +16,19 @@ Rows:
     chartType: VALUE
     Title: Policy rate
     Subtitle: United States
-    Unit: "%" 
+    Unit: "%"
     UnitShow: "Yes"
     UnitIcon: "bi bi-cash-coin h1"
     unitLoc: SUFFIX
     Decimals: 2
     LabelsYN: "No"
     legendConcept: REF_AREA
-    legendLoc: 
+    legendLoc:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
     metadataLink:
-    DATA: "https://stats.bis.org/api/v1/data/WS_CBPOL_M/M.US/all?detail=full&lastNObservations=1"
+    DATA: "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CBPOL/1.0/M.US?detail=full&lastNObservations=1"
 -
     Row: 1
     chartType: VALUE
@@ -41,12 +41,12 @@ Rows:
     Decimals: 2
     LabelsYN: No
     legendConcept: REF_AREA
-    legendLoc: 
+    legendLoc:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
     metadataLink:
-    DATA: "https://stats.bis.org/api/v1/data/WS_CBPOL_M/M.XM/all?detail=full&lastNObservations=1"
+    DATA: "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CBPOL/1.0/M.XM/all?detail=full&lastNObservations=1"
 -
     Row: 1
     chartType: VALUE
@@ -59,12 +59,12 @@ Rows:
     Decimals: 2
     LabelsYN: No
     legendConcept: REF_AREA
-    legendLoc: 
+    legendLoc:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
     metadataLink:
-    DATA: "https://stats.bis.org/api/v1/data/WS_CBPOL_M/M.GB/all?detail=full&lastNObservations=1"
+    DATA: "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CBPOL/1.0/M.GB/all?detail=full&lastNObservations=1"
 -
     Row: 2
     chartType: PIE
@@ -79,9 +79,9 @@ Rows:
     xAxisConcept: REF_AREA
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
-    dsdLink: "https://www.ilo.org/sdmx/rest/datastructure/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
-    metadataLink: "https://www.ilo.org/sdmx/rest/dataflow/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
-    DATA: "https://www.ilo.org/sdmx/rest/data/DF_POP_XWAP_SEX_AGE_NB/FRA+DEU+CAN+USA+GBR+JPN.A.POP_XWAP_NB.SEX_T.AGE_AGGREGATE_TOTAL?endPeriod=2022&lastNObservations=1"
+    dsdLink: "https://sdmx.ilo.org/rest/datastructure/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
+    metadataLink: "https://sdmx.ilo.org/rest/dataflow/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
+    DATA: "https://sdmx.ilo.org/rest/data/DF_POP_XWAP_SEX_AGE_NB/FRA+DEU+CAN+USA+GBR+JPN.A.POP_XWAP_NB.SEX_T.AGE_AGGREGATE_TOTAL?endPeriod=2022&lastNObservations=1"
 -
     Row: 2
     chartType: BAR
@@ -96,9 +96,9 @@ Rows:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
-    dsdLink: "https://www.ilo.org/sdmx/rest/datastructure/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
-    metadataLink: "https://www.ilo.org/sdmx/rest/dataflow/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
-    DATA: "https://www.ilo.org/sdmx/rest/data/DF_POP_XWAP_SEX_AGE_NB/FRA+DEU+CAN+USA+GBR+JPN.A.POP_XWAP_NB.SEX_T.AGE_AGGREGATE_TOTAL?endPeriod=2022"
+    dsdLink: "https://sdmx.ilo.org/rest/datastructure/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
+    metadataLink: "https://sdmx.ilo.org/rest/dataflow/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
+    DATA: "https://sdmx.ilo.org/rest/data/DF_POP_XWAP_SEX_AGE_NB/FRA+DEU+CAN+USA+GBR+JPN.A.POP_XWAP_NB.SEX_T.AGE_AGGREGATE_TOTAL?endPeriod=2022"
 -
     Row: 3
     chartType: LINE
@@ -113,9 +113,9 @@ Rows:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
-    dsdLink: "https://www.ilo.org/sdmx/rest/datastructure/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
-    metadataLink: "https://www.ilo.org/sdmx/rest/dataflow/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
-    DATA: "https://www.ilo.org/sdmx/rest/data/DF_SDG_0852_SEX_AGE_RT/X01+X04+X02+X03.A.SDG_0852_RT.SEX_T.AGE_YTHADULT_Y15-24"
+    dsdLink: "https://sdmx.ilo.org/rest/datastructure/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
+    metadataLink: "https://sdmx.ilo.org/rest/dataflow/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
+    DATA: "https://sdmx.ilo.org/rest/data/DF_SDG_0852_SEX_AGE_RT/X01+X04+X02+X03.A.SDG_0852_RT.SEX_T.AGE_YTHADULT_Y15-24"
 -
     Row: 3
     chartType: LINE
@@ -130,6 +130,6 @@ Rows:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
-    dsdLink: "https://www.ilo.org/sdmx/rest/datastructure/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
-    metadataLink: "https://www.ilo.org/sdmx/rest/dataflow/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
-    DATA: https://www.ilo.org/sdmx/rest/data/DF_SDG_0852_SEX_AGE_RT/X01.A.SDG_0852_RT.SEX_T.AGE_YTHADULT_Y15-24
+    dsdLink: "https://sdmx.ilo.org/rest/datastructure/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
+    metadataLink: "https://sdmx.ilo.org/rest/dataflow/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
+    DATA: https://sdmx.ilo.org/rest/data/DF_SDG_0852_SEX_AGE_RT/X01.A.SDG_0852_RT.SEX_T.AGE_YTHADULT_Y15-24
