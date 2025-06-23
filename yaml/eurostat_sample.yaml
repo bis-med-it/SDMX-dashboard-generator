@@ -29,7 +29,7 @@ Rows:
     downloadYN: "Yes"
     dsdLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/datastructure/ESTAT/TEICP000/1.0"
     metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEICP000/1.0"
-    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEICP000/M.CP00.I15.DE?endPeriod=2023&lastNObservations=1"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEICP000/M.CP00.I15.DE?lastNObservations=1"
 -
     Row: 1
     chartType: VALUE
@@ -48,7 +48,7 @@ Rows:
     downloadYN: "Yes"
     dsdLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/datastructure/ESTAT/TEILM010/1.0?detail=full"
     metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEILM010/1.0?detail=full"
-    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEILM010/M.SA.TOTAL.T.THS_PER.FR?endPeriod=2023&lastNObservations=1"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEILM010/M.SA.TOTAL.T.THS_PER.FR?lastNObservations=1"
 -
     Row: 1
     chartType: VALUE
@@ -67,7 +67,7 @@ Rows:
     downloadYN: "Yes"
     dataLink: 
     metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEILM310/1.0?detail=full"
-    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEILM310/Q.NSA.JOBRATE.TOTAL.B-S.EA20?endPeriod=2023&lastNObservations=1"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEILM310/Q.NSA.JOBRATE.TOTAL.B-S.EA20?lastNObservations=1"
 -
     Row: 2
     chartType: PIE
@@ -84,7 +84,7 @@ Rows:
     downloadYN: "Yes"
     dataLink: 
     metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TPS00010/1.0?detail=full"
-    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00010/A..EA20?endPeriod=2022&lastNObservations=1"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TPS00010/A..EA20?&lastNObservations=1"
 -
     Row: 2
     chartType: BAR
@@ -101,7 +101,7 @@ Rows:
     downloadYN: "Yes"
     dataLink: 
     metadataLink: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/TEIIS550/1.0?detail=full"
-    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEIIS550/M.PSQM.F_CC1.I21_SCA.BE+FR+ES+DE"
+    DATA: "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/TEIIS550/M.BPRM_SQM.F_CC1.I21_SCA.BE+FR+ES+DE"
 -
     Row: 3
     chartType: LINE
