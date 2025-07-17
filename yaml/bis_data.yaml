@@ -67,28 +67,12 @@ Rows:
     DATA: "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CBPOL/1.0/M.GB/all?detail=full&lastNObservations=1"
 -
     Row: 2
-    chartType: PIE
-    Title:
-    Subtitle: "auto"
-    Unit: "%"
-    unitLoc: SUFFIX
-    Decimals: 0
-    LabelsYN: No
-    legendConcept: REF_AREA
-    legendLoc: BOTTOM
-    xAxisConcept: REF_AREA
-    yAxisConcept: OBS_VALUE
-    downloadYN: "Yes"
-    dsdLink: "https://sdmx.ilo.org/rest/datastructure/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
-    metadataLink: "https://sdmx.ilo.org/rest/dataflow/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
-    DATA: "https://sdmx.ilo.org/rest/data/DF_POP_XWAP_SEX_AGE_NB/FRA+DEU+CAN+USA+GBR+JPN.A.POP_XWAP_NB.SEX_T.AGE_AGGREGATE_TOTAL?endPeriod=2022&lastNObservations=1"
--
-    Row: 2
     chartType: BAR
-    Title:
-    Subtitle: "auto"
-    Unit: "%"
-    unitLoc: HIDE
+    Title: "Central bank total assets"
+    Subtitle: "Japan, United Kingdom and United States, % of GDP"
+    Unit: "% of GDP"
+    UnitShow: "Yes"
+    unitLoc: SUFFIX
     Decimals: 0
     LabelsYN: No
     legendConcept: REF_AREA
@@ -96,40 +80,5 @@ Rows:
     xAxisConcept: TIME_PERIOD
     yAxisConcept: OBS_VALUE
     downloadYN: "Yes"
-    dsdLink: "https://sdmx.ilo.org/rest/datastructure/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
-    metadataLink: "https://sdmx.ilo.org/rest/dataflow/ILO/DF_POP_XWAP_SEX_AGE_NB/1.0?detail=full"
-    DATA: "https://sdmx.ilo.org/rest/data/DF_POP_XWAP_SEX_AGE_NB/FRA+DEU+CAN+USA+GBR+JPN.A.POP_XWAP_NB.SEX_T.AGE_AGGREGATE_TOTAL?endPeriod=2022"
--
-    Row: 3
-    chartType: LINE
-    Title:
-    Subtitle: "auto"
-    Unit: "%"
-    unitLoc: SUFFIX
-    Decimals: 0
-    LabelsYN: Yes
-    legendConcept: REF_AREA
-    legendLoc: HIDE
-    xAxisConcept: TIME_PERIOD
-    yAxisConcept: OBS_VALUE
-    downloadYN: "Yes"
-    dsdLink: "https://sdmx.ilo.org/rest/datastructure/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
-    metadataLink: "https://sdmx.ilo.org/rest/dataflow/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
-    DATA: "https://sdmx.ilo.org/rest/data/DF_SDG_0852_SEX_AGE_RT/X01+X04+X02+X03.A.SDG_0852_RT.SEX_T.AGE_YTHADULT_Y15-24"
--
-    Row: 3
-    chartType: LINE
-    Title:
-    Subtitle: "auto"
-    Unit: "%"
-    unitLoc: SUFFIX
-    Decimals: 0
-    LabelsYN: Yes
-    legendConcept: REF_AREA
-    legendLoc: BOTTOM
-    xAxisConcept: TIME_PERIOD
-    yAxisConcept: OBS_VALUE
-    downloadYN: "Yes"
-    dsdLink: "https://sdmx.ilo.org/rest/datastructure/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
-    metadataLink: "https://sdmx.ilo.org/rest/dataflow/ILO/DF_SDG_0852_SEX_AGE_RT/1.0?detail=full"
-    DATA: https://sdmx.ilo.org/rest/data/DF_SDG_0852_SEX_AGE_RT/X01.A.SDG_0852_RT.SEX_T.AGE_YTHADULT_Y15-24
+    metadataLink:
+    DATA: "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CBTA/1.0/A.GB+US+JP.B.XDF_R_B1GQ._Z.B"
