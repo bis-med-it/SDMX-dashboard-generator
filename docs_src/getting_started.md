@@ -40,12 +40,6 @@ The app has been successfully tested with Python versions equal or higher to 3.9
    pip install -r requirements.txt
    ```
 
-   If you wish to contribute, you can install the optional development requirements:
-
-   ```sh
-   pip install -r requirements/dev_requirements.txt
-   ```
-
 4. From the root folder, run the app
 
    ```sh
